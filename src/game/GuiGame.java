@@ -39,14 +39,16 @@ public class GuiGame extends GuiScreen<GameSettings>
 		car = application.getTextureManager().genTexture("car", new File("resources/car.png"));
 		carFrame = application.getTextureManager().genTexture("carframe", new File("resources/carframe.png"));
 
-		parkingSpots = ParkingSpot.createParkingArea(200, 153, 15, 1);   //left
-		parkingSpots.addAll(ParkingSpot.createParkingArea(1720 - ParkingSpot.HEIGHT, 153, 15, 3));   //right
+		parkingSpots = ParkingSpot.createParkingArea(200, 153, 10, 1);   //left
+		parkingSpots.addAll(ParkingSpot.createParkingArea(1720 - ParkingSpot.HEIGHT, 153, 10, 3));   //right
 
-		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 250, 20, 2));
-		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 250 + ParkingSpot.HEIGHT - 5, 20, 0));
+		//top
+		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 200, 13, 2));
+		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 200 + ParkingSpot.HEIGHT - 5, 13, 0));
 
-		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 830 - ParkingSpot.HEIGHT * 2 + 5, 20, 2));
-		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 830 - ParkingSpot.HEIGHT, 20, 0));
+		//bottom
+		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 880 - ParkingSpot.HEIGHT * 2 + 5, 13, 2));
+		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 880 - ParkingSpot.HEIGHT, 13, 0));
 	}
 	
 	public void init()
@@ -56,8 +58,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 		world = new World(this.gameSettings);
 		
 		shader = Shader.createShader(new File("shaders/overlay.vert"), new File("shaders/overlay.frag"));
-		
-		
+
 		frameBuffer = GL30.glGenFramebuffers();
 		frameBufferTexture = GL11.glGenTextures();
 		

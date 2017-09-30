@@ -9,8 +9,8 @@ import java.util.ArrayList;
  */
 public class ParkingSpot {
 
-    public static final int WIDTH = 60;
-    public static final int HEIGHT = 90;
+    public static final int WIDTH = 90;
+    public static final int HEIGHT = 130;
     double xPos, yPos;
     int direction;
     private Car car;
