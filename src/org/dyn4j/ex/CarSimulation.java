@@ -14,7 +14,7 @@ import org.dyn4j.geometry.Vector2;
 import org.dyn4j.samples.SimulationBody;
 import org.dyn4j.samples.SimulationFrame;
 
-public class CarSimulation extends SimulationFrame{
+public class CarSimulation extends SimulationFrame {
 	private static final long serialVersionUID = -6715546875088615532L;
 	
 	private SimulationBody car;
@@ -109,7 +109,7 @@ public class CarSimulation extends SimulationFrame{
 		// the car
 		car = new Car();
 		car.setLinearDamping(2.0f);
-		car.setAngularDamping(2.0f);
+		car.setAngularDamping(3.0f);
 		this.world.addBody(car);
 	}
 
@@ -169,6 +169,21 @@ public class CarSimulation extends SimulationFrame{
 //        	g.setColor(Color.RED);
         	g.draw(new Line2D.Double(p1.x * scale, p1.y * scale, (p1.x - f1.x) * scale, (p1.y - f1.y) * scale));
         	g.draw(new Line2D.Double(p2.x * scale, p2.y * scale, (p2.x - f2.x) * scale, (p2.y - f2.y) * scale));
+        }
+        
+        // sideways damping
+        Vector2 v = car.getLinearVelocity();
+        if (!v.isZero()) {
+        	Vector2 rhov = r.getRightHandOrthogonalVector();
+        	Vector2 rnorm = rhov.multiply(v.dot(rhov)/v.getMagnitude());
+      	  	rnorm.multiply(-1);
+//      	 v.dot(c);
+//      	 System.out.println(rhov);
+//      	 System.out.println(rnorm);
+        	car.applyForce(rnorm);
+        	Vector2 p = c.sum(r.product(0.0));
+        	g.draw(new Line2D.Double(p.x * scale, p.y * scale, (p.x - rnorm.x) * scale, (p.y - rnorm.y) * scale));
+        	g.draw(new Line2D.Double(p.x * scale, p.y * scale, (p.x - r.x) * scale, (p.y - r.y) * scale));
         }
         
 //        Vector2 velocity = car.getLinearVelocity();
