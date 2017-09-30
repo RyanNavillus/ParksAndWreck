@@ -24,7 +24,7 @@ public class World
 		
 		gameSettings = settings;
 		
-		parkingList.add(new ParkingSpot(0, 0, false));
+		//parkingList.add(new ParkingSpot(0, 0, false));
 	}
 	
 	public void update(double delta)
@@ -36,7 +36,7 @@ public class World
 	{
 		for(ParkingSpot parkingSpot : parkingList)
 		{
-			parkingSpot.render();
+			//parkingSpot.render();
 		}
 		
 		for(Car car : staticCars)
