@@ -12,7 +12,7 @@ float noise(in vec2 coordinate)
 }
 
 void main() {
-    float luma = noise(floor(gl_FragCoord.xy / 3f));
+    float luma = noise(floor(gl_FragCoord.xy / 3));
     luma *= .1;
     gl_FragColor = vec4((1 - luma) * red, (1 - luma) * green, (1 - luma) * blue, 1);
     gl_FragDepth = -10;

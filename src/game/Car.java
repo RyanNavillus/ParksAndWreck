@@ -2,7 +2,6 @@ package game;
 
 import com.polaris.engine.render.Texture;
 import com.polaris.engine.render.TextureManager;
-import javafx.util.Pair;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class Car {
 	private Texture car;
 	private Texture carFrame;
 
-	private ArrayList<Pair<Double, Double>> fires = new ArrayList<>();
+	private ArrayList<Double[]> fires = new ArrayList<>();
 
 	private double rotation;
 
@@ -109,8 +108,8 @@ public class Car {
 
 		for (int i = 0; i < fires.size(); i++){
 			//System.out.println("fire");
-			double x = fires.get(i).getKey();
-			double y =  fires.get(i).getValue();
+			double x = fires.get(i)[0];
+			double y =  fires.get(i)[1];
 
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glVertex2d(0 + posX + x, 0 + posY + y);
@@ -139,7 +138,7 @@ public class Car {
 		while (y > 40 && y < 60)
 			y = Math.random() * (44 * 2.5 - 20);
 
-		fires.add(new Pair<Double, Double>(x, y));
+		fires.add(new Double[] {x, y});
 	}
 	
 	public double getPosX()

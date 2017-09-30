@@ -1,5 +1,3 @@
-#version 330
-
 uniform vec2 window;
 uniform sampler2D renderedTexture;
 uniform float time;
