@@ -1,5 +1,3 @@
-#version 330
-
 in vec3 in_Position;
 in vec4 in_Color;
 in vec3 in_Normal;
