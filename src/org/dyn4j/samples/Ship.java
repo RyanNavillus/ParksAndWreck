@@ -15,15 +15,18 @@ public class Ship extends SimulationBody {
 	public Ship() {
 		super();
 		
-		this.addFixture(Geometry.createRectangle(0.5, 1.5), 1, 0.2, 0.2);
-//		BodyFixture bf2 = this.addFixture(Geometry.createEquilateralTriangle(0.5), 1, 0.2, 0.2);
+		double friction = 0.5;
+		double bounce = 0.5;
+		
+		this.addFixture(Geometry.createRectangle(0.5, 1.5), 1, friction, bounce);
+		BodyFixture bf2 = this.addFixture(Geometry.createEquilateralTriangle(0.25), 1, friction, bounce);
 //		bf2.getShape().translate(0, 0.9);
 		this.translate(0.0, 2.0);
-//		this.setMass(MassType.NORMAL);
-		this.setMass(new Mass(new Vector2(0, 0), 1, 0.5));
+		this.setMass(MassType.NORMAL);
+//		this.setMass(new Mass(new Vector2(0, 0), 1, 0.5));
 
 		this.setAngularDamping(5.0f);
-//		this.setLinearDamping(5.0f);
+		this.setLinearDamping(2.0f);
 	}
 	
 	public void thrust(Graphics2D g, double force, double scale) {
@@ -35,8 +38,8 @@ public class Ship extends SimulationBody {
         	
        	applyForce(f);
        	
-       	g.setColor(Color.ORANGE);
-       	g.draw(new Line2D.Double(p.x * scale, p.y * scale, (p.x - f.x) * scale, (p.y - f.y) * scale));
+//       	g.setColor(Color.ORANGE);
+//       	g.draw(new Line2D.Double(p.x * scale, p.y * scale, (p.x - f.x) * scale, (p.y - f.y) * scale));
 	}
 
 	public void rotate(Graphics2D g, double force, double scale) {
@@ -54,7 +57,7 @@ public class Ship extends SimulationBody {
         this.applyForce(f2, p2);
         	
         g.setColor(Color.RED);
-        g.draw(new Line2D.Double(p1.x * scale, p1.y * scale, (p1.x - f1.x) * scale, (p1.y - f1.y) * scale));
-        g.draw(new Line2D.Double(p2.x * scale, p2.y * scale, (p2.x - f2.x) * scale, (p2.y - f2.y) * scale));
+//        g.draw(new Line2D.Double(p1.x * scale, p1.y * scale, (p1.x - f1.x) * scale, (p1.y - f1.y) * scale));
+//        g.draw(new Line2D.Double(p2.x * scale, p2.y * scale, (p2.x - f2.x) * scale, (p2.y - f2.y) * scale));
 	}
 }

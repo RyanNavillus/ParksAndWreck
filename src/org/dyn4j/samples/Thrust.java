@@ -147,7 +147,7 @@ public class Thrust extends SimulationFrame {
 	 * Default constructor.
 	 */
 	public Thrust() {
-		super("Thrust", 24.0);
+		super("Thrust", 64.0);
 		
 		KeyListener listener = new CustomKeyListener();
 		this.addKeyListener(listener);
@@ -161,7 +161,7 @@ public class Thrust extends SimulationFrame {
 		this.world.setGravity(new Vector2(0, 0));
 		
 		// create all your bodies/joints
-		double offset = 10;
+		double offset = 5;
 		
 		// the bounds so we can keep playing
 		SimulationBody l = new SimulationBody();
