@@ -8,6 +8,7 @@ import com.polaris.engine.render.TextureManager;
 import org.lwjgl.opengl.*;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Killian Le Clainche on 9/29/17.
@@ -29,6 +30,8 @@ public class GuiGame extends GuiScreen<GameSettings>
 	private int frameBufferTexture;
 	
 	private int renderBuffer;
+
+	private ArrayList<ParkingSpot> parkingSpots;
 	
 	public GuiGame(App<GameSettings> app)
 	{
@@ -104,39 +107,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 		
 		world.render(delta);
 		
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		
-		car.bind();
-		
-		GL11.glBegin(GL11.GL_QUADS);
-		
-		GL11.glTexCoord2d(0, 0);
-		GL11.glVertex2d(400, 400);
-		GL11.glTexCoord2d(0, 1);
-		GL11.glVertex2d(400, 488);
-		GL11.glTexCoord2d(1, 1);
-		GL11.glVertex2d(454, 488);
-		GL11.glTexCoord2d(1, 0);
-		GL11.glVertex2d(454, 400);
-		
-		GL11.glEnd();
-		
-		carFrame.bind();
-		
-		GL11.glBegin(GL11.GL_QUADS);
-		
-		GL11.glTexCoord2d(0, 0);
-		GL11.glVertex2d(400, 400);
-		GL11.glTexCoord2d(0, 1);
-		GL11.glVertex2d(400, 400 + 44 * 2.5);
-		GL11.glTexCoord2d(1, 1);
-		GL11.glVertex2d(400 + 27 * 2.5, 400 + 44 * 2.5);
-		GL11.glTexCoord2d(1, 0);
-		GL11.glVertex2d(400 + 27 * 2.5, 400);
-		
-		GL11.glEnd();
-		
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+
 		
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 		application.gl2d();
