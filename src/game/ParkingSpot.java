@@ -24,7 +24,7 @@ public class ParkingSpot {
         color[2] = 1.0f;
 
         if (direction > 4){
-            System.out.println("Parking spot direction needs to be a number 0-3!");
+            System.out.println("Parking spot direction needs to be a number 0-4!");
             direction = 0;
         }
 
@@ -39,7 +39,7 @@ public class ParkingSpot {
         for (int i = 0; i < width; i++){
             parkingSpots.add(new ParkingSpot(x + xOffset, y + yOffset, direction));
 
-            if (direction == 0 || direction == 2){
+            if (direction == 0 || direction == 2 || direction == 4){
                 xOffset = i * (ParkingSpot.WIDTH - 5);
             } else {
                 yOffset = i * (ParkingSpot.WIDTH - 5);
@@ -88,7 +88,7 @@ public class ParkingSpot {
             GL11.glVertex2d(WIDTH + xPos, HEIGHT * invert + yPos);
             GL11.glVertex2d(WIDTH + xPos, 0 + yPos);
             GL11.glEnd();
-        } else {
+        } else if (direction == 1 || direction == 3){
             //top
             GL11.glBegin(GL11.GL_QUADS);
             GL11.glVertex2d(0 + xPos, 0 + yPos);
@@ -107,6 +107,20 @@ public class ParkingSpot {
             GL11.glVertex2d(0 + xPos, WIDTH + yPos);
             GL11.glVertex2d(HEIGHT * invert + xPos, WIDTH + yPos);
             GL11.glVertex2d(HEIGHT * invert + xPos, WIDTH - 5 + yPos);
+            GL11.glEnd();
+        } else {
+            //left
+            GL11.glBegin(GL11.GL_QUADS);
+            GL11.glVertex2d(0 + xPos, 0 + yPos);
+            GL11.glVertex2d(0 + xPos, HEIGHT * invert + yPos);
+            GL11.glVertex2d(5 + xPos, HEIGHT * invert + yPos);
+            GL11.glVertex2d(5 + xPos, 0 + yPos);
+
+            //right
+            GL11.glVertex2d(WIDTH - 5 + xPos, 0 + yPos);
+            GL11.glVertex2d(WIDTH - 5 + xPos, HEIGHT * invert + yPos);
+            GL11.glVertex2d(WIDTH + xPos, HEIGHT * invert + yPos);
+            GL11.glVertex2d(WIDTH + xPos, 0 + yPos);
             GL11.glEnd();
         }
 
