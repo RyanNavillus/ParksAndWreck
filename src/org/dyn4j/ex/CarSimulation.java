@@ -202,8 +202,11 @@ public class CarSimulation extends SimulationFrame {
 //        g.draw(new java.awt.geom.Ellipse2D.Double((bwh.x - 0.5/2) * scale, (bwh.y - 0.5/2) * scale, 0.5 * scale, 0.5 * scale));
         Vector2 bwh_v = car.getLinearVelocity(bwh);
         if (!bwh_v.isZero()) {
-        	Vector2 vx = new Vector2(rrnorm).multiply(bwh_v.dot(rrnorm));
-        	Vector2 vy = new Vector2(rnorm).multiply(bwh_v.dot(rnorm));
+        	Vector2 myrr = new Vector2(rrnorm);
+        	Vector2 myr = new Vector2(rnorm);
+
+        	Vector2 vx = myrr.multiply(bwh_v.dot(myrr));
+        	Vector2 vy = myr.multiply(bwh_v.dot(myr));
 
         	double mforce = force * 0.5;
         	if (vx.getMagnitude() < mforce) {
