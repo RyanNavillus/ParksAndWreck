@@ -58,7 +58,8 @@ public class Car {
 	
 	public void update(double delta)
 	{
-	
+		posX += delta * 750 * Math.cos((rotation / -180.0 - .5) * Math.PI);
+		posY += delta * 750 * Math.sin((rotation / -180.0 - .5) * Math.PI);
 	}
 	
 	public void render(double delta)

@@ -67,7 +67,7 @@ public class World
 			
 			playerCars.add(new Car(1920, 915,  90, textureManager));
 			
-			ticksToInitialize = 10;
+			ticksToInitialize = 2;
 		}
 		
 		for(Car p : playerCars)
