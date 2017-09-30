@@ -12,14 +12,19 @@ public class World
 	private List<Car> staticCars;
 	private List<Car> playerCars;
 	
+	private List<ParkingSpot> parkingList;
+	
 	private GameSettings gameSettings;
 	
 	public World(GameSettings settings)
 	{
 		staticCars = new ArrayList<>();
 		playerCars = new ArrayList<>();
+		parkingList = new ArrayList<>();
 		
 		gameSettings = settings;
+		
+		parkingList.add(new ParkingSpot(0, 0, false));
 	}
 	
 	public void update(double delta)
@@ -29,6 +34,11 @@ public class World
 	
 	public void render(double delta)
 	{
+		for(ParkingSpot parkingSpot : parkingList)
+		{
+			parkingSpot.render(delta);
+		}
+		
 		for(Car car : staticCars)
 		{
 			car.render(delta);

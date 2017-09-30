@@ -1,8 +1,6 @@
 #version 330
 
-uniform float red;
-uniform float green;
-uniform float blue;
+uniform sampler2D renderedTexture;
 
 out vec4 gl_FragColor;
 
