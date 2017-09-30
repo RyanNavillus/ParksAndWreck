@@ -1,18 +1,23 @@
 package game;
 
-import org.lwjgl.glfw.GLFW;
-
 import com.polaris.engine.App;
 
 import java.util.ArrayList;
+
+import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.geometry.Geometry;
+import org.dyn4j.geometry.MassType;
+import org.dyn4j.geometry.Vector2;
+import org.dyn4j.samples.SimulationBody;
 /**
  * Created by Killian Le Clainche on 9/29/17.
  */
+import org.dyn4j.samples.SimulationFrame;
 public class ParksAndWreck extends App<GameSettings>
 {
 	
 	private ArrayList<Player> players;
-	
+		
 	public static void main(String[] args)
 	{
 		ParksAndWreck game = new ParksAndWreck();
@@ -49,14 +54,13 @@ public class ParksAndWreck extends App<GameSettings>
 		}
 
 		int numberOfPlayers = players.size();
-		
+				
+		//simulationWorld.run();
 		// End Testing
 		
 		gameSettings.createFonts();
 		gameSettings.getKeys();
 		this.initGui(new GuiGame(this));
-		
-		
 	}
 	
 	@Override
@@ -64,4 +68,5 @@ public class ParksAndWreck extends App<GameSettings>
 	{
 		return new GameSettings();
 	}
+	
 }

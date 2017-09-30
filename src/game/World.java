@@ -6,6 +6,9 @@ import com.polaris.engine.render.TextureManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dyn4j.dynamics.Force;
+import org.dyn4j.samples.SimulationBody;
+
 /**
  * Created by Killian Le Clainche on 9/30/2017.
  */
@@ -22,10 +25,11 @@ public class World
 	
 	private GameSettings gameSettings;
 	private TextureManager textureManager;
-	
+		
+	private org.dyn4j.dynamics.World physicsWorld;
 	private double ticksToInitialize = 2;
-	
-	public World(GameSettings settings, TextureManager manager)
+
+	public World(GameSettings settings, TextureManager manager, org.dyn4j.dynamics.World physicsWorld)
 	{
 		staticCars = new ArrayList<>();
 		playerCars = new ArrayList<>();
@@ -34,7 +38,20 @@ public class World
 		gameSettings = settings;
 		
 		textureManager = manager;
+				
+		this.physicsWorld = physicsWorld;
 		
+		Car car = new Car(100, 100, 0, manager);
+		//playerCars.add(car);
+		//physicsWorld.addBody(car.simulationBody);
+		
+		car = new Car(100, 200, 45, manager);
+		playerCars.add(car);
+		physicsWorld.addBody(car.simulationBody);
+		car.simulationBody.translate(100, 100);
+		car.simulationBody.rotate(10);
+		car.simulationBody.applyForce(new Force(100.0, 100.0));
+				
 		fireTexture = textureManager.getTexture("fire0");
 
 		//parkingList.add(new ParkingSpot(0, 0, false));
@@ -57,6 +74,7 @@ public class World
 	
 	public void update(double delta)
 	{
+
 		if((ticksToInitialize -= delta) <= 0)
 		{
 			playerCars.add(new Car(-65, 55,  270, textureManager));

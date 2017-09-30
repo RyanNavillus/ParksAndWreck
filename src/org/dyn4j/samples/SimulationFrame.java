@@ -50,6 +50,7 @@ import org.dyn4j.dynamics.World;
  * @since 3.2.0
  * @version 3.2.0
  */
+
 public abstract class SimulationFrame extends JFrame {
 	/** The serial version id */
 	private static final long serialVersionUID = 7659608187025022915L;
