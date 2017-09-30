@@ -5,6 +5,8 @@ import com.polaris.engine.gui.GuiScreen;
 import com.polaris.engine.render.Shader;
 import com.polaris.engine.render.Texture;
 import com.polaris.engine.render.TextureManager;
+
+import org.dyn4j.geometry.Vector2;
 import org.lwjgl.opengl.*;
 
 import java.io.File;
@@ -26,7 +28,8 @@ public class GuiGame extends GuiScreen<GameSettings>
 	
 	private Background background;
 	private World world;
-	
+	private org.dyn4j.dynamics.World physicsWorld;
+
 	private int frameBuffer;
 	private int frameBufferTexture;
 	
@@ -44,13 +47,13 @@ public class GuiGame extends GuiScreen<GameSettings>
 		
 		car = application.getTextureManager().genTexture("car", new File("resources/car.png"));
 		carFrame = application.getTextureManager().genTexture("carframe", new File("resources/carframe.png"));
+		initializePhysics();
 	}
 	
 	public void init()
 	{
 		super.init();
-		
-		world = new World(this.gameSettings, application.getTextureManager());
+		world = new World(this.gameSettings, application.getTextureManager(), physicsWorld);
 		
 		shader = Shader.createShader(new File("shaders/overlay.vert"), new File("shaders/overlay.frag"));
 		
@@ -87,6 +90,12 @@ public class GuiGame extends GuiScreen<GameSettings>
 		renderBuffer = GL15.glGenBuffers();
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, renderBuffer);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, g_quad_vertex_buffer_data, GL15.GL_STATIC_DRAW);
+	}
+	
+	private void initializePhysics() {
+		physicsWorld = new org.dyn4j.dynamics.World();
+		physicsWorld.setGravity(new Vector2(0, 0));
+		
 	}
 	
 	public void update(double delta)

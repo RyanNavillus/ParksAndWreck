@@ -17,9 +17,7 @@ public class ParksAndWreck extends App<GameSettings>
 {
 	
 	private ArrayList<Player> players;
-	
-	private SimulationWorld simulationWorld;
-	
+		
 	public static void main(String[] args)
 	{
 		ParksAndWreck game = new ParksAndWreck();
@@ -56,9 +54,7 @@ public class ParksAndWreck extends App<GameSettings>
 		}
 
 		int numberOfPlayers = players.size();
-		
-		//simulationWorld = new SimulationWorld("Parks And Wreck", 64.0);
-		
+				
 		//simulationWorld.run();
 		// End Testing
 		

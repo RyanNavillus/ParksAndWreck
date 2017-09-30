@@ -5,6 +5,9 @@ import com.polaris.engine.render.TextureManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dyn4j.dynamics.Force;
+import org.dyn4j.samples.SimulationBody;
+
 /**
  * Created by Killian Le Clainche on 9/30/2017.
  */
@@ -18,10 +21,10 @@ public class World
 	
 	private GameSettings gameSettings;
 	private TextureManager textureManager;
+		
+	private org.dyn4j.dynamics.World physicsWorld;
 	
-	private SimulationWorld simulationWorld;
-	
-	public World(GameSettings settings, TextureManager manager)
+	public World(GameSettings settings, TextureManager manager, org.dyn4j.dynamics.World physicsWorld)
 	{
 		staticCars = new ArrayList<>();
 		playerCars = new ArrayList<>();
@@ -30,18 +33,20 @@ public class World
 		gameSettings = settings;
 		
 		textureManager = manager;
-<<<<<<< HEAD
+				
+		this.physicsWorld = physicsWorld;
 		
-		simulationWorld = new SimulationWorld("Parks and Wreck");
-		
-=======
-
 		Car car = new Car(100, 100, 0, 0, 0, manager);
-		playerCars.add(car);
+		//playerCars.add(car);
+		//physicsWorld.addBody(car.simulationBody);
+		
 		car = new Car(100, 200, 0, 0, 45, manager);
 		playerCars.add(car);
-
->>>>>>> e3c137cfc5a8df264017344b5096031f8412e250
+		physicsWorld.addBody(car.simulationBody);
+		car.simulationBody.translate(100, 100);
+		car.simulationBody.rotate(10);
+		car.simulationBody.applyForce(new Force(100.0, 100.0));
+		
 		//parkingList.add(new ParkingSpot(0, 0, false));
 
 		parkingList.addAll(ParkingSpot.createParkingArea(200, 153, 10, 1));   //left
@@ -58,7 +63,9 @@ public class World
 	
 	public void update(double delta)
 	{
-	
+		for (Car car : playerCars) {
+			car.update(delta);
+		}
 	}
 	
 	public void render(double delta)
