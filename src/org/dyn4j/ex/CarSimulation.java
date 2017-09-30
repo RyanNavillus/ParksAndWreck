@@ -4,17 +4,17 @@ import org.dyn4j.dynamics.World;
 import org.dyn4j.samples.SimulationBody;
 import org.dyn4j.samples.SimulationFrame;
 
-public class Car extends SimulationFrame{
+public class CarSimulation extends SimulationFrame{
 	private static final long serialVersionUID = -6715546875088615532L;
 	
 	private SimulationBody car;
 
-	public Car() {
+	public CarSimulation() {
 		super("Car", 32.0);
 	}
 
 	public static void main(String[] args) {
-		Car simulation = new Car();
+		CarSimulation simulation = new CarSimulation();
 		simulation.run();
 	}
 
