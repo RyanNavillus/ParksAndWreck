@@ -109,37 +109,24 @@ public class CarSimulation extends SimulationFrame{
 		super.update(g, elapsedTime);
 		
 		final double scale = this.scale;
-		final double force = 500 * elapsedTime;
+		final double force = 1000 * elapsedTime;
 
         final Vector2 r = new Vector2(car.getTransform().getRotation() + Math.PI * 0.5);
         final Vector2 c = car.getWorldCenter();
 
-        double angle = 0;
-        if (this.leftTurnOn.get()) {
-        	angle = 15;
-        }
-
 		// apply thrust
         if (this.forwardThrustOn.get()) {
-        	Vector2 f1 = r.product(force);
-        	Vector2 p1 = c.sum(r.product(0.9).rotate(30/360.0 * Math.PI));
-        	Vector2 f2 = r.product(force);
-        	Vector2 p2 = c.sum(r.product(0.9).rotate(-30/360.0 * Math.PI));
-        	f1.rotate(angle/360.0 * Math.PI);
-        	f2.rotate(angle/360.0 * Math.PI);
+        	Vector2 f = r.product(force);
+        	Vector2 p = c.sum(r.product(0.0));
         	
-        	car.applyForce(f1, p1);
-        	car.applyForce(f2, p2);
+        	car.applyForce(f);
         	
 //        	g.setColor(Color.ORANGE);
-        	g.draw(new Line2D.Double(p1.x * scale, p1.y * scale, (p1.x - f1.x) * scale, (p1.y - f1.y) * scale));
-        	g.draw(new Line2D.Double(p2.x * scale, p2.y * scale, (p2.x - f2.x) * scale, (p2.y - f2.y) * scale));
+        	g.draw(new Line2D.Double(p.x * scale, p.y * scale, (p.x - f.x) * scale, (p.y - f.y) * scale));
         } 
-
-        if (this.rightTurnOn.get()) {
-        	Vector2 f = r.product(force).right();
-        	Vector2 p = c.sum(r.product(0.9));
-        	car.applyForce(f, p);
-        } 
+        
+        Vector2 velocity = car.getLinearVelocity();
+        velocity.multiply(0.98);
+        car.setLinearVelocity(velocity);
 	}
 }
