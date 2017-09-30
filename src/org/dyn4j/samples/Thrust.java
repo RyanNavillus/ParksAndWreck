@@ -32,7 +32,10 @@ import java.awt.event.KeyListener;
 import java.awt.geom.Line2D;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.dyn4j.collision.narrowphase.Penetration;
+import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.dynamics.CollisionAdapter;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
@@ -60,6 +63,34 @@ public class Thrust extends SimulationFrame {
 	private AtomicBoolean[] reverseThrustOn;
 	private AtomicBoolean[] leftThrustOn;
 	private AtomicBoolean[] rightThrustOn;
+	
+	private static class StopContactListener extends CollisionAdapter {
+		private Body b1, b2;
+		
+		public StopContactListener(Body b1, Body b2) {
+			this.b1 = b1;
+			this.b2 = b2;
+		}
+		@Override
+		public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Penetration penetration) {
+			// the bodies can appear in either order
+			if ((body1 == b1 && body2 == b2) ||
+			    (body1 == b2 && body2 == b1)) {
+				// its the collision we were looking for
+				// do whatever you need to do here
+				
+				// stopping them like this isn't really recommended
+				// there are probably better ways to do what you want
+				
+				body1.getLinearVelocity().zero();
+				body1.setAngularVelocity(0.0);
+				body2.getLinearVelocity().zero();
+				body2.setAngularVelocity(0.0);
+				return false;
+			}
+			return true;
+		}
+	}
 	
 	/**
 	 * Custom key adapter to listen for key events.
@@ -196,14 +227,17 @@ public class Thrust extends SimulationFrame {
 		this.leftThrustOn = new AtomicBoolean[num_of_ships];
 		this.rightThrustOn = new AtomicBoolean[num_of_ships];
 
-		this.ships[0] = new Ship();
-		this.ships[1] = new Ship();
 		for (int i = 0; i < ships.length; i++) {
+			this.ships[i] = new Ship();
 			this.world.addBody(ships[i]);
 			this.forwardThrustOn[i] = new AtomicBoolean(false);
 			this.reverseThrustOn[i] = new AtomicBoolean(false);
 			this.leftThrustOn[i] = new AtomicBoolean(false);
 			this.rightThrustOn[i] = new AtomicBoolean(false);
+			
+			for (int j = 0; j < i; j++) {
+				this.world.addListener(new StopContactListener(ships[i], ships[j]));
+			}
 		}
 	}
 	
@@ -245,7 +279,7 @@ public class Thrust extends SimulationFrame {
             	ships[1].thrust(g, force, scale);
             } 
 
-            if (this.reverseThrustOn[0].get()) {
+            if (this.reverseThrustOn[1].get()) {
         	    ships[1].thrust(g, -force, scale);
             }
 
