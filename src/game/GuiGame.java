@@ -12,6 +12,8 @@ import org.lwjgl.opengl.*;
 import java.io.File;
 import java.util.ArrayList;
 
+import static org.lwjgl.opengl.GL11.glViewport;
+
 /**
  * Created by Killian Le Clainche on 9/29/17.
  */
@@ -23,8 +25,6 @@ public class GuiGame extends GuiScreen<GameSettings>
 	private int windowSize;
 	private int time;
 	
-	private Texture car;
-	private Texture carFrame;
 	
 	private Background background;
 	private World world;
@@ -45,9 +45,14 @@ public class GuiGame extends GuiScreen<GameSettings>
 		
 		background = new Background();
 		
-		car = application.getTextureManager().genTexture("car", new File("resources/car.png"));
-		carFrame = application.getTextureManager().genTexture("carframe", new File("resources/carframe.png"));
+		//car = application.getTextureManager().genTexture("car", new File("resources/car.png"));
+		//carFrame = application.getTextureManager().genTexture("carframe", new File("resources/carframe.png"));
 		initializePhysics();
+		application.getTextureManager().genTexture("car", new File("resources/car.png"));
+		application.getTextureManager().genTexture("carframe", new File("resources/carframe.png"));
+		application.getTextureManager().genTexture("carframeBroke", new File("resources/carframeBroke.png"));
+		application.getTextureManager().genTexture("fire0", new File("resources/flame0.png"));
+		application.getTextureManager().genTexture("fire1", new File("resources/flame1.png"));
 	}
 	
 	public void init()
@@ -109,7 +114,10 @@ public class GuiGame extends GuiScreen<GameSettings>
 		
 		dist+= delta * 40;
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
-		super.render(delta);
+		glViewport(0, 0, 1920, 1080);
+
+
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		
 		GL11.glPushMatrix();
 		GL11.glMatrixMode(GL11.GL_PROJECTION);

@@ -20,33 +20,32 @@ public class Car {
 	
 	private double posX, posY, height, width;
 	
-	private double velX, velY;
 	
 	private double[] carColors = new double[3];
 
 	private Texture car;
 	private Texture carFrame;
+	private Texture carFrameBroke;
 
 	private ArrayList<Double[]> fires = new ArrayList<>();
 
 	public SimulationBody simulationBody;
 	
 	private double rotation;
+	private boolean broken;
 
-	public Car(double startX, double startY, double startVelX, double startVelY, double startRotation, TextureManager manager)
+	public Car(double startX, double startY, double startRotation, TextureManager manager)
 	{
 		posX = startX;
 		posY = startY;
-		
-		velX = startVelX;
-		velY = startVelY;
 
 		car = manager.getTexture("car");
 		carFrame = manager.getTexture("carframe");
+		carFrameBroke = manager.getTexture("carframeBroke");
 
-		carColors[0] = 1 - Math.random()/2;
-		carColors[1] = 1 - Math.random()/2;
-		carColors[2] = 1 - Math.random()/2;
+		carColors[0] = Math.random();
+		carColors[1] = Math.random();
+		carColors[2] = Math.random();
 
 		//System.out.println(carColors[1] + " " + carColors[1] + " " + carColors[2]);
 
@@ -57,6 +56,10 @@ public class Car {
 		simulationBody.setMass(MassType.NORMAL);
 		
 		generateFire();
+		//for (int i = 0; i < 5; i++)
+		//	generateFire();
+
+		broken = false;
 	}
 	
 	/*
@@ -113,9 +116,11 @@ public class Car {
 	{
 		System.out.println("2 posX: " + posX + "; posY: " + posY + "; rotation: " + rotation + "; height: " + height + "; width: " + width); 
 		GL11.glPushMatrix();
+		
 		GL11.glTranslatef((float) (posX + (width / 2)), (float) (posY + (height / 2)), 0);
 		GL11.glRotatef((float) rotation, 0, 0, 1);
 		GL11.glTranslatef((float) -(posX + width / 2), (float) -(posY + (height / 2)), 0);
+
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 
@@ -138,7 +143,11 @@ public class Car {
 
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 
-		carFrame.bind();
+		if (!broken){
+			carFrame.bind();
+		} else {
+			carFrameBroke.bind();
+		}
 
 		GL11.glBegin(GL11.GL_QUADS);
 
@@ -153,21 +162,26 @@ public class Car {
 
 		GL11.glEnd();
 
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
-		GL11.glColor3f(1.0f, 1.0f, 0.0f);
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		
+		World.fireTexture.bind();
+		
+		GL11.glBegin(GL11.GL_QUADS);
 
 		for (int i = 0; i < fires.size(); i++){
 			//System.out.println("fire");
 			double x = fires.get(i)[0];
 			double y =  fires.get(i)[1];
-
-			GL11.glBegin(GL11.GL_QUADS);
+			
+			GL11.glTexCoord2d(0, 0);
 			GL11.glVertex2d(0 + posX + x, 0 + posY + y);
+			GL11.glTexCoord2d(0, 1);
 			GL11.glVertex2d(0 + posX + x, 20 + posY + y);
+			GL11.glTexCoord2d(1, 1);
 			GL11.glVertex2d(20 + posX + x, 20 + posY + y);
+			GL11.glTexCoord2d(1, 0);
 			GL11.glVertex2d(20 + posX + x, 0 + posY + y);
-			GL11.glEnd();
 		}
 
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
@@ -177,16 +191,18 @@ public class Car {
 		GL11.glVertex2d(0 + posX, 80 + posY);
 		GL11.glVertex2d(width + posX, 80 + posY);
 		GL11.glVertex2d(width + posX, 60 + posY);
+
 		GL11.glEnd();
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 		GL11.glPopMatrix();
 	}
 
 	private void generateFire(){
 		double x = Math.random() * (27 * 2.5 - 20);
-		double y = 50;
+		double y = 70;
 
-		while (y > 40 && y < 60)
+		while (y > 40 && y < 80)
 			y = Math.random() * (44 * 2.5 - 20);
 
 		fires.add(new Double[] {x, y});
