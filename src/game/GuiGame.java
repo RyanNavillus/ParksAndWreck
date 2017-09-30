@@ -19,6 +19,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 	private Shader shader;
 	private int texID;
 	private int windowSize;
+	private int time;
 	
 	private Texture car;
 	private Texture carFrame;
@@ -32,6 +33,8 @@ public class GuiGame extends GuiScreen<GameSettings>
 	private int renderBuffer;
 
 	private ArrayList<ParkingSpot> parkingSpots;
+	
+	private float dist = 0;
 	
 	public GuiGame(App<GameSettings> app)
 	{
@@ -52,8 +55,8 @@ public class GuiGame extends GuiScreen<GameSettings>
 		shader = Shader.createShader(new File("shaders/overlay.vert"), new File("shaders/overlay.frag"));
 		
 		texID = GL20.glGetUniformLocation(shader.getShaderId(), "renderedTexture");
-		windowSize = GL20.glGetUniformLocation(shader.getShaderId(), "windowSize");
-		
+		windowSize = GL20.glGetUniformLocation(shader.getShaderId(), "window");
+		time = GL20.glGetUniformLocation(shader.getShaderId(), "time");
 		
 		frameBuffer = GL30.glGenFramebuffers();
 		frameBufferTexture = GL11.glGenTextures();
@@ -94,6 +97,8 @@ public class GuiGame extends GuiScreen<GameSettings>
 	
 	public void render(double delta)
 	{
+		
+		dist+= delta * 40;
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
 		super.render(delta);
 		
@@ -106,8 +111,6 @@ public class GuiGame extends GuiScreen<GameSettings>
 		background.render(delta);
 		
 		world.render(delta);
-		
-
 		
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 		application.gl2d();
@@ -125,7 +128,8 @@ public class GuiGame extends GuiScreen<GameSettings>
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, frameBufferTexture);
 		
 		GL20.glUniform1i(texID, 0);
-		GL20.glUniform2fv(windowSize, new float[]{gameSettings.getWindowWidth(), gameSettings.getWindowHeight()});
+		GL20.glUniform2f(windowSize, gameSettings.getWindowWidth(), gameSettings.getWindowHeight());
+		GL20.glUniform1f(time, (System.currentTimeMillis() % 100000) / 500f);
 		
 		GL20.glEnableVertexAttribArray(0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, renderBuffer);
