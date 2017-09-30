@@ -19,8 +19,8 @@ public class GameSettings extends Settings
 	{
 		super.init(i);
 		
-		this.setWindowWidth(1280);
-		this.setWindowHeight(720);
+		this.setWindowWidth(1920);
+		this.setWindowHeight(1000);
 	}
 	
 	public void createFonts()
