@@ -8,6 +8,7 @@ import com.polaris.engine.render.TextureManager;
 import org.lwjgl.opengl.*;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Killian Le Clainche on 9/29/17.
@@ -26,6 +27,8 @@ public class GuiGame extends GuiScreen<GameSettings>
 	
 	private int frameBuffer;
 	private int frameBufferTexture;
+
+	private ArrayList<ParkingSpot> parkingSpots;
 	
 	public GuiGame(App<GameSettings> app)
 	{
@@ -35,6 +38,15 @@ public class GuiGame extends GuiScreen<GameSettings>
 		
 		car = application.getTextureManager().genTexture("car", new File("resources/car.png"));
 		carFrame = application.getTextureManager().genTexture("carframe", new File("resources/carframe.png"));
+
+		parkingSpots = ParkingSpot.createParkingArea(200, 153, 15, 1);   //left
+		parkingSpots.addAll(ParkingSpot.createParkingArea(1720 - ParkingSpot.HEIGHT, 153, 15, 3));   //right
+
+		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 250, 20, 2));
+		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 250 + ParkingSpot.HEIGHT - 5, 20, 0));
+
+		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 830 - ParkingSpot.HEIGHT * 2 + 5, 20, 2));
+		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 830 - ParkingSpot.HEIGHT, 20, 0));
 	}
 	
 	public void init()
@@ -82,7 +94,11 @@ public class GuiGame extends GuiScreen<GameSettings>
 		background.render(delta);
 		
 		world.render(delta);
-		
+
+		for (int i = 0; i < parkingSpots.size(); i++){
+			parkingSpots.get(i).render(delta);
+		}
+
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
 		car.bind();
@@ -135,10 +151,10 @@ public class GuiGame extends GuiScreen<GameSettings>
 		GL20.glUniform1i(texID, 0);
 		
 		GL11.glBegin(GL11.GL_QUADS);
-		
+
 		GL11.glVertex2d(0, 0);
-		GL11.glVertex2d(0, 1180);
-		GL11.glVertex2d(1920, 1180);
+		GL11.glVertex2d(0, 1080);
+		GL11.glVertex2d(1920, 1080);
 		GL11.glVertex2d(1920, 0);
 		
 		GL11.glEnd();

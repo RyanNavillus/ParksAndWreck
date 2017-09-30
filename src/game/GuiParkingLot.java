@@ -26,7 +26,7 @@ public class GuiParkingLot extends GuiScreen<GameSettings> {
             parkingSpots.add(new ParkingSpot(700 + i * (ParkingSpot.WIDTH - 5), 500, 0));
         }*/
 
-        parkingSpots = ParkingSpot.CreateParkingArea(100, 100, 50, 0);
+        parkingSpots = ParkingSpot.createParkingArea(100, 100, 50, 0);
     }
 
     public void render(double delta)
