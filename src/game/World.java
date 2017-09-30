@@ -1,5 +1,6 @@
 package game;
 
+import com.polaris.engine.render.Texture;
 import com.polaris.engine.render.TextureManager;
 
 import java.util.ArrayList;
@@ -10,6 +11,9 @@ import java.util.List;
  */
 public class World
 {
+	public static Texture fireTexture;
+	
+	private float totalTime = 0;
 	
 	private List<Car> staticCars;
 	private List<Car> playerCars;
@@ -28,6 +32,8 @@ public class World
 		gameSettings = settings;
 		
 		textureManager = manager;
+		
+		fireTexture = textureManager.getTexture("fire0");
 
 		Car car = new Car(100, 100, 0, 0, 0, manager);
 		playerCars.add(car);
@@ -55,6 +61,17 @@ public class World
 	
 	public void render(double delta)
 	{
+		totalTime += delta;
+		
+		if(totalTime % .4 <= .2 && fireTexture.getName().equals("fire1"))
+		{
+			fireTexture = textureManager.getTexture("fire0");
+		}
+		else if(totalTime % .4 > .2 && fireTexture.getName().equals("fire0"))
+		{
+			fireTexture = textureManager.getTexture("fire1");
+		}
+		
 		for(ParkingSpot parkingSpot : parkingList)
 		{
 			parkingSpot.render(delta);

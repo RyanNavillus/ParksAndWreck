@@ -21,8 +21,6 @@ public class GuiGame extends GuiScreen<GameSettings>
 	private int windowSize;
 	private int time;
 	
-	private Texture car;
-	private Texture carFrame;
 	
 	private Background background;
 	private World world;
@@ -42,8 +40,10 @@ public class GuiGame extends GuiScreen<GameSettings>
 		
 		background = new Background();
 		
-		car = application.getTextureManager().genTexture("car", new File("resources/car.png"));
-		carFrame = application.getTextureManager().genTexture("carframe", new File("resources/carframe.png"));
+		application.getTextureManager().genTexture("car", new File("resources/car.png"));
+		application.getTextureManager().genTexture("carframe", new File("resources/carframe.png"));
+		application.getTextureManager().genTexture("fire0", new File("resources/flame0.png"));
+		application.getTextureManager().genTexture("fire1", new File("resources/flame1.png"));
 	}
 	
 	public void init()
