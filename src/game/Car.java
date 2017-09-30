@@ -63,7 +63,7 @@ public class Car {
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) (posX + (27 * 2.5 / 2)), (float) (posY + (44 * 2.5 / 2)), 0);
-		GL11.glRotatef((float) rotation++, 0, 0, 1);
+		GL11.glRotatef((float) Math.ceil((rotation++) / 4.0) * 4, 0, 0, 1);
 		GL11.glTranslatef((float) -(posX + 27 * 2.5 / 2), (float) -(posY + (44 * 2.5 / 2)), 0);
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);

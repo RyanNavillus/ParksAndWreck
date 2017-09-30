@@ -10,6 +10,8 @@ import org.lwjgl.opengl.*;
 import java.io.File;
 import java.util.ArrayList;
 
+import static org.lwjgl.opengl.GL11.glViewport;
+
 /**
  * Created by Killian Le Clainche on 9/29/17.
  */
@@ -100,7 +102,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 		
 		dist+= delta * 40;
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
-		super.render(delta);
+		glViewport(0, 0, 1920, 1080);
 		
 		GL11.glPushMatrix();
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
