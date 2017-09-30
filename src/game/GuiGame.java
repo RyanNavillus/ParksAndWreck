@@ -8,7 +8,6 @@ import com.polaris.engine.render.TextureManager;
 import org.lwjgl.opengl.*;
 
 import java.io.File;
-import java.util.ArrayList;
 
 /**
  * Created by Killian Le Clainche on 9/29/17.
@@ -18,6 +17,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 	
 	private Shader shader;
 	private int texID;
+	private int windowSize;
 	
 	private Texture car;
 	private Texture carFrame;
@@ -27,8 +27,8 @@ public class GuiGame extends GuiScreen<GameSettings>
 	
 	private int frameBuffer;
 	private int frameBufferTexture;
-
-	private ArrayList<ParkingSpot> parkingSpots;
+	
+	private int renderBuffer;
 	
 	public GuiGame(App<GameSettings> app)
 	{
@@ -38,17 +38,6 @@ public class GuiGame extends GuiScreen<GameSettings>
 		
 		car = application.getTextureManager().genTexture("car", new File("resources/car.png"));
 		carFrame = application.getTextureManager().genTexture("carframe", new File("resources/carframe.png"));
-
-		parkingSpots = ParkingSpot.createParkingArea(200, 153, 10, 1);   //left
-		parkingSpots.addAll(ParkingSpot.createParkingArea(1720 - ParkingSpot.HEIGHT, 153, 10, 3));   //right
-
-		//top
-		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 200, 13, 2));
-		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 200 + ParkingSpot.HEIGHT - 5, 13, 0));
-
-		//bottom
-		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 880 - ParkingSpot.HEIGHT * 2 + 5, 13, 2));
-		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 880 - ParkingSpot.HEIGHT, 13, 0));
 	}
 	
 	public void init()
@@ -58,7 +47,11 @@ public class GuiGame extends GuiScreen<GameSettings>
 		world = new World(this.gameSettings);
 		
 		shader = Shader.createShader(new File("shaders/overlay.vert"), new File("shaders/overlay.frag"));
-
+		
+		texID = GL20.glGetUniformLocation(shader.getShaderId(), "renderedTexture");
+		windowSize = GL20.glGetUniformLocation(shader.getShaderId(), "windowSize");
+		
+		
 		frameBuffer = GL30.glGenFramebuffers();
 		frameBufferTexture = GL11.glGenTextures();
 		
@@ -71,8 +64,23 @@ public class GuiGame extends GuiScreen<GameSettings>
 		
 		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, frameBufferTexture, 0);
 		
+		GL20.glDrawBuffers(GL30.GL_COLOR_ATTACHMENT0);
+		
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		
+		float[] g_quad_vertex_buffer_data = {
+				0, 0, 0.0f,
+				1920, 0, 0.0f,
+				0,  1080, 0.0f,
+				0,  1080, 0.0f,
+				1920, 0, 0.0f,
+				1920,  1080, 0.0f,
+				};
+		
+		renderBuffer = GL15.glGenBuffers();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, renderBuffer);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, g_quad_vertex_buffer_data, GL15.GL_STATIC_DRAW);
 	}
 	
 	public void update(double delta)
@@ -95,11 +103,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 		background.render(delta);
 		
 		world.render(delta);
-
-		for (int i = 0; i < parkingSpots.size(); i++){
-			parkingSpots.get(i).render(delta);
-		}
-
+		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
 		car.bind();
@@ -150,15 +154,23 @@ public class GuiGame extends GuiScreen<GameSettings>
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, frameBufferTexture);
 		
 		GL20.glUniform1i(texID, 0);
+		GL20.glUniform2fv(windowSize, new float[]{gameSettings.getWindowWidth(), gameSettings.getWindowHeight()});
 		
-		GL11.glBegin(GL11.GL_QUADS);
-
-		GL11.glVertex2d(0, 0);
-		GL11.glVertex2d(0, 1080);
-		GL11.glVertex2d(1920, 1080);
-		GL11.glVertex2d(1920, 0);
+		GL20.glEnableVertexAttribArray(0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, renderBuffer);
+		GL20.glVertexAttribPointer(
+				0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+				3,                  // size
+				GL11.GL_FLOAT,           // type
+				false,           // normalized?
+				0,                  // stride
+				0            // array buffer offset
+		);
 		
-		GL11.glEnd();
+		// Draw the triangles !
+		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6); // 2*3 indices starting at 0 -> 2 triangles
+		
+		GL20.glDisableVertexAttribArray(0);
 		
 		shader.unbind();
 		
