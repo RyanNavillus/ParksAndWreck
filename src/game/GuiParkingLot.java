@@ -22,11 +22,11 @@ public class GuiParkingLot extends GuiScreen<GameSettings> {
     public GuiParkingLot(App<GameSettings> app) {
         super(app);
 
-        for (int i = 0; i < 15; i++){
-        }
+        /*for (int i = 0; i < 15; i++){
+            parkingSpots.add(new ParkingSpot(700 + i * (ParkingSpot.WIDTH - 5), 500, 0));
+        }*/
 
-        for (int i = 0; i < 15; i++){
-        }
+        parkingSpots = ParkingSpot.CreateParkingArea(100, 100, 50, 0);
     }
 
     public void render(double delta)
@@ -52,7 +52,7 @@ public class GuiParkingLot extends GuiScreen<GameSettings> {
         GL11.glEnd();
 
         for (int i = 0; i < parkingSpots.size(); i++){
-            parkingSpots.get(i).render();
+            parkingSpots.get(i).render(delta);
         }
 
         GL11.glMatrixMode(GL11.GL_PROJECTION);
