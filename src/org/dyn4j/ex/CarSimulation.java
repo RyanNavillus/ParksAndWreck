@@ -22,6 +22,7 @@ public class CarSimulation extends SimulationFrame{
 	private AtomicBoolean forwardThrustOn = new AtomicBoolean(false);
 	private AtomicBoolean leftTurnOn = new AtomicBoolean(false);
 	private AtomicBoolean rightTurnOn = new AtomicBoolean(false);
+	private AtomicBoolean jump = new AtomicBoolean(false);
 
 	private class CustomKeyListener extends KeyAdapter {
 		@Override
@@ -35,6 +36,9 @@ public class CarSimulation extends SimulationFrame{
 					break;
 				case KeyEvent.VK_RIGHT:
 					rightTurnOn.set(true);
+					break;
+				case KeyEvent.VK_SPACE:
+					jump.set(true);
 					break;
 			}
 			
@@ -51,6 +55,9 @@ public class CarSimulation extends SimulationFrame{
 					break;
 				case KeyEvent.VK_RIGHT:
 					rightTurnOn.set(false);
+					break;
+				case KeyEvent.VK_SPACE:
+					jump.set(false);
 					break;
 			}
 		}
@@ -101,6 +108,8 @@ public class CarSimulation extends SimulationFrame{
 
 		// the car
 		car = new Car();
+		car.setLinearDamping(2.0f);
+		car.setAngularDamping(2.0f);
 		this.world.addBody(car);
 	}
 
@@ -109,10 +118,15 @@ public class CarSimulation extends SimulationFrame{
 		super.update(g, elapsedTime);
 		
 		final double scale = this.scale;
-		final double force = 1000 * elapsedTime;
+//		final double force = 1000 * elapsedTime;
+		double force = 1000 * elapsedTime;
 
         final Vector2 r = new Vector2(car.getTransform().getRotation() + Math.PI * 0.5);
         final Vector2 c = car.getWorldCenter();
+        
+        if (this.jump.get()) {
+        	force *= 100;
+        }
 
 		// apply thrust
         if (this.forwardThrustOn.get()) {
@@ -157,12 +171,12 @@ public class CarSimulation extends SimulationFrame{
         	g.draw(new Line2D.Double(p2.x * scale, p2.y * scale, (p2.x - f2.x) * scale, (p2.y - f2.y) * scale));
         }
         
-        Vector2 velocity = car.getLinearVelocity();
-        velocity.multiply(0.98);
-        car.setLinearVelocity(velocity);
-
-        double av = car.getAngularVelocity();
-        av *= 0.95;
-        car.setAngularVelocity(av);
+//        Vector2 velocity = car.getLinearVelocity();
+//        velocity.multiply(0.98);
+//        car.setLinearVelocity(velocity);
+//
+//        double av = car.getAngularVelocity();
+//        av *= 0.98;
+//        car.setAngularVelocity(av);
 	}
 }
