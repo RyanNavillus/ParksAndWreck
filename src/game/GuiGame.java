@@ -44,7 +44,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 	{
 		super.init();
 		
-		world = new World(this.gameSettings);
+		world = new World(this.gameSettings, application.getTextureManager());
 		
 		shader = Shader.createShader(new File("shaders/overlay.vert"), new File("shaders/overlay.frag"));
 		
