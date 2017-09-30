@@ -27,9 +27,7 @@ public class Background
 	
 	public void render(double delta)
 	{
-		//colorShader.bind();
-		GL11.glEnable(GL11.GL_COLOR);
-		GL11.glColor3f(.3f, .3f, .3f);
+		colorShader.bind();
 		
 		GL20.glUniform1f(color[0], .3f);
 		GL20.glUniform1f(color[1], .3f);
@@ -196,7 +194,7 @@ public class Background
 		
 		GL11.glEnd();
 		
-		//colorShader.unbind();
+		colorShader.unbind();
 	}
 	
 }
