@@ -9,14 +9,19 @@ import java.util.ArrayList;
  */
 public class ParkingSpot {
 
-    public static final int WIDTH = 60;
-    public static final int HEIGHT = 90;
+    public static final int WIDTH = 90;
+    public static final int HEIGHT = 130;
     double xPos, yPos;
     int direction;
+    private Car car;
+    private float[] color = new float[3];
 
     public ParkingSpot(double x, double y, int direction){
         xPos = x;
         yPos = y;
+        color[0] = 1.0f;
+        color[1] = 1.0f;
+        color[2] = 1.0f;
 
         if (direction > 4){
             System.out.println("Parking spot direction needs to be a number 0-3!");
@@ -26,7 +31,7 @@ public class ParkingSpot {
         this.direction = direction;
     }
 
-    public static ArrayList<ParkingSpot> CreateParkingArea(int x, int y, int width, int direction){
+    public static ArrayList<ParkingSpot> createParkingArea(int x, int y, int width, int direction){
         ArrayList<ParkingSpot> parkingSpots = new ArrayList<>();
         int xOffset = 0;
         int yOffset = 0;
@@ -45,7 +50,7 @@ public class ParkingSpot {
     }
 
     public void render(double delta){
-        GL11.glColor3f(1.0f, 1.0f, 1.0f);
+        GL11.glColor3f(color[0], color[1], color[2]);
 
         int invert = 1;
         if (direction == 2 || direction == 3)
@@ -105,5 +110,19 @@ public class ParkingSpot {
             GL11.glEnd();
         }
 
+    }
+
+    public void parkCar(Car car){
+        this.car = car;
+    }
+
+    public boolean isAvailable(){
+        return car == null ? true : false;
+    }
+
+    public void setColor(float r, float g, float b){
+        color[0] = r;
+        color[1] = g;
+        color[2] = b;
     }
 }

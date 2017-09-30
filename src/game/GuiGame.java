@@ -8,6 +8,7 @@ import com.polaris.engine.render.TextureManager;
 import org.lwjgl.opengl.*;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Killian Le Clainche on 9/29/17.
@@ -26,6 +27,8 @@ public class GuiGame extends GuiScreen<GameSettings>
 	
 	private int frameBuffer;
 	private int frameBufferTexture;
+
+	private ArrayList<ParkingSpot> parkingSpots;
 	
 	public GuiGame(App<GameSettings> app)
 	{
@@ -35,6 +38,17 @@ public class GuiGame extends GuiScreen<GameSettings>
 		
 		car = application.getTextureManager().genTexture("car", new File("resources/car.png"));
 		carFrame = application.getTextureManager().genTexture("carframe", new File("resources/carframe.png"));
+
+		parkingSpots = ParkingSpot.createParkingArea(200, 153, 10, 1);   //left
+		parkingSpots.addAll(ParkingSpot.createParkingArea(1720 - ParkingSpot.HEIGHT, 153, 10, 3));   //right
+
+		//top
+		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 200, 13, 2));
+		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 200 + ParkingSpot.HEIGHT - 5, 13, 0));
+
+		//bottom
+		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 880 - ParkingSpot.HEIGHT * 2 + 5, 13, 2));
+		parkingSpots.addAll(ParkingSpot.createParkingArea(440, 880 - ParkingSpot.HEIGHT, 13, 0));
 	}
 	
 	public void init()
@@ -44,8 +58,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 		world = new World(this.gameSettings);
 		
 		shader = Shader.createShader(new File("shaders/overlay.vert"), new File("shaders/overlay.frag"));
-		
-		
+
 		frameBuffer = GL30.glGenFramebuffers();
 		frameBufferTexture = GL11.glGenTextures();
 		
@@ -82,7 +95,11 @@ public class GuiGame extends GuiScreen<GameSettings>
 		background.render(delta);
 		
 		world.render(delta);
-		
+
+		for (int i = 0; i < parkingSpots.size(); i++){
+			parkingSpots.get(i).render(delta);
+		}
+
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
 		car.bind();
@@ -135,10 +152,10 @@ public class GuiGame extends GuiScreen<GameSettings>
 		GL20.glUniform1i(texID, 0);
 		
 		GL11.glBegin(GL11.GL_QUADS);
-		
+
 		GL11.glVertex2d(0, 0);
-		GL11.glVertex2d(0, 1180);
-		GL11.glVertex2d(1920, 1180);
+		GL11.glVertex2d(0, 1080);
+		GL11.glVertex2d(1920, 1080);
 		GL11.glVertex2d(1920, 0);
 		
 		GL11.glEnd();
