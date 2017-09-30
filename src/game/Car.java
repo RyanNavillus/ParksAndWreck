@@ -35,9 +35,9 @@ public class Car {
 		carFrame = manager.getTexture("carframe");
 		carFrameBroke = manager.getTexture("carframeBroke");
 
-		carColors[0] = 1 - Math.random()/2;
-		carColors[1] = 1 - Math.random()/2;
-		carColors[2] = 1 - Math.random()/2;
+		carColors[0] = Math.random();
+		carColors[1] = Math.random();
+		carColors[2] = Math.random();
 
 		//System.out.println(carColors[1] + " " + carColors[1] + " " + carColors[2]);
 
@@ -112,22 +112,29 @@ public class Car {
 
 		GL11.glEnd();
 
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
-		GL11.glColor3f(1.0f, 1.0f, 0.0f);
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		
+		World.fireTexture.bind();
+		
+		GL11.glBegin(GL11.GL_QUADS);
 
 		for (int i = 0; i < fires.size(); i++){
 			//System.out.println("fire");
 			double x = fires.get(i)[0];
 			double y =  fires.get(i)[1];
-
-			GL11.glBegin(GL11.GL_QUADS);
+			
+			GL11.glTexCoord2d(0, 0);
 			GL11.glVertex2d(0 + posX + x, 0 + posY + y);
+			GL11.glTexCoord2d(0, 1);
 			GL11.glVertex2d(0 + posX + x, 20 + posY + y);
+			GL11.glTexCoord2d(1, 1);
 			GL11.glVertex2d(20 + posX + x, 20 + posY + y);
+			GL11.glTexCoord2d(1, 0);
 			GL11.glVertex2d(20 + posX + x, 0 + posY + y);
-			GL11.glEnd();
 		}
+		GL11.glEnd();
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 		GL11.glPopMatrix();
 	}
