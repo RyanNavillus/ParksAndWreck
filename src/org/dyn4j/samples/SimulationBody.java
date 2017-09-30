@@ -29,9 +29,6 @@ public class SimulationBody extends Body {
 				(float)Math.random() * 0.5f + 0.5f,
 				(float)Math.random() * 0.5f + 0.5f,
 				(float)Math.random() * 0.5f + 0.5f);
-		
-		setAngularDamping(0.9f);
-		setLinearDamping(0.5f);
 	}
 	
 	/**
