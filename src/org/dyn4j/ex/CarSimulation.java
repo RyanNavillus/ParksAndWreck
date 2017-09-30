@@ -116,7 +116,7 @@ public class CarSimulation extends SimulationFrame{
 
 		// apply thrust
         if (this.forwardThrustOn.get()) {
-        	Vector2 f = r.product(force);
+        	Vector2 f = r.product(1.5 * force);
         	Vector2 p = c.sum(r.product(0.0));
         	
         	car.applyForce(f);
@@ -124,9 +124,45 @@ public class CarSimulation extends SimulationFrame{
 //        	g.setColor(Color.ORANGE);
         	g.draw(new Line2D.Double(p.x * scale, p.y * scale, (p.x - f.x) * scale, (p.y - f.y) * scale));
         } 
+
+        if (this.leftTurnOn.get()) {
+        	Vector2 f1 = r.product(force * 0.1).right();
+        	Vector2 f2 = r.product(force * 0.1).left();
+        	Vector2 p1 = c.sum(r.product(0.9));
+        	Vector2 p2 = c.sum(r.product(-0.9));
+        	
+        	// apply a force to the top going left
+        	car.applyForce(f1, p1);
+        	// apply a force to the bottom going right
+        	car.applyForce(f2, p2);
+        	
+//        	g.setColor(Color.RED);
+        	g.draw(new Line2D.Double(p1.x * scale, p1.y * scale, (p1.x - f1.x) * scale, (p1.y - f1.y) * scale));
+        	g.draw(new Line2D.Double(p2.x * scale, p2.y * scale, (p2.x - f2.x) * scale, (p2.y - f2.y) * scale));
+        }
+
+        if (this.rightTurnOn.get()) {
+        	Vector2 f1 = r.product(force * 0.1).left();
+        	Vector2 f2 = r.product(force * 0.1).right();
+        	Vector2 p1 = c.sum(r.product(0.9));
+        	Vector2 p2 = c.sum(r.product(-0.9));
+        	
+        	// apply a force to the top going left
+        	car.applyForce(f1, p1);
+        	// apply a force to the bottom going right
+        	car.applyForce(f2, p2);
+        	
+//        	g.setColor(Color.RED);
+        	g.draw(new Line2D.Double(p1.x * scale, p1.y * scale, (p1.x - f1.x) * scale, (p1.y - f1.y) * scale));
+        	g.draw(new Line2D.Double(p2.x * scale, p2.y * scale, (p2.x - f2.x) * scale, (p2.y - f2.y) * scale));
+        }
         
         Vector2 velocity = car.getLinearVelocity();
         velocity.multiply(0.98);
         car.setLinearVelocity(velocity);
+
+        double av = car.getAngularVelocity();
+        av *= 0.95;
+        car.setAngularVelocity(av);
 	}
 }
