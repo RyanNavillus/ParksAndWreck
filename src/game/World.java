@@ -1,5 +1,7 @@
 package game;
 
+import com.polaris.engine.render.TextureManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,14 +17,17 @@ public class World
 	private List<ParkingSpot> parkingList;
 	
 	private GameSettings gameSettings;
+	private TextureManager textureManager;
 	
-	public World(GameSettings settings)
+	public World(GameSettings settings, TextureManager manager)
 	{
 		staticCars = new ArrayList<>();
 		playerCars = new ArrayList<>();
 		parkingList = new ArrayList<>();
 		
 		gameSettings = settings;
+		
+		textureManager = manager;
 		
 		//parkingList.add(new ParkingSpot(0, 0, false));
 	}
