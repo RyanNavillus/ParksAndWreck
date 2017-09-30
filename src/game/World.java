@@ -46,12 +46,16 @@ public class World
 		parkingList.addAll(ParkingSpot.createParkingArea(1720 - ParkingSpot.HEIGHT, 153, 10, 3));   //right
 
 		//top
-		parkingList.addAll(ParkingSpot.createParkingArea(440, 200, 9, 2));
-		parkingList.addAll(ParkingSpot.createParkingArea(440, 200 + ParkingSpot.HEIGHT - 5, 9, 0));
+		//parkingList.addAll(ParkingSpot.createParkingArea(580, 200, 9, 2));
+		//parkingList.addAll(ParkingSpot.createParkingArea(580, 200 + ParkingSpot.HEIGHT - 5, 9, 0));
+
+		parkingList.addAll(ParkingSpot.createParkingArea(580, 200 + ParkingSpot.HEIGHT / 2, 9, 4));
 
 		//bottom
-		parkingList.addAll(ParkingSpot.createParkingArea(440, 880 - ParkingSpot.HEIGHT * 2 + 5, 9, 2));
-		parkingList.addAll(ParkingSpot.createParkingArea(440, 880 - ParkingSpot.HEIGHT, 9, 0));
+		//parkingList.addAll(ParkingSpot.createParkingArea(580, 880 - ParkingSpot.HEIGHT * 2 + 5, 9, 2));
+		//parkingList.addAll(ParkingSpot.createParkingArea(580, 880 - ParkingSpot.HEIGHT, 9, 0));
+
+		parkingList.addAll(ParkingSpot.createParkingArea(580, 880 - ParkingSpot.HEIGHT / 2 - ParkingSpot.HEIGHT, 9, 4));
 	}
 	
 	public void update(double delta)

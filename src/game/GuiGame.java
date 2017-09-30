@@ -44,6 +44,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 		
 		application.getTextureManager().genTexture("car", new File("resources/car.png"));
 		application.getTextureManager().genTexture("carframe", new File("resources/carframe.png"));
+		application.getTextureManager().genTexture("carframeBroke", new File("resources/carframeBroke.png"));
 		application.getTextureManager().genTexture("fire0", new File("resources/flame0.png"));
 		application.getTextureManager().genTexture("fire1", new File("resources/flame1.png"));
 	}
@@ -103,6 +104,9 @@ public class GuiGame extends GuiScreen<GameSettings>
 		dist+= delta * 40;
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
 		glViewport(0, 0, 1920, 1080);
+
+
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		
 		GL11.glPushMatrix();
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
