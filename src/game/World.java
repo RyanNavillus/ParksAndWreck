@@ -23,6 +23,8 @@ public class World
 	private GameSettings gameSettings;
 	private TextureManager textureManager;
 	
+	private double ticksToInitialize = 2;
+	
 	public World(GameSettings settings, TextureManager manager)
 	{
 		staticCars = new ArrayList<>();
@@ -34,11 +36,6 @@ public class World
 		textureManager = manager;
 		
 		fireTexture = textureManager.getTexture("fire0");
-
-		Car car = new Car(100, 100, 0, 0, 0, manager);
-		playerCars.add(car);
-		car = new Car(100, 200, 0, 0, 45, manager);
-		playerCars.add(car);
 
 		//parkingList.add(new ParkingSpot(0, 0, false));
 
@@ -60,7 +57,24 @@ public class World
 	
 	public void update(double delta)
 	{
-	
+		if((ticksToInitialize -= delta) <= 0)
+		{
+			playerCars.add(new Car(-65, 55,  270, textureManager));
+			
+			playerCars.add(new Car(-65, 915,  270, textureManager));
+			
+			playerCars.add(new Car(1920, 55,  90, textureManager));
+			
+			playerCars.add(new Car(1920, 915,  90, textureManager));
+			
+			ticksToInitialize = 10;
+		}
+		
+		for(Car p : playerCars)
+			p.update(delta);
+		
+		for(Car s : staticCars)
+			s.update(delta);
 	}
 	
 	public void render(double delta)

@@ -10,7 +10,6 @@ public class Car {
 	
 	private double posX, posY;
 	
-	private double velX, velY;
 	
 	private double[] carColors = new double[3];
 
@@ -23,13 +22,10 @@ public class Car {
 	private double rotation;
 	private boolean broken;
 
-	public Car(double startX, double startY, double startVelX, double startVelY, double startRotation, TextureManager manager)
+	public Car(double startX, double startY, double startRotation, TextureManager manager)
 	{
 		posX = startX;
 		posY = startY;
-		
-		velX = startVelX;
-		velY = startVelY;
 
 		car = manager.getTexture("car");
 		carFrame = manager.getTexture("carframe");
@@ -46,7 +42,7 @@ public class Car {
 		//for (int i = 0; i < 5; i++)
 		//	generateFire();
 
-		broken = true;
+		broken = false;
 	}
 	
 	/*
@@ -69,7 +65,7 @@ public class Car {
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) (posX + (27 * 2.5 / 2)), (float) (posY + (44 * 2.5 / 2)), 0);
-		GL11.glRotatef((float) Math.ceil((rotation++) / 4.0) * 4, 0, 0, 1);
+		GL11.glRotatef((float) Math.ceil(rotation / 3.0) * 3, 0, 0, 1);
 		GL11.glTranslatef((float) -(posX + 27 * 2.5 / 2), (float) -(posY + (44 * 2.5 / 2)), 0);
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
