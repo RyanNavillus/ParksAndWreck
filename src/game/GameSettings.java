@@ -1,15 +1,27 @@
 package game;
 
+import com.polaris.engine.options.Input;
 import com.polaris.engine.options.Settings;
+import com.polaris.engine.options.WindowMode;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
+
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 
 /**
  * Created by Killian Le Clainche on 9/29/17.
  */
 public class GameSettings extends Settings
 {
+	
+	public void init(Input i)
+	{
+		super.init(i);
+		
+		this.setWindowWidth(1280);
+		this.setWindowHeight(720);
+	}
 	
 	public void createFonts()
 	{
