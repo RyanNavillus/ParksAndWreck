@@ -14,8 +14,8 @@ float noise(in vec2 coordinate)
 void main() {
     // Pass through our original color with full opacity.
     float luma = noise(gl_FragCoord.xy);
-    float multiplier = 1;
-    //float multiplier = .7f + (gl_FragCoord.x / 1920f) * .15f + (gl_FragCoord.x / 1080f) * .1f;
+    //float multiplier = 1;
+    float multiplier = .7f + (gl_FragCoord.x / 1920.0f) * .15f + (gl_FragCoord.x / 1080.0f) * .1f;
     luma *= .1f;
     gl_FragColor = vec4((1 - luma) * red * multiplier, (1 - luma) * green * multiplier, (1 - luma) * blue * multiplier, 1);
     gl_FragDepth = -10;
