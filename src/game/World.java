@@ -19,6 +19,8 @@ public class World
 	private GameSettings gameSettings;
 	private TextureManager textureManager;
 	
+	private SimulationWorld simulationWorld;
+	
 	public World(GameSettings settings, TextureManager manager)
 	{
 		staticCars = new ArrayList<>();
@@ -28,6 +30,8 @@ public class World
 		gameSettings = settings;
 		
 		textureManager = manager;
+		
+		simulationWorld = new SimulationWorld("Parks and Wreck");
 		
 		//parkingList.add(new ParkingSpot(0, 0, false));
 	}
