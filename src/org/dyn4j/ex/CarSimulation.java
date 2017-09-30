@@ -23,7 +23,7 @@ public class CarSimulation extends SimulationFrame{
 		this.world.setGravity(World.ZERO_GRAVITY);
 
 		// the car
-		car = new SimulationBody();
+		car = new Car();
 		this.world.addBody(car);
 	}
 }
