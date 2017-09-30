@@ -10,8 +10,8 @@ public class ParkingSpot {
     boolean invertY;
 
     public ParkingSpot(double x, double y, boolean invertY){
-        xPos = x;
-        yPos = y;
+        //xPos = x;
+       // yPos = y;
         this.invertY = invertY;
     }
 
@@ -24,7 +24,7 @@ public class ParkingSpot {
         GL11.glVertex2d(190, 0);
         GL11.glEnd();*/
 
-        int invert = 1;
+        /*int invert = 1;
         if (invertY)
             invert = -1;
 
@@ -42,6 +42,6 @@ public class ParkingSpot {
 
         //right
         GL11.glBegin(GL11.GL_QUADS);
-        GL11.glEnd();
+        GL11.glEnd();*/
     }
 }

@@ -27,7 +27,9 @@ public class Background
 	
 	public void render(double delta)
 	{
-		colorShader.bind();
+		//colorShader.bind();
+		GL11.glEnable(GL11.GL_COLOR);
+		GL11.glColor3f(.3f, .3f, .3f);
 		
 		GL20.glUniform1f(color[0], .3f);
 		GL20.glUniform1f(color[1], .3f);
@@ -93,6 +95,7 @@ public class Background
 		GL20.glUniform1f(color[0], .8f);
 		GL20.glUniform1f(color[1], .8f);
 		GL20.glUniform1f(color[2], .8f);
+		GL11.glColor3f(.8f, .8f, .8f);
 		GL11.glBegin(GL11.GL_QUADS);
 		
 		GL11.glVertex2d(0, 150);
@@ -130,6 +133,7 @@ public class Background
 		GL20.glUniform1f(color[0], .7f);
 		GL20.glUniform1f(color[1], .7f);
 		GL20.glUniform1f(color[2], .7f);
+		GL11.glColor3f(.7f, .7f, .7f);
 		GL11.glBegin(GL11.GL_QUADS);
 		
 		GL11.glVertex2d(0, 40);
@@ -162,6 +166,7 @@ public class Background
 		GL20.glUniform1f(color[0], .9f);
 		GL20.glUniform1f(color[1], .9f);
 		GL20.glUniform1f(color[2], .9f);
+		GL11.glColor3f(.9f, .9f, .9f);
 		GL11.glBegin(GL11.GL_QUADS);
 		
 		GL11.glVertex2d(0, 1030);
@@ -191,7 +196,7 @@ public class Background
 		
 		GL11.glEnd();
 		
-		colorShader.unbind();
+		//colorShader.unbind();
 	}
 	
 }

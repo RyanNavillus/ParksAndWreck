@@ -36,7 +36,7 @@ public class World
 	{
 		for(ParkingSpot parkingSpot : parkingList)
 		{
-			parkingSpot.render(delta);
+			parkingSpot.render();
 		}
 		
 		for(Car car : staticCars)
