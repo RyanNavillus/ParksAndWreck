@@ -155,6 +155,10 @@ public class Thrust extends SimulationFrame {
 		bf2.getShape().translate(0, 0.9);
 		ship.translate(0.0, 2.0);
 		ship.setMass(MassType.NORMAL);
+
+		ship.setAngularDamping(0.9f);
+		ship.setLinearDamping(0.5f);
+
 		this.world.addBody(ship);
 	}
 	
