@@ -166,10 +166,10 @@ public class World {
 				if (body1 instanceof Car) 
 				{
 					try {
-					((Car)body1).damageCar();
+					Car c1 = (Car)body1;
+					c1.damageCar();
 					if (boomMode) {
-						body1.applyImpulse(body2.getLinearVelocity().product(3));
-						Car c1 = (Car)body1;
+//						body1.applyImpulse(body2.getLinearVelocity().product(3));
 						if (c1.isDead()) w.explode(c1);
 					}
 					}
@@ -178,10 +178,10 @@ public class World {
 				}
 				if (body2 instanceof Car) {
 					try {
-					((Car)body2).damageCar();
+					Car c2 = (Car)body2;
+					c2.damageCar();
 					if (boomMode) {
-						body2.applyImpulse(body1.getLinearVelocity().product(3));
-						Car c2 = (Car)body1;
+//						c2.applyImpulse(body1.getLinearVelocity().product(3));
 						if (c2.isDead()) w.explode(c2);
 					}
 					}
