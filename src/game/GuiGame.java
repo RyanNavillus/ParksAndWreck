@@ -151,6 +151,9 @@ public class GuiGame extends GuiScreen<GameSettings>
 	public void render(double delta)
 	{
 		
+		if(World.tracks.size() > 0)
+			World.renderTrack();
+		
 		dist+= delta * 40;
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
 		glViewport(0, 0, 1920, 1080);
