@@ -63,7 +63,7 @@ public class Car extends SimulationBody {
 		//	generateFire();
 
 		broken = false;
-		leaking = Math.random() * 10 < 5;
+		leaking = Math.random() * 10 < 1;
 	}
 	
 	public double getX() {
@@ -77,8 +77,8 @@ public class Car extends SimulationBody {
 	public void update(double delta)
 	{
 		if (leaking){
-			double x = getX();
-			double y = getY() + 100;
+			double x = getX() + halfWidth/SCALE;
+			double y = getY() + halfWidth/SCALE;
 			boolean grew = false;
 
 			for(Oil oil : World.getOils()){
@@ -91,11 +91,9 @@ public class Car extends SimulationBody {
 			}
 
 			if (!grew)
-				World.getOils().add(new Oil(x, y));
-		}
-		
-		if (this.getLinearVelocity().getMagnitude() > 100) {
-			System.out.println("Going too fast");
+				World.getOils().add(new Oil(x, y, Math.random() * 360));
+
+			System.out.println(World.getOils().size());
 		}
 	}
 	

@@ -63,6 +63,13 @@ public class GuiGame extends GuiScreen<GameSettings>
 		application.getTextureManager().genTexture("puddle_medium", new File("resources/puddle_medium.png"));
 		application.getTextureManager().genTexture("puddle_large", new File("resources/puddle_large.png"));
 		application.getTextureManager().genTexture("puddle_xlarge", new File("resources/puddle_xlarge.png"));
+
+		Oil.setOilTextures(new Texture[] {application.getTextureManager().getTexture("puddle_xsmall"),
+				                          application.getTextureManager().getTexture("puddle_small"),
+			                              application.getTextureManager().getTexture("puddle_medium"),
+			                              application.getTextureManager().getTexture("puddle_large"),
+			                              application.getTextureManager().getTexture("puddle_xlarge")
+		                                 });
 		
 		for(int i = 0; i < 5; i++)
 			application.getTextureManager().genTexture("tiretrack" + i, new File("resources/tiretrack" + i + ".png"));
