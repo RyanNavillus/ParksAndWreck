@@ -124,8 +124,8 @@ public class GuiGame extends GuiScreen<GameSettings>
 	public void update(double delta)
 	{
 		super.update(delta);
-		if(ticksExisted < 60)
-		world.update(delta);
+		if(ticksExisted < 3600)
+			world.update(delta);
 	}
 	
 	public void render(double delta)
@@ -152,9 +152,9 @@ public class GuiGame extends GuiScreen<GameSettings>
 
 		gameSettings.getFont().bind();
 		
-		float shiftX = 1920 / 2 - gameSettings.getFont().getWidth(formatter.format(60 - ticksExisted) + "s") / 2f;
+		float shiftX = 1920 / 2 - gameSettings.getFont().getWidth(formatter.format(3600 - ticksExisted) + "s") / 2f;
 		GL11.glColor4f(1, 1, 0, 1);
-		gameSettings.getFont().draw(formatter.format(60 - ticksExisted) + "s", shiftX, 65, 0, .5f);
+		gameSettings.getFont().draw(formatter.format(3600 - ticksExisted) + "s", shiftX, 65, 0, .5f);
 		
 		//title
 		GL11.glColor4d(.25f, .25f, .25f, 1);
