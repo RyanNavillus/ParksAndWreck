@@ -43,11 +43,8 @@ public class Car extends SimulationBody {
 		double friction = 0.0;
 		double bounce = 0.2;
 		
-		double posX = this.getTransform().getTranslationX();
-		double posY = this.getTransform().getTranslationY();
-		double rotation = this.getTransform().getRotation();
-		// might have to switch height and width
-		addFixture(Geometry.createRectangle(height, width),  1, friction, bounce);
+		// the width and height are correct, do not change
+		addFixture(Geometry.createRectangle(height, width), 1, friction, bounce);
 
 		// this may or may not need to be changed
 //		this.translate(0.0, 2.0);
