@@ -216,61 +216,70 @@ public class World {
 				Car car = playerCars[i];
 				if (car != null && spot.containsCar(car))
 				{
-					if(spot.id == car.parkingSpotId)
-					{
-						double timeInterval = ((new Date().getTime()) - car.parkingStartTime.getTime()) / 1000.0; // Seconds spent in parking spot
-						//System.out.println("Time interval: " + timeInterval + " :" + spot.id);
-						if (timeInterval > 1)
+					if(spot.assignedCar == car) {
+						if (car.parkingStartTime != null)
 						{
-							System.out.println("Parked in spot: " + spot.id);
-							
-							removePlayerCar(i, car);
-							
-							//Immobilize car
-//							Mass mas = new Mass(new Vector2(0, 0), 10000, )
-//							car.setMass(MassType.INFINITE);
-							Mass oldMass = car.getMass();
-							car.setMass(new Mass(oldMass.getCenter(), oldMass.getMass() * 10, oldMass.getInertia() * 10));
-							car.setIAmStatic();
-							
-							car.setLinearVelocity(car.getLinearVelocity().product(0.01));
-							car.setAngularVelocity(car.getAngularVelocity() * 0.01);
-							car.setAngularDamping(car.getAngularDamping() * 5);
-							car.setLinearDamping(car.getLinearDamping() * 5);
-							//Increase score of car.player
-							playerScores[i] += 10;
-							
-							//Spawn a new car for player
-							switch (i)
+							double timeInterval = ((new Date().getTime()) - car.parkingStartTime.getTime()) / 300.0; // Seconds spent in parking spot
+							//System.out.println("Time interval: " + timeInterval + " :" + spot.id);
+							if (timeInterval > 1)
 							{
-							case 0: 
-								addPlayerCar(0, new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager));
-								break;
-							case 1:
-								addPlayerCar(1, new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager));
-								break;
-							case 2:
-								addPlayerCar(2, new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager));
-								break;
-							case 3:
-								addPlayerCar(3, new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager));
-								break;
-							default:
-								break;
+								System.out.println("Parked in spot: " + spot.id);
+								spot.setFull(true);
+								
+								removePlayerCar(i, car);
+								
+								//Immobilize car
+	//							Mass mas = new Mass(new Vector2(0, 0), 10000, )
+	//							car.setMass(MassType.INFINITE);
+								Mass oldMass = car.getMass();
+								car.setMass(new Mass(oldMass.getCenter(), oldMass.getMass() * 10, oldMass.getInertia() * 10));
+								car.setIAmStatic();
+								
+								car.setLinearVelocity(car.getLinearVelocity().product(0.01));
+								car.setAngularVelocity(car.getAngularVelocity() * 0.01);
+								car.setAngularDamping(car.getAngularDamping() * 5);
+								car.setLinearDamping(car.getLinearDamping() * 5);
+								//Increase score of car.player
+								playerScores[i] += 10;
+								
+								//Spawn a new car for player
+								switch (i)
+								{
+								case 0: 
+									Car newCar1 = new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager);
+									addPlayerCar(0, newCar1);
+									assignParkingSpot(newCar1);
+									break;
+								case 1:
+									Car newCar2 = new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager);
+									addPlayerCar(0, newCar2);
+									assignParkingSpot(newCar2);
+									break;
+								case 2:
+									Car newCar3 = new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager);
+									addPlayerCar(0, newCar3);
+									assignParkingSpot(newCar3);
+									break;
+								case 3:
+									Car newCar4 = new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager);
+									addPlayerCar(0, newCar4);
+									assignParkingSpot(newCar4);
+									break;
+								default:
+									break;
+								}
 							}
 						}
-					}
-					else
-					{
-						car.parkingSpotId = spot.id;
-						car.parkingStartTime = new Date();
+						else
+						{
+							car.parkingStartTime = new Date();
+						}
 					}
 				}
 				else
 				{
-					if (car != null && spot.id == car.parkingSpotId)
+					if (car != null && spot.assignedCar == car)
 					{
-						car.parkingSpotId = 0;
 						car.parkingStartTime = null;
 					}
 				}
@@ -531,8 +540,20 @@ public class World {
 
 	private void assignParkingSpot(Car car) {
 		System.out.println("Hi");
+		
+		if(ParkingSpot.fullCount == ParkingSpot.count)
+		{
+			System.out.println("All spots filled");
+		}
+		
 		int index = (int) (Math.random() * parkingList.size());
 		ParkingSpot spot = parkingList.get(index);
+		
+		while(spot.getFull() == true)
+		{
+			index = (int) (Math.random() * parkingList.size());
+			spot = parkingList.get(index);
+		}
 		spot.assignColor((float)car.getCarColors()[0], (float)car.getCarColors()[1], (float)car.getCarColors()[2]);
 		spot.assignedCar = car;
 		

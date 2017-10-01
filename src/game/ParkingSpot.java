@@ -12,6 +12,8 @@ import java.util.ArrayList;
 public class ParkingSpot {
 
 	public static int count = 0;
+	public static int fullCount = 0;
+	
     public static final int WIDTH = 90;
     public static final int HEIGHT = 130;
     double xPos, yPos;
@@ -23,6 +25,8 @@ public class ParkingSpot {
     
     private boolean isAssigned = false;
 
+    private boolean full = false;
+    
     public int id;
     
     public Car assignedCar;
@@ -242,5 +246,16 @@ public class ParkingSpot {
         assignedColor[0] = 1.0f;
         assignedColor[1] = 1.0f;
         assignedColor[2] = 1.0f;
+    }
+    
+    public void setFull(boolean full)
+    {
+    	this.full = full;
+    	ParkingSpot.fullCount++;
+    }
+    
+    public boolean getFull()
+    {
+    	return this.full;
     }
 }
