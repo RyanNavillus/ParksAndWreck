@@ -66,24 +66,21 @@ public class Car extends SimulationBody {
 		leaking = Math.random() * 10 < 5;
 	}
 	
-	/*
-	 GL11.glPushMatrix();
-	 GL11.glTranslate3f(CENTER_X, CENTER_Y, CENTER_Z);
-	 GL11.glRotate3f(ROTATION, ROTATION_X, ROTATION_Y, ROTATION_Z);
-	 RENDER WHEELS
-	 RENDER CAR + COLOR
-	 SETUP FOR RENDERING FIRE ANIMATION ON TOP OF CARS
-	GL11.glPopMatrix();
-	 
-	 */
+	public double getX() {
+		return this.getWorldCenter().x;
+	}
+
+	public double getY() {
+		return this.getWorldCenter().y;
+	}
 	
 	public void update(double delta)
 	{
 		setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
 
 		if (leaking){
-			double x = this.getTransform().getTranslationX();
-			double y = this.getTransform().getTranslationY() + 100;
+			double x = getX();
+			double y = getY() + 100;
 			boolean grew = false;
 
 			for(Oil oil : World.getOils()){
