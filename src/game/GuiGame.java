@@ -217,33 +217,40 @@ public class GuiGame extends GuiScreen<GameSettings>
 	}
 
 	public static void renderScores(GameSettings gameSettings, int[] playerScores){
+		GL11.glPushMatrix();
+
+		GL11.glTranslated(0f, 0f, .5f);
+
 		gameSettings.getFont().bind();
 
 		float shiftX;
 
 		//scores
 		setColorToCar(0);
-		shiftX = 470 - gameSettings.getFont().getWidth("0") / 2f;
+		shiftX = 470 - gameSettings.getFont().getWidth(Integer.toString(playerScores[0])) / 2f;
 		gameSettings.getFont().draw(Integer.toString(playerScores[0]), shiftX, 200, 0, .5f);
 
 		setColorToCar(1);
-		shiftX = 1450 - gameSettings.getFont().getWidth("24") / 2f;
+		shiftX = 1450 - gameSettings.getFont().getWidth(Integer.toString(playerScores[1])) / 2f;
 		gameSettings.getFont().draw(Integer.toString(playerScores[1]), shiftX, 200, 0, .5f);
 
 		setColorToCar(2);
-		shiftX = 470 - gameSettings.getFont().getWidth("56") / 2f;
+		shiftX = 470 - gameSettings.getFont().getWidth(Integer.toString(playerScores[2])) / 2f;
 		gameSettings.getFont().draw(Integer.toString(playerScores[2]), shiftX, 950, 0, .5f);
 
 		setColorToCar(3);
-		shiftX = 1450 - gameSettings.getFont().getWidth("2") / 2f;
+		shiftX = 1450 - gameSettings.getFont().getWidth(Integer.toString(playerScores[3])) / 2f;
 		gameSettings.getFont().draw(Integer.toString(playerScores[3]), shiftX, 950, 0, .5f);
 
 		gameSettings.getFont().unbind();
+
+		GL11.glPopMatrix();
 	}
 
 	private static void setColorToCar(int player){
 		double[] colors = playerColors[player];
-		GL11.glColor4d(colors[0], colors[1], colors[2], 0.1);
+		double offset =  - Math.random() / 4;
+		GL11.glColor4d(colors[0] - offset, colors[1] - offset, colors[2] - offset, 0.1);
 	}
 
 	private double[] generatePlayerColor(double[][] colors, int size){
