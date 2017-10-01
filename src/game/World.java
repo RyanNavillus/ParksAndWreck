@@ -169,7 +169,10 @@ public class World {
 					Car c1 = (Car)body1;
 					c1.damageCar();
 					if (boomMode) {
-//						body1.applyImpulse(body2.getLinearVelocity().product(3));
+						Vector2 lv = body2.getLinearVelocity();
+						if (!lv.isZero()) {
+							c1.applyImpulse(lv.product(3));
+						}
 						if (c1.isDead()) w.explode(c1);
 					}
 					}
@@ -181,7 +184,10 @@ public class World {
 					Car c2 = (Car)body2;
 					c2.damageCar();
 					if (boomMode) {
-//						c2.applyImpulse(body1.getLinearVelocity().product(3));
+						Vector2 lv = body1.getLinearVelocity();
+						if (!lv.isZero()) {
+							c2.applyImpulse(lv.product(3));
+						}
 						if (c2.isDead()) w.explode(c2);
 					}
 					}
