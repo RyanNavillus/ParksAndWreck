@@ -2,53 +2,50 @@ uniform vec2 window;
 uniform sampler2D renderedTexture;
 uniform float time;
 
-const int samples = 4;
-
-vec2 aspect;
-vec2 aux;
-float angle;
-float cellWidth;
-mat2 rot;
-mat2 unRot;
-
-vec4 samplePixel(vec2 uv) {
-    uv = uv * aspect * rot;
-
-    // [0,1) range indicating fragment's position within current cell
-    // Useful for drawing stuff inside cells
-    vec2 cellCoord = fract(uv / cellWidth);
-
-    // "Tile-space" coordinate of cell containing current fragment
-    // Will be same value for every fragment within the cell
-    vec2 cellId = floor(uv / cellWidth);
-
-    // Texture coordinate (0-1 range across entire quad) of bottom-left corner of current cell
-    vec2 mosaicUv = cellId * cellWidth * unRot / aspect;
-
-	return texture(renderedTexture, mosaicUv);
+vec2 CRTCurveUV( vec2 uv )
+{
+    uv = uv * 2.0 - 1.0;
+    vec2 offset = abs( uv.yx ) / vec2( 6.0, 4.0 );
+    uv = uv + uv * offset * offset;
+    uv = uv * 0.5 + 0.5;
+    return uv;
 }
 
-vec4 superSamplePixel(vec2 pos) {
-    vec2 off = 1.0 / float(samples) / window.xy;
-    vec4 sum = vec4(0.0);
-    for (int x=0; x<samples; x++) {
-        for (int y=0; y<samples; y++) {
-            sum += samplePixel(pos + vec2(off.x*float(x), off.y*float(y)));
-        }
-    }
-    return sum / float(samples * samples);
+void DrawVignette( inout vec3 color, vec2 uv )
+{
+    float vignette = uv.x * uv.y * ( 1.0 - uv.x ) * ( 1.0 - uv.y );
+    vignette = clamp( pow( 16.0 * vignette, 0.3 ), 0.0, 1.0 );
+    color *= vignette;
 }
+
+void DrawScanline( inout vec3 color, vec2 uv )
+{
+    float scanline 	= clamp( 0.95 + 0.05 * cos( 3.14 * ( uv.y + 0.008 * time ) * 240.0 * 1.0 ), 0.0, 1.0 );
+    float grille 	= 0.8 + 0.2 * clamp( 1.5 * cos( 3.14 * uv.x * 640.0 * 1.0 ), 0.0, 1.0 );
+    color *= scanline * grille * 1.4;
+}
+
+float noise(in vec2 coordinate)
+{
+    return fract(sin(dot(coordinate, vec2(12.9898 * time, 78.233)))*43758.5453);
+}
+
 
 void main() {
-    aspect = vec2(window.x/window.y, 1.0);
-        aux = vec2(100, 100) / window.xy;
-        angle = 0;
-        cellWidth = .001083;
-        rot = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
-        unRot = inverse(rot);
+    vec2 uv    = gl_FragCoord.xy / window.xy;
+    vec3 color = texture(renderedTexture, uv).xyz;
+    vec2 crtUV = CRTCurveUV( uv );
+    if ( crtUV.x < 0.0 || crtUV.x > 1.0 || crtUV.y < 0.0 || crtUV.y > 1.0 )
+    {
+        color = vec3( 0.0, 0.0, 0.0 );
+    }
 
+    DrawScanline( color, uv );
+    float luma = noise(floor(gl_FragCoord.xy / 3));
+    luma *= .1;
+    color *= (1 - luma);
+    DrawVignette( color, crtUV );
 
-        vec2 uv = gl_FragCoord.xy / window.xy;
-        gl_FragColor = superSamplePixel(uv);
-        //fragColor = samplePixel(uv); //Uncomment for no-AA version
+	gl_FragColor.xyz 	= color;
+    gl_FragColor.w		= 1.0;
 }

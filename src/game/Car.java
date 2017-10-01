@@ -3,9 +3,7 @@ package game;
 import com.polaris.engine.render.Texture;
 import com.polaris.engine.render.TextureManager;
 
-import org.dyn4j.collision.Fixture;
-import org.dyn4j.dynamics.BodyFixture;
-import org.dyn4j.dynamics.Force;
+import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Rectangle;
@@ -14,20 +12,25 @@ import org.dyn4j.samples.SimulationBody;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class Car extends SimulationBody {
-	
-	private static final double height = 44 * 2.5, width = 27 * 2.5;
-	private static final double halfHeight = 22 * 2.5, halfWidth = 13.5 * 2.5;
+public class Car extends Body
+{
+	private static final double SCALE = 32.0;
+	private static final double width = 44 * 2.2, height = 27 * 2.2;
+	private static final double halfWidth = 22 * 2.2, halfHeight = 13.5 * 2.2;
 	
 	private double[] carColors = new double[3];
-
+	
 	private Texture car;
 	private Texture carFrame;
 	private Texture carFrameBroke;
 
 	private ArrayList<Double[]> fires = new ArrayList<>();
+	
+	public Date parkingStartTime;
+	public int parkingSpotId;
 	
 	private boolean broken;
 	private boolean leaking;
@@ -38,23 +41,24 @@ public class Car extends SimulationBody {
 	{
 		super();
 
-		this.translate(new Vector2(startX, startY));
-		this.rotateAboutCenter(startRotation / 180 * Math.PI);
-		setLinearVelocity(Math.cos(startRotation / 180 * Math.PI) * 1000, Math.sin(startRotation / 180 * Math.PI) * 1000);
+		double rotation = startRotation / 180 * Math.PI;
+		
+		this.translate(new Vector2(startX + 100, startY + 100).product(1/SCALE));
+//		this.rotateAboutCenter(rotation);
+//		Vector2 initVel = new Vector2(Math.cos(rotation), Math.sin(rotation));
+//		setLinearVelocity(initVel);
+		this.getLinearVelocity().multiply(0);
 		
 		double friction = 0.0;
 		double bounce = 0.2;
 		
-		double posX = this.getTransform().getTranslationX();
-		double posY = this.getTransform().getTranslationY();
-		double rotation = this.getTransform().getRotation();
-		// might have to switch height and width
-		addFixture(Geometry.createRectangle(height, width),  1, friction, bounce);
+		// might have to switch width and height
+		addFixture(Geometry.createRectangle(width/SCALE, height/SCALE),  1, friction, bounce);
 
 		// this may or may not need to be changed
 //		this.translate(0.0, 2.0);
 		setMass(MassType.NORMAL);
-
+		
 		car = manager.getTexture("car");
 		carFrame = manager.getTexture("carframe");
 		carFrameBroke = manager.getTexture("carframeBroke");
@@ -71,16 +75,13 @@ public class Car extends SimulationBody {
 		leaking = Math.random() * 10 < 1 || broken;
 	}
 	
-	/*
-	 GL11.glPushMatrix();
-	 GL11.glTranslate3f(CENTER_X, CENTER_Y, CENTER_Z);
-	 GL11.glRotate3f(ROTATION, ROTATION_X, ROTATION_Y, ROTATION_Z);
-	 RENDER WHEELS
-	 RENDER CAR + COLOR
-	 SETUP FOR RENDERING FIRE ANIMATION ON TOP OF CARS
-	GL11.glPopMatrix();
-	 
-	 */
+	public double getX() {
+		return this.getWorldCenter().x * SCALE;
+	}
+
+	public double getY() {
+		return this.getWorldCenter().y * SCALE;
+	}
 	
 	public void update(double delta)
 	{
@@ -96,8 +97,9 @@ public class Car extends SimulationBody {
 		}
 
 		if (leaking && Math.random() * 6 < 1){
-			double x = this.getTransform().getTranslationX() + halfWidth;
-			double y = this.getTransform().getTranslationY() + halfHeight;
+			double x = getX() + halfWidth/SCALE;
+			double y = getY() + halfWidth/SCALE;
+
 			boolean grew = false;
 
 			for(Oil oil : World.getOils()){
@@ -117,14 +119,14 @@ public class Car extends SimulationBody {
 	public void render(double delta)
 	{
 		
-		double posX = this.getTransform().getTranslationX();
-		double posY = this.getTransform().getTranslationY();
+		double posX = this.getX();
+		double posY = this.getY();
 		double rotation = this.getTransform().getRotation();
 		
 		GL11.glPushMatrix();
 		
-		GL11.glTranslatef((float) (posX + halfWidth), (float) (posY + halfHeight), 0);
-		GL11.glRotatef((float) (rotation * 180 / Math.PI - 90), 0, 0, 1);
+		GL11.glTranslatef((float) (posX), (float) (posY), 0);
+		GL11.glRotatef((float) (rotation * 180 / Math.PI), 0, 0, 1);
 
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -175,9 +177,9 @@ public class Car extends SimulationBody {
 		GL11.glBegin(GL11.GL_QUADS);
 
 
-		for (int i = 0; i < fires.size(); i++){
-			double x = fires.get(i)[0];
-			double y =  fires.get(i)[1];
+		for (Double[] d : fires){
+			double x = d[0];
+			double y =  d[1];
 
 			GL11.glTexCoord2d(0, 0);
 			GL11.glVertex2d(-halfWidth + x, -halfHeight + y);
@@ -197,11 +199,11 @@ public class Car extends SimulationBody {
 	}
 
 	private void generateFire(){
-		double x = Math.random() * (27 * 2.5 - 30) + 5;
+		double x = Math.random() * (width - 30) + 5;
 		double y = 70;
 
-		while (y > 40 && y < 80)
-			y = Math.random() * (44 * 2.5 - 30) + 5;
+		while (y > (.3636 * height) && y < (.3636 * 2 * height))
+			y = Math.random() * (height - 30) + 5;
 
 		fires.add(new Double[] {x, y});
 	}
@@ -213,4 +215,26 @@ public class Car extends SimulationBody {
 	public double[] getCarColors(){
 		return carColors;
 	}
+
+	public void thrust(double force) {
+        final Vector2 r = new Vector2(this.getTransform().getRotation() + Math.PI * 0.5).left();
+       	Vector2 f = r.product(force);
+       	applyForce(f);
+	}
+
+	public void myrotate(double force) {
+        final Vector2 r = new Vector2(this.getTransform().getRotation() + Math.PI * 0.5).left();
+        final Vector2 c = this.getWorldCenter();
+
+        Vector2 f1 = r.product(force * 0.05).right();
+        Vector2 f2 = r.product(force * 0.05).left();
+        Vector2 p1 = c.sum(r.product(0.9));
+        Vector2 p2 = c.sum(r.product(-0.9));
+        	
+        // apply a force to the top going left
+        this.applyForce(f1, p1);
+        // apply a force to the bottom going right
+        this.applyForce(f2, p2);
+	}
 }
+
