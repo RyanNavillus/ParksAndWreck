@@ -149,7 +149,7 @@ public class ParkingSpot {
     		xPos2 = xPos + WIDTH;
     		yPos2 = yPos + HEIGHT;
     	}
-    	System.out.println("id: " + id + "(" + xPos + ", " + yPos + ")" + "(" + xPos2 + ", " + yPos2 + ")");
+    	//System.out.println("id: " + id + "(" + xPos + ", " + yPos + ")" + "(" + xPos2 + ", " + yPos2 + ")");
 
     	if(centerX > xPos && centerX < (xPos + WIDTH) && centerY < yPos && centerY > (yPos + HEIGHT)) 
     	{

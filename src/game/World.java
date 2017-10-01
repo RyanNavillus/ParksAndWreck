@@ -82,7 +82,7 @@ public class World {
 		
 		setupFrameBuffers();
 		
-		createWalls();
+		//createWalls();
 	}
 	
 	private void addPlayerCar(int id, Car car)
@@ -111,15 +111,34 @@ public class World {
 			ticksToInitialize = 10;
 		}
 
-//		if (playerCars[2] != null)
-//		{
-//			final double force = 500000 * delta;
-//			playerCars[2].thrust(force);
-//		}
+		if (playerCars[0] != null)
+		{
+			final double force = 5000 * delta;
+
+			if (gameSettings.goKey.isPressed())
+			{
+				playerCars[0].thrust(force);
+			}
+
+			if (gameSettings.stopKey.isPressed())
+			{
+				playerCars[0].thrust(-force);
+			}
+
+			if (gameSettings.rightKey.isPressed())
+			{
+				playerCars[0].myrotate(force);
+			}
+
+			if (gameSettings.leftKey.isPressed())
+			{
+				playerCars[0].myrotate(-force);
+			}
+		}
 
 		if (playerCars[0] != null && players[0].controller != null)
 		{
-			final double force = 500000 * delta;
+			final double force = 5000 * delta;
 
 			if (players[0].controller.aButtonPressed())
 			{
