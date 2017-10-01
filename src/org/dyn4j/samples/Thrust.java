@@ -84,12 +84,13 @@ public class Thrust extends SimulationFrame {
 				Vector2 impulse2 = null;
 				
 				double minImpulse = 2;
+				double impulseAdjust = 0.5;
 
 				Object userData1 = fixture1.getUserData();
 				if (userData1 != null && userData1 instanceof DynData) {
 					DynData data1 = (DynData) userData1;
 					if (data1.isHead()) {
-						impulse1 = new Vector2(body1.getLinearVelocity());
+						impulse1 = new Vector2(body1.getLinearVelocity()).multiply(impulseAdjust);
 						if (impulse1.getMagnitude() < minImpulse) {
 							impulse1.setMagnitude(minImpulse);
 						}
@@ -101,7 +102,7 @@ public class Thrust extends SimulationFrame {
 				if (userData2 != null && userData2 instanceof DynData) {
 					DynData data2 = (DynData) userData2;
 					if (data2.isHead()) {
-						impulse2 = new Vector2(body2.getLinearVelocity()).multiply(1);
+						impulse2 = new Vector2(body2.getLinearVelocity()).multiply(impulseAdjust);
 						if (impulse2.getMagnitude() < minImpulse) {
 							impulse2.setMagnitude(minImpulse);
 						}
