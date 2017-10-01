@@ -156,6 +156,15 @@ public class World {
 						if (timeInterval > 1)
 						{
 							System.out.println("Parked in spot: " + spot.id);
+							//Immobilize car
+							//car.setMass(MassType.INFINITE);
+							//car.setLinearVelocity(0,0);
+							
+							//Increase score of car.player
+							
+							//Spawn a new car for player
+							
+							
 						}
 					}
 					else
