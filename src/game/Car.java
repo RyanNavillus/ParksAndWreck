@@ -320,5 +320,14 @@ public class Car extends Body
 			generateFire();
 		}
 	}
+	
+	public boolean isDead() {
+		return health == 0;
+	}
+
+	public void explode() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

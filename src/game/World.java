@@ -141,12 +141,16 @@ public class World {
 					((Car)body1).damageCar();
 					if (boomMode) {
 						body1.applyImpulse(body2.getLinearVelocity().product(3));
+						Car c1 = (Car)body1;
+						if (c1.isDead()) c1.explode();
 					}
 				}
 				if (body2 instanceof Car) {
 					((Car)body2).damageCar();
 					if (boomMode) {
 						body2.applyImpulse(body1.getLinearVelocity().product(3));
+						Car c2 = (Car)body1;
+						if (c2.isDead()) c2.explode();
 					}
 				}
 			}
