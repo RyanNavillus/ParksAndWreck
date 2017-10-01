@@ -151,6 +151,9 @@ public class GuiGame extends GuiScreen<GameSettings>
 	public void render(double delta)
 	{
 		
+		if(World.tracks.size() > 0)
+			World.renderTrack();
+		
 		dist+= delta * 40;
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
 		glViewport(0, 0, 1920, 1080);
@@ -217,33 +220,64 @@ public class GuiGame extends GuiScreen<GameSettings>
 	}
 
 	public static void renderScores(GameSettings gameSettings, int[] playerScores){
+		GL11.glPushMatrix();
+
+		GL11.glTranslated(0f, 0f, .5f);
+
 		gameSettings.getFont().bind();
 
 		float shiftX;
 
 		//scores
+		int randomOffset = Math.random() * 50 < 1 ? 5 : 0;
+		randomOffset = Math.random() * 2 < 1 ? randomOffset : -randomOffset;
 		setColorToCar(0);
-		shiftX = 470 - gameSettings.getFont().getWidth("0") / 2f;
+		shiftX = 470 - gameSettings.getFont().getWidth(Integer.toString(playerScores[0])) / 2f - randomOffset;
 		gameSettings.getFont().draw(Integer.toString(playerScores[0]), shiftX, 200, 0, .5f);
 
+		randomOffset = Math.random() * 50 < 1 ? 5 : 0;
+		randomOffset = Math.random() * 2 < 1 ? randomOffset : -randomOffset;
 		setColorToCar(1);
-		shiftX = 1450 - gameSettings.getFont().getWidth("24") / 2f;
+		shiftX = 1450 - gameSettings.getFont().getWidth(Integer.toString(playerScores[1])) / 2f - randomOffset;
 		gameSettings.getFont().draw(Integer.toString(playerScores[1]), shiftX, 200, 0, .5f);
 
+		randomOffset = Math.random() * 50 < 1 ? 5 : 0;
+		randomOffset = Math.random() * 2 < 1 ? randomOffset : -randomOffset;
 		setColorToCar(2);
-		shiftX = 470 - gameSettings.getFont().getWidth("56") / 2f;
+		shiftX = 470 - gameSettings.getFont().getWidth(Integer.toString(playerScores[2])) / 2f - randomOffset;
 		gameSettings.getFont().draw(Integer.toString(playerScores[2]), shiftX, 950, 0, .5f);
 
+		randomOffset = Math.random() * 50 < 1 ? 5 : 0;
+		randomOffset = Math.random() * 2 < 1 ? randomOffset : -randomOffset;
 		setColorToCar(3);
-		shiftX = 1450 - gameSettings.getFont().getWidth("2") / 2f;
+		shiftX = 1450 - gameSettings.getFont().getWidth(Integer.toString(playerScores[3])) / 2f - randomOffset;
 		gameSettings.getFont().draw(Integer.toString(playerScores[3]), shiftX, 950, 0, .5f);
 
 		gameSettings.getFont().unbind();
+
+		GL11.glPopMatrix();
 	}
 
 	private static void setColorToCar(int player){
 		double[] colors = playerColors[player];
-		GL11.glColor4d(colors[0], colors[1], colors[2], 0.1);
+		double offset =  - Math.random() / 4;
+
+		offset = Math.random() * 50 < 1 ? offset * 2 : offset;
+
+		double r = colors[0] - offset;
+		double g = colors[1] - offset;
+		double b = colors[2] - offset;
+
+		if(r > 1)
+			r = 1;
+
+		if (g > 1)
+			g = 1;
+
+		if (b > 1)
+			b = 1;
+
+		GL11.glColor4d(r, g, b, 0.1);
 	}
 
 	private double[] generatePlayerColor(double[][] colors, int size){

@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Car extends Body
 {
-	private static final double SCALE = 32.0;
+	public static final double SCALE = 32.0;
 	private static final double width = 44 * 2.2, height = 27 * 2.2;
 	private static final double halfWidth = 22 * 2.2, halfHeight = 13.5 * 2.2;
 	
@@ -44,10 +44,11 @@ public class Car extends Body
 		double rotation = startRotation / 180 * Math.PI;
 		
 		this.translate(new Vector2(startX + 100, startY).product(1/SCALE));
+		
 //		this.rotateAboutCenter(rotation);
-//		Vector2 initVel = new Vector2(Math.cos(rotation), Math.sin(rotation));
-//		setLinearVelocity(initVel);
-		this.getLinearVelocity().multiply(0);
+		Vector2 initVel = new Vector2(Math.cos(rotation), Math.sin(rotation)).multiply(10);
+		setLinearVelocity(initVel);
+//		this.getLinearVelocity().multiply(0);
 		
 		setLinearDamping(4);
 		setAngularDamping(0.5);
