@@ -258,4 +258,8 @@ public class ParkingSpot {
     {
     	return this.full;
     }
+    
+    public boolean getAssigned() {
+    	return isAssigned;
+    }
 }

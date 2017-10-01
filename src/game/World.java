@@ -81,6 +81,7 @@ public class World {
 
 		physicsWorld = new org.dyn4j.dynamics.World();
 		physicsWorld.setGravity(org.dyn4j.dynamics.World.ZERO_GRAVITY);
+		physicsWorld.addListener(new CustomCollision());
 
 		fireTexture = textureManager.getTexture("fire0");
 
@@ -143,7 +144,6 @@ public class World {
 	{
 		playerCars[id] = car;
 		physicsWorld.addBody(car);
-		physicsWorld.addListener(new CustomCollision());
 	}
 	
 	private void removePlayerCar(int id, Car car)
@@ -157,6 +157,7 @@ public class World {
 	{
 		final double force = 20000 * delta;
 
+	
 		if (playerCars[0] != null && !playerCars[0].isRecent())
 		{
 			if (gameSettings.goKey.isPressed())
@@ -278,17 +279,17 @@ public class World {
 									break;
 								case 1:
 									Car newCar2 = new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager);
-									addPlayerCar(0, newCar2);
+									addPlayerCar(1, newCar2);
 									assignParkingSpot(newCar2);
 									break;
 								case 2:
 									Car newCar3 = new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager);
-									addPlayerCar(0, newCar3);
+									addPlayerCar(2, newCar3);
 									assignParkingSpot(newCar3);
 									break;
 								case 3:
 									Car newCar4 = new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager);
-									addPlayerCar(0, newCar4);
+									addPlayerCar(3, newCar4);
 									assignParkingSpot(newCar4);
 									break;
 								default:
@@ -565,6 +566,7 @@ public class World {
 	}
 
 	private void assignParkingSpot(Car car) {
+		
 		System.out.println("Hi");
 		
 		if(ParkingSpot.fullCount == ParkingSpot.count)
@@ -575,7 +577,7 @@ public class World {
 		int index = (int) (Math.random() * parkingList.size());
 		ParkingSpot spot = parkingList.get(index);
 		
-		while(spot.getFull() == true)
+		while(spot.getFull() || spot.getAssigned())
 		{
 			index = (int) (Math.random() * parkingList.size());
 			spot = parkingList.get(index);
