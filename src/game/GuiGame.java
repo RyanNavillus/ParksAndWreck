@@ -70,14 +70,10 @@ public class GuiGame extends GuiScreen<GameSettings>
 		world = new World(this.gameSettings, application.getTextureManager());
 		
 		shader = Shader.createShader(new File("shaders/overlay.vert"), new File("shaders/overlay.frag"));
-		shader1 = Shader.createShader(new File("shaders/fontoutline.vert"), new File("shaders/fontoutline.frag"));
 		
 		texID = GL20.glGetUniformLocation(shader.getShaderId(), "renderedTexture");
 		windowSize = GL20.glGetUniformLocation(shader.getShaderId(), "window");
 		time = GL20.glGetUniformLocation(shader.getShaderId(), "time");
-		
-		texID1 = GL20.glGetUniformLocation(shader1.getShaderId(), "renderedTexture");
-		windowSize1 = GL20.glGetUniformLocation(shader1.getShaderId(), "window");
 		
 		frameBuffer = GL30.glGenFramebuffers();
 		frameBufferTexture = GL11.glGenTextures();
