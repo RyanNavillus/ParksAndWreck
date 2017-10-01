@@ -20,7 +20,8 @@ public class World
 	private float totalTime = 0;
 	
 	private List<Car> staticCars;
-	private List<Car> playerCars;
+	private Car[] playerCars;
+	private int[] playerScores;
 	
 	private List<ParkingSpot> parkingList;
 	
@@ -33,8 +34,9 @@ public class World
 	public World(GameSettings settings, TextureManager manager)
 	{
 		staticCars = new ArrayList<>();
-		playerCars = new ArrayList<>();
+		playerCars = new Car[4];
 		parkingList = new ArrayList<>();
+		playerScores = new int[4];
 		
 		gameSettings = settings;
 		
@@ -44,6 +46,11 @@ public class World
 		physicsWorld.setGravity(org.dyn4j.dynamics.World.ZERO_GRAVITY);
 				
 		fireTexture = textureManager.getTexture("fire0");
+
+		/*Car car = new Car(100, 100, 0, 0, 0, manager);
+		playerCars[0] = car;
+		car = new Car(100, 200, 0, 0, 45, manager);
+		playerCars[1] = car;*/
 
 		//parkingList.add(new ParkingSpot(0, 0, false));
 
@@ -63,29 +70,27 @@ public class World
 		parkingList.addAll(ParkingSpot.createParkingArea(580, 880 - ParkingSpot.HEIGHT / 2 - ParkingSpot.HEIGHT, 9, 4));
 	}
 	
-	private void addPlayerCar(Car car)
-	{
-		playerCars.add(car);
-		physicsWorld.addBody(car);
-	}
-	
 	public void update(double delta)
 	{
 		if((ticksToInitialize -= delta) <= 0)
 		{
-			addPlayerCar(new Car(-65, 55,  0, textureManager));
-			
-			addPlayerCar(new Car(-65, 915,  0, textureManager));
-			
-			addPlayerCar(new Car(1920, 55,  180, textureManager));
-			
-			addPlayerCar(new Car(1920, 915,  180, textureManager));
+			playerCars[0] = new Car(-65, 55,  0, 0, 0, GuiGame.playerColors[0], textureManager);
+
+			playerCars[1] = new Car(-65, 915, 0, 0, 0, GuiGame.playerColors[1], textureManager);
+
+			playerCars[2] = new Car(1920, 55,  180, 0, 0, GuiGame.playerColors[2], textureManager);
+
+			playerCars[3] = new Car(1920, 915,  180, 0, 0, GuiGame.playerColors[3], textureManager);
 			
 			ticksToInitialize = 2;
 		}
 		
-		for(Car p : playerCars)
+		for(Car p : playerCars){
+			if (p == null)
+				continue;
+
 			p.update(delta);
+		}
 		
 		for(Car s : staticCars)
 			s.update(0);
@@ -118,8 +123,19 @@ public class World
 		
 		for(Car car : playerCars)
 		{
+			if (car == null)
+				continue;
+
 			car.render(delta);
 		}
+	}
+
+	public Car[] getPlayerCars(){
+		return playerCars;
+	}
+
+	public int[] getPlayerScores(){
+		return playerScores;
 	}
 	
 }
