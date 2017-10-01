@@ -231,7 +231,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 		float shiftY;
 
 		for (int i = 0; i < playerScores.length; i++){
-			if (playerScores[i] > displayScores[i] && animationCounter % 5 == 0){
+			if (playerScores[i] > displayScores[i] && animationCounter % 2 == 0){
 				displayScores[i]++;
 			}
 		}
@@ -256,7 +256,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 		randomOffset = Math.random() * displacementFrequency < 1 ? 5 * playerScores[1] / 20 : 0;
 		randomOffset = Math.random() * 2 < 1 ? randomOffset : -randomOffset;
 		setColorToCar(1);
-		shiftX = 1450 - gameSettings.getFont().getWidth(Integer.toString(displayScores[1])) / 2f - randomOffset;
+		shiftX = 1500 - gameSettings.getFont().getWidth(Integer.toString(displayScores[1])) / 2f - randomOffset;
 		gameSettings.getFont().draw(Integer.toString(displayScores[1]), shiftX, 200, 0, .5f);
 
 		displacementFrequency = displayScores[2] != 0 ? 100 / displayScores[2] : 100;
@@ -276,7 +276,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 		randomOffset = Math.random() * displacementFrequency < 1 ? 5 * playerScores[3] / 20 : 0;
 		randomOffset = Math.random() * 2 < 1 ? randomOffset : -randomOffset;
 		setColorToCar(3);
-		shiftX = 1450 - gameSettings.getFont().getWidth(Integer.toString(displayScores[3])) / 2f - randomOffset;
+		shiftX = 1500 - gameSettings.getFont().getWidth(Integer.toString(displayScores[3])) / 2f - randomOffset;
 		gameSettings.getFont().draw(Integer.toString(displayScores[3]), shiftX, 950, 0, .5f);
 
 		gameSettings.getFont().unbind();

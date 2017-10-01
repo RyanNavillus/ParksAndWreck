@@ -37,6 +37,8 @@ public class Car extends Body
 
 	private int counter = 0;
 
+	private int health;
+
 	public Car(double startX, double startY, double startRotation, double[] carColors, TextureManager manager)
 	{
 		super();
@@ -76,6 +78,8 @@ public class Car extends Body
 
 		broken = Math.random() * 9 < 1;
 		leaking = Math.random() * 10 < 1 || broken;
+
+		health = 100;
 	}
 	
 	public double getX() {
@@ -240,6 +244,17 @@ public class Car extends Body
         this.applyForce(f1, p1);
         // apply a force to the bottom going right
         this.applyForce(f2, p2);
+	}
+
+	public void damageCar(){
+		health -= 3;
+
+		if (health < 0)
+			health = 0;
+
+		while (10 - (health % 10) > fires.size()){
+			generateFire();
+		}
 	}
 }
 
