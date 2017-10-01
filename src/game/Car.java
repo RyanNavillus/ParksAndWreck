@@ -45,12 +45,12 @@ public class Car extends Body
 		
 		this.translate(new Vector2(startX, startY).product(1/SCALE));
 		this.rotateAboutCenter(rotation);
-		Vector2 initVel = new Vector2(Math.cos(rotation), Math.sin(rotation)).multiply(10);
+		Vector2 initVel = new Vector2(Math.cos(rotation), Math.sin(rotation)).multiply(25);
 		setLinearVelocity(initVel);
 //		this.getLinearVelocity().multiply(0);
 		
 		setLinearDamping(4);
-		setAngularDamping(0.5);
+		setAngularDamping(.1);
 		
 		double friction = 0.0;
 		double bounce = 0.2;
@@ -88,7 +88,8 @@ public class Car extends Body
 	
 	public void update(double delta)
 	{
-		//setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
+		
+		//this.thrust(12500 * delta);
 
 		if(counter == 5){
 			double angle = this.getTransform().getRotation();
@@ -130,7 +131,7 @@ public class Car extends Body
 		GL11.glPushMatrix();
 		
 		GL11.glTranslatef((float) (posX), (float) (posY), 0);
-		GL11.glRotatef((float) (rotation * 180 / Math.PI), 0, 0, 1);
+		GL11.glRotatef((float) Math.ceil((rotation * 180 / Math.PI) / 9.0) * 9.0f, 0, 0, 1);
 
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);

@@ -148,28 +148,36 @@ public class World {
 					playerCars[0].myrotate(-force);
 				}
 			}
-
-			if (playerCars[0] != null && players[0].controller != null)
+			
+			for(int i = 0; i < playerCars.length; i++)
 			{
-				final double force = 20000 * delta;
-
-				if (players[0].controller.aButtonPressed())
+				if(playerCars[i] != null && players[i].controller != null)
 				{
-					playerCars[0].thrust(force);
+					double angle = players[i].controller.getDirection();
+					
+					if(angle != 0.0)
+					{
+						angle = angle / 180 * Math.PI;
+						
+						double rotation = playerCars[i].getTransform().getRotation();
+						if(rotation < 0)
+							rotation += Math.PI * 2;
+						
+						double travel1 = angle - rotation;
+						double travel2 = rotation + angle;
+						
+						System.out.println(playerCars[i].getTransform().getRotation());
+						
+						if(Math.abs(travel1) < Math.abs(travel2))
+						{
+							playerCars[i].rotateAboutCenter(Math.min(travel1, 8 * Math.PI * delta) - 2 * Math.PI);
+						}
+						else
+						{
+							playerCars[i].rotateAboutCenter(-Math.min(travel2, 8 * Math.PI * delta));
+						}
+					}
 				}
-
-				if (players[0].controller.startButtonPressed())
-				{
-					playerCars[0].rotate(force * 0.1);
-				}
-			}
-
-			if (playerCars[0] != null && players[0].controller != null
-					&& players[0].controller.getDirection() != Double.NaN)
-			{
-				// BLALDSLDASL " + )
-				playerCars[0].rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI)
-						- playerCars[0].getTransform().getRotation());
 			}
 		}
 
