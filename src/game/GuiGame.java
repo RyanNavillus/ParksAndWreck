@@ -11,6 +11,7 @@ import org.dyn4j.geometry.Vector2;
 import org.lwjgl.opengl.*;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.glViewport;
@@ -43,6 +44,9 @@ public class GuiGame extends GuiScreen<GameSettings>
 	private float dist = 0;
 
 	private static int animationCounter;
+	
+	private DecimalFormat formatter = new DecimalFormat("0.00");
+	private double ticksExisted = 0;
 	
 	public GuiGame(App<GameSettings> app, Shader shader, int texID, int windowSize, int time, int frameBuffer, int frameBufferTexture, int renderBuffer)
 	{
@@ -130,6 +134,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 			World.renderTrack();
 		
 		dist+= delta * 40;
+		ticksExisted += delta;
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
 		glViewport(0, 0, 1920, 1080);
 
@@ -146,9 +151,13 @@ public class GuiGame extends GuiScreen<GameSettings>
 
 		gameSettings.getFont().bind();
 		
+		float shiftX = 1920 / 2 - gameSettings.getFont().getWidth(formatter.format(60 - ticksExisted) + "s") / 2f;
+		GL11.glColor4f(1, 1, 0, 1);
+		gameSettings.getFont().draw(formatter.format(60 - ticksExisted) + "s", shiftX, 50, 0, .5f);
+		
 		//title
 		GL11.glColor4d(.25f, .25f, .25f, 1);
-		float shiftX = 1920 / 2 - gameSettings.getFont().getWidth(title) / 2f;
+		shiftX = 1920 / 2 - gameSettings.getFont().getWidth(title) / 2f;
 		gameSettings.getFont().draw(title, shiftX, 600, 0, 1f);
 
 		gameSettings.getFont().unbind();
