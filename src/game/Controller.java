@@ -94,14 +94,39 @@ public class Controller {
 		return false;
 	}
 	
-	public boolean startButtonPressed() 
+	public boolean dUpButtonPressed() 
 	{
 		ByteBuffer buttons = GLFW.glfwGetJoystickButtons(id);
-		if (buttons.get(7) == 1) {
+		if (buttons.get(10) == 1) {
 			return true;
 		}
 		return false;
 	}
-	
-	
+
+	public boolean dDownButtonPressed() 
+	{
+		ByteBuffer buttons = GLFW.glfwGetJoystickButtons(id);
+		if (buttons.get(12) == 1) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean dRightButtonPressed() 
+	{
+		ByteBuffer buttons = GLFW.glfwGetJoystickButtons(id);
+		if (buttons.get(13) == 1) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean dLeftButtonPressed() 
+	{
+		ByteBuffer buttons = GLFW.glfwGetJoystickButtons(id);
+		if (buttons.get(11) == 1) {
+			return true;
+		}
+		return false;
+	}
 }

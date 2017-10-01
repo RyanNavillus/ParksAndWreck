@@ -22,7 +22,6 @@ import static org.lwjgl.opengl.GL11.glViewport;
 public class GuiGame extends GuiScreen<GameSettings>
 {
 	
-	
 	private static final String title = "PARKS AND WRECK";
 	
 	private Shader shader;

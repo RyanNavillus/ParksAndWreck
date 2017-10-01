@@ -180,22 +180,22 @@ public class World {
 				{
 					if (playerCars[0] != null && !playerCars[0].isRecent())
 					{
-						if (gameSettings.goKey.isPressed())
+						if (players[i].controller.dUpButtonPressed())
 						{
 							playerCars[0].thrust(force);
 						}
 
-						if (gameSettings.stopKey.isPressed())
+						if (players[i].controller.dDownButtonPressed())
 						{
 							playerCars[0].thrust(-force);
 						}
 
-						if (gameSettings.rightKey.isPressed())
+						if (players[i].controller.dRightButtonPressed())
 						{
 							playerCars[0].myrotate(force);
 						}
 
-						if (gameSettings.leftKey.isPressed())
+						if (players[i].controller.dLeftButtonPressed())
 						{
 							playerCars[0].myrotate(-force);
 						}
