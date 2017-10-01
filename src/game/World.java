@@ -81,7 +81,7 @@ public class World
 	{
 		if((ticksToInitialize -= delta) <= 0)
 		{
-			playerCars[0] = new Car(-65, 55, 0, GuiGame.playerColors[0], textureManager);
+			addPlayerCar(0, new Car(-65, 55, 0, GuiGame.playerColors[0], textureManager));
 			
 			ticksToInitialize = 0;
 		}
@@ -100,7 +100,7 @@ public class World
 		}
 		
 		for(Car s : staticCars)
-			s.update(0);
+			s.update(delta);
 		
 		physicsWorld.update(delta);
 	}

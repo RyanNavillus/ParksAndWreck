@@ -50,12 +50,10 @@ public class Car extends SimulationBody {
 		carFrame = manager.getTexture("carframe");
 		carFrameBroke = manager.getTexture("carframeBroke");
 
-		rotation = startRotation;
-
 		this.carColors = carColors;
 
-		for (int i = 0; i < 5; i++)
-			generateFire();
+		//for (int i = 0; i < 5; i++)
+		//	generateFire();
 
 		broken = false;
 	}
@@ -74,7 +72,6 @@ public class Car extends SimulationBody {
 	public void update(double delta)
 	{
 		setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
-	
 	}
 	
 	public void render(double delta)
