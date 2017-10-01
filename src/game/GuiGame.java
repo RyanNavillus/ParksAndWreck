@@ -57,6 +57,15 @@ public class GuiGame extends GuiScreen<GameSettings>
 		application.getTextureManager().genTexture("carframeBroke", new File("resources/carframeBroke.png"));
 		application.getTextureManager().genTexture("fire0", new File("resources/flame0.png"));
 		application.getTextureManager().genTexture("fire1", new File("resources/flame1.png"));
+		
+		application.getTextureManager().genTexture("puddle_xsmall", new File("resources/puddle_xsmall.png"));
+		application.getTextureManager().genTexture("puddle_small", new File("resources/puddle_small.png"));
+		application.getTextureManager().genTexture("puddle_medium", new File("resources/puddle_medium.png"));
+		application.getTextureManager().genTexture("puddle_large", new File("resources/puddle_large.png"));
+		application.getTextureManager().genTexture("puddle_xlarge", new File("resources/puddle_xlarge.png"));
+		
+		for(int i = 0; i < 5; i++)
+			application.getTextureManager().genTexture("tiretrack" + i, new File("resources/tiretrack" + i + ".png"));
 
 		playerColors = new double[4][3];
 		for(int i = 0; i < playerColors.length; i++){
