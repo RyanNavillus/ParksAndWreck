@@ -41,6 +41,10 @@ public class Controller {
 	 */
 	public double getDirection() {
 		FloatBuffer axes = GLFW.glfwGetJoystickAxes(id);
+		
+		if(axes.get(0) == 0.0 && axes.get(1) == 0.0)
+			return 0;
+		
 		//System.out.println(axes.get(0) + ", " + axes.get(1));
 		double angle = Math.toDegrees(Math.atan(axes.get(1) / axes.get(0)));
 		if (axes.get(0) < 0 ) 
@@ -51,7 +55,7 @@ public class Controller {
 		{
 			angle = 360 + angle;
 		}
-		System.out.println("Angle: " + angle + " degrees");
+		System.out.println("Angle: " + angle + " degrees " + axes.get(1) + " " + axes.get(0));
 		return angle;
 
 	}
