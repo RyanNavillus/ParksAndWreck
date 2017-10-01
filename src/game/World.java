@@ -28,27 +28,27 @@ import static org.lwjgl.opengl.GL11.glViewport;
  */
 public class World {
 	public static Texture fireTexture;
-	
+
 	private static Shader colorShader;
 	private static int texID;
 	private static int windowSize;
 	private static int trackFrameBuffer;
 	private static int trackTexture;
 	private static int renderBuffer;
-	
+
 	private float totalTime = 0;
-	
+
 	private Player[] players;
-	
+
 	private List<Car> staticCars;
 	private Car[] playerCars;
 	private int[] playerScores;
-	
+
 	private List<ParkingSpot> parkingList;
-	
+
 	private GameSettings gameSettings;
 	private TextureManager textureManager;
-		
+
 	private org.dyn4j.dynamics.World physicsWorld;
 	private double ticksToInitialize = 2;
 
@@ -61,16 +61,16 @@ public class World {
 		playerCars = new Car[4];
 		parkingList = new ArrayList<>();
 		playerScores = new int[4];
-		
+
 		players = new Player[] {new Player(), new Player(), new Player(), new Player()};
-		
+
 		gameSettings = settings;
-		
+
 		textureManager = manager;
-		
+
 		physicsWorld = new org.dyn4j.dynamics.World();
 		physicsWorld.setGravity(org.dyn4j.dynamics.World.ZERO_GRAVITY);
-				
+
 		fireTexture = textureManager.getTexture("fire0");
 
 		parkingList.addAll(ParkingSpot.createParkingArea(200, 153, 9, 1));   //left
@@ -79,18 +79,18 @@ public class World {
 		parkingList.addAll(ParkingSpot.createParkingArea(580, 200 + ParkingSpot.HEIGHT / 2, 9, 4));
 
 		parkingList.addAll(ParkingSpot.createParkingArea(580, 880 - ParkingSpot.HEIGHT / 2 - ParkingSpot.HEIGHT, 9, 4));
-		
+
 		setupFrameBuffers();
-		
+
 		createWalls();
 	}
-	
+
 	private void addPlayerCar(int id, Car car)
 	{
 		playerCars[id] = car;
 		physicsWorld.addBody(car);
 	}
-	
+
 	public void update(double delta)
 	{
 		if((ticksToInitialize -= delta) <= 0)
@@ -102,62 +102,66 @@ public class World {
 				staticCars.add(playerCars[2]);
 				staticCars.add(playerCars[3]);
 			}
-			
+
 			addPlayerCar(0, new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager));
 			addPlayerCar(1, new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager));
 			addPlayerCar(2, new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager));
 			addPlayerCar(3, new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager));
-			
-			ticksToInitialize = 10;
+
+			ticksToInitialize = 100;
 		}
 
-		if (playerCars[0] != null)
+		if (ticksToInitialize < 99)
 		{
-			final double force = 5000 * delta;
-
-			if (gameSettings.goKey.isPressed())
+			if (playerCars[0] != null)
 			{
-				playerCars[0].thrust(force);
+				final double force = 5000 * delta;
+
+				if (gameSettings.goKey.isPressed())
+				{
+					playerCars[0].thrust(force);
+				}
+
+				if (gameSettings.stopKey.isPressed())
+				{
+					playerCars[0].thrust(-force);
+				}
+
+				if (gameSettings.rightKey.isPressed())
+				{
+					playerCars[0].myrotate(force);
+				}
+
+				if (gameSettings.leftKey.isPressed())
+				{
+					playerCars[0].myrotate(-force);
+				}
 			}
 
-			if (gameSettings.stopKey.isPressed())
+			if (playerCars[0] != null && players[0].controller != null)
 			{
-				playerCars[0].thrust(-force);
+				final double force = 5000 * delta;
+
+				if (players[0].controller.aButtonPressed())
+				{
+					playerCars[0].thrust(force);
+				}
+
+				if (players[0].controller.startButtonPressed())
+				{
+					playerCars[0].rotate(force * 0.1);
+				}
 			}
 
-			if (gameSettings.rightKey.isPressed())
+			if (playerCars[0] != null && players[0].controller != null
+					&& players[0].controller.getDirection() != Double.NaN)
 			{
-				playerCars[0].myrotate(force);
-			}
-
-			if (gameSettings.leftKey.isPressed())
-			{
-				playerCars[0].myrotate(-force);
+				// BLALDSLDASL " + )
+				playerCars[0].rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI)
+						- playerCars[0].getTransform().getRotation());
 			}
 		}
 
-		if (playerCars[0] != null && players[0].controller != null)
-		{
-			final double force = 5000 * delta;
-
-			if (players[0].controller.aButtonPressed())
-			{
-				playerCars[0].thrust(force);
-			}
-
-			if (players[0].controller.startButtonPressed())
-			{
-				playerCars[0].rotate(force * 0.1);
-			}
-		}
-		
-		if (playerCars[0] != null && players[0].controller != null
-				&& players[0].controller.getDirection() != Double.NaN)
-		{
-			// BLALDSLDASL " + )
-			playerCars[0].rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI)
-					- playerCars[0].getTransform().getRotation());
-		}
 
 		for (Car p : playerCars)
 		{
@@ -171,7 +175,7 @@ public class World {
 			s.update(delta);
 
 		physicsWorld.update(delta);
-		
+
 		for (ParkingSpot spot : parkingList)
 		{
 			for (Car car : playerCars)
@@ -188,12 +192,12 @@ public class World {
 							//Immobilize car
 							//car.setMass(MassType.INFINITE);
 							//car.setLinearVelocity(0,0);
-							
+
 							//Increase score of car.player
-							
+
 							//Spawn a new car for player
-							
-							
+
+
 						}
 					}
 					else
@@ -213,7 +217,7 @@ public class World {
 			}
 		}
 	}
-	
+
 	public void render(double delta)
 	{
 		totalTime += delta;
@@ -229,7 +233,7 @@ public class World {
 		}
 
 		GuiGame.renderScores(gameSettings, playerScores);
-		
+
 		renderTracks();
 
 		for(Track track : tracks){
@@ -239,7 +243,7 @@ public class World {
 		for(Oil oil : oils){
 			oil.render(delta);
 		}
-		
+
 		for(Car car : staticCars)
 		{
 			car.render(delta);
@@ -268,18 +272,18 @@ public class World {
 	public static ArrayList<Track> getTracks(){
 		return tracks;
 	}
-	
+
 	public static void renderTrack()
 	{
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, trackFrameBuffer);
 		glViewport(0, 0, 1920, 1080);
-		
+
 		GL11.glPushMatrix();
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, 1920, 1080, 0, -1, 1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		
+
 		//RENDER THE TRACK HERE
 
 		for( Track t : tracks){
@@ -314,20 +318,20 @@ public class World {
 		}
 
 		tracks = new ArrayList<>();
-		
+
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 	}
-	
+
 	private void renderTracks()
 	{
 		colorShader.bind();
-		
+
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, trackTexture);
-		
+
 		GL20.glUniform1i(texID, 0);
 		GL20.glUniform2f(windowSize, gameSettings.getWindowWidth(), gameSettings.getWindowHeight());
-		
+
 		GL20.glEnableVertexAttribArray(0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, renderBuffer);
 		GL20.glVertexAttribPointer(
@@ -338,40 +342,40 @@ public class World {
 				0,                  // stride
 				0            // array buffer offset
 		);
-		
+
 		// Draw the triangles !
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6); // 2*3 indices starting at 0 -> 2 triangles
-		
+
 		GL20.glDisableVertexAttribArray(0);
-		
+
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-		
+
 		colorShader.unbind();
 	}
-	
+
 	private void setupFrameBuffers()
 	{
 		colorShader = Shader.createShader(new File("shaders/normal.vert"), new File("shaders/normal.frag"));
 		texID = GL20.glGetUniformLocation(colorShader.getShaderId(), "renderedTexture");
 		windowSize = GL20.glGetUniformLocation(colorShader.getShaderId(), "window");
-		
+
 		trackFrameBuffer = GL30.glGenFramebuffers();
 		trackTexture = GL11.glGenTextures();
-		
+
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, trackFrameBuffer);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, trackTexture);
-		
+
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, 1920, 1080, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, 0);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-		
+
 		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, trackTexture, 0);
-		
+
 		GL20.glDrawBuffers(GL30.GL_COLOR_ATTACHMENT0);
-		
+
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-		
+
 		float[] g_quad_vertex_buffer_data = {
 				0, 0, 0.0f,
 				1920, 0, 0.0f,
@@ -380,88 +384,88 @@ public class World {
 				1920, 0, 0.0f,
 				1920,  1080, 0.0f,
 				};
-		
+
 		renderBuffer = GL15.glGenBuffers();
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, renderBuffer);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, g_quad_vertex_buffer_data, GL15.GL_STATIC_DRAW);
 	}
-	
+
 	private void createWalls()
 	{
 		double scale = Car.SCALE;
-		
+
 		double friction = 0.5;
 		double bounce = 0.5;
-		
+
 		//left wall
 		Body wall = new Body(1);
 		wall.translate(100 / scale, (150 + (930 - 150) / 2) / scale);
 		wall.addFixture(Geometry.createRectangle(200 / scale, (930 - 150) / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
-		
+
 		physicsWorld.addBody(wall);
-		
+
 		//right wall
 		wall = new Body(1);
 		wall.translate(1820 / scale, (150 + (930 - 150) / 2) / scale);
 		wall.addFixture(Geometry.createRectangle(200 / scale, (930 - 150) / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
-		
+
 		physicsWorld.addBody(wall);
-		
-		
+
+
 		//upper wall left
 		wall = new Body(1);
 		wall.translate(50 / scale, 25 / scale);
 		wall.addFixture(Geometry.createRectangle(100 / scale, 50 / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
-		
+
 		physicsWorld.addBody(wall);
-		
+
 		//upper wall middle
-		
+
 		wall = new Body(1);
 		wall.translate((100 + 1720 / 2) / scale, (75 / 2) / scale);
 		wall.addFixture(Geometry.createRectangle(1720 / scale, 75 / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
-		
+
 		physicsWorld.addBody(wall);
-		
+
 		//upper wall right
-		
+
 		wall = new Body(1);
 		wall.translate(1870 / scale, 25 / scale);
 		wall.addFixture(Geometry.createRectangle(100 / scale, 50 / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
-		
+
 		physicsWorld.addBody(wall);
-		
+
 		//lower wall left
-		
+
 		wall = new Body(1);
 		wall.translate(50 / scale, 1055 / scale);
 		wall.addFixture(Geometry.createRectangle(100 / scale, 50 / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
-		
+
 		physicsWorld.addBody(wall);
-		
+
 		//lower wall middle
-		
+
 		wall = new Body(1);
 		wall.translate((100 + 1720 / 2) / scale, (1080 - 75 / 2) / scale);
 		wall.addFixture(Geometry.createRectangle(1720 / scale, 75 / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
-		
+
 		physicsWorld.addBody(wall);
-		
+
 		//lower wall right
-		
+
 		wall = new Body(1);
 		wall.translate((1920 - 50) / scale, 1055 / scale);
 		wall.addFixture(Geometry.createRectangle(100 / scale, 50 / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
-		
+
 		physicsWorld.addBody(wall);
 	}
-	
+
 }

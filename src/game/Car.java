@@ -45,9 +45,9 @@ public class Car extends Body
 		
 		this.translate(new Vector2(startX, startY).product(1/SCALE));
 //		this.rotateAboutCenter(rotation);
-//		Vector2 initVel = new Vector2(Math.cos(rotation), Math.sin(rotation));
-//		setLinearVelocity(initVel);
-		this.getLinearVelocity().multiply(0);
+		Vector2 initVel = new Vector2(Math.cos(rotation), Math.sin(rotation)).multiply(10);
+		setLinearVelocity(initVel);
+//		this.getLinearVelocity().multiply(0);
 		
 		double friction = 0.0;
 		double bounce = 0.2;
