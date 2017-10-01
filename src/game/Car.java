@@ -93,8 +93,8 @@ public class Car extends Body
 
 		if(counter == 5){
 			double angle = this.getTransform().getRotation();
-			World.getTracks().add(new Track(this.getTransform().getTranslationX() + halfWidth - 20 * Math.abs(Math.sin(angle)), this.getTransform().getTranslationY() + halfHeight - 20 * Math.abs(Math.cos(angle)), angle, (int) (Math.random() * 6.0)));
-			World.getTracks().add(new Track(this.getTransform().getTranslationX() + halfWidth + 10 * Math.abs(Math.sin(angle)), this.getTransform().getTranslationY() + halfHeight + 10 * Math.abs(Math.cos(angle)), angle, (int) (Math.random() * 6.0)));
+			World.getTracks().add(new Track(getX() + halfWidth/SCALE - 20 * Math.abs(Math.sin(angle)), getY() + halfHeight/SCALE - 20 * Math.abs(Math.cos(angle)), angle, (int) (Math.random() * 6.0)));
+			World.getTracks().add(new Track(getX() + halfWidth/SCALE + 10 * Math.abs(Math.sin(angle)), getY() + halfHeight/SCALE + 10 * Math.abs(Math.cos(angle)), angle, (int) (Math.random() * 6.0)));
 			counter = 0;
 		} else {
 			counter++;

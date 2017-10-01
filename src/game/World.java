@@ -261,9 +261,9 @@ public class World {
 			parkingSpot.render(delta);
 		}
 
-		GuiGame.renderScores(gameSettings, playerScores);
-
 		renderTracks();
+
+		GuiGame.renderScores(gameSettings, playerScores);
 
 		for(Track track : tracks){
 			track.render(delta);
