@@ -270,7 +270,7 @@ public class Car extends Body
 //        System.out.println(orthV);
         
         double mag = orthV.getMagnitude();
-        mag = Math.max(mag, 3);
+        mag = Math.max(mag, 15);
         
         Vector2 f1 = r.product(force * mag / 100).right();
         Vector2 f2 = r.product(force * mag / 400).left();

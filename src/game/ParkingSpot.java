@@ -12,12 +12,21 @@ import java.util.ArrayList;
 public class ParkingSpot {
 
 	public static int count = 0;
+	public static int fullCount = 0;
+	
     public static final int WIDTH = 90;
     public static final int HEIGHT = 130;
     double xPos, yPos;
     int direction;
     private Car car;
     private float[] color = new float[3];
+    
+    private float[] assignedColor = new float[3];
+    
+    private boolean isAssigned = false;
+
+    private boolean full = false;
+    
     public int id;
     
     public Car assignedCar;
@@ -28,6 +37,10 @@ public class ParkingSpot {
         color[0] = 1.0f;
         color[1] = 1.0f;
         color[2] = 1.0f;
+        
+        assignedColor[0] = 1.0f;
+        assignedColor[1] = 1.0f;
+        assignedColor[2] = 1.0f;
 
         if (direction > 4){
             System.out.println("Parking spot direction needs to be a number 0-4!");
@@ -97,6 +110,20 @@ public class ParkingSpot {
             GL11.glVertex2d(WIDTH + xPos, HEIGHT * invert + yPos);
             GL11.glVertex2d(WIDTH + xPos, 0 + yPos);
             GL11.glEnd();
+            
+            if(isAssigned) 
+            {
+            	GL11.glEnable(GL11.GL_BLEND);
+                GL11.glColor4f(assignedColor[0], assignedColor[1], assignedColor[2], .3f);
+                GL11.glBegin(GL11.GL_QUADS);
+                GL11.glVertex2d(5 + xPos, HEIGHT * invert + yPos);
+                GL11.glVertex2d(WIDTH + xPos, HEIGHT * invert + yPos);
+                GL11.glVertex2d(WIDTH + xPos, 0 + yPos);
+                GL11.glVertex2d(5 + xPos, 0 + yPos);
+                GL11.glColor4f(color[0], color[1], color[2], 1.0f);
+                GL11.glEnd();
+                GL11.glDisable(GL11.GL_BLEND);
+            }
         } else if (direction == 1 || direction == 3){
             //top
             GL11.glBegin(GL11.GL_QUADS);
@@ -117,6 +144,21 @@ public class ParkingSpot {
             GL11.glVertex2d(HEIGHT * invert + xPos, WIDTH + yPos);
             GL11.glVertex2d(HEIGHT * invert + xPos, WIDTH - 5 + yPos);
             GL11.glEnd();
+
+            if (isAssigned) 
+            {
+            	GL11.glEnable(GL11.GL_BLEND);
+                GL11.glColor4f(assignedColor[0], assignedColor[1], assignedColor[2], .3f);
+                GL11.glBegin(GL11.GL_QUADS);
+                GL11.glVertex2d(0 + xPos, 5 + yPos);
+                GL11.glVertex2d(HEIGHT * invert + xPos, 5 + yPos);
+                GL11.glVertex2d(HEIGHT * invert + xPos, WIDTH - 5 + yPos);
+                GL11.glVertex2d(0 + xPos, WIDTH - 5 + yPos);
+                GL11.glColor4f(color[0], color[1], color[2], 1.0f);
+                GL11.glEnd();
+                GL11.glDisable(GL11.GL_BLEND);
+            }
+            
         } else {
             //left
             GL11.glBegin(GL11.GL_QUADS);
@@ -131,6 +173,20 @@ public class ParkingSpot {
             GL11.glVertex2d(WIDTH + xPos, HEIGHT * invert + yPos);
             GL11.glVertex2d(WIDTH + xPos, 0 + yPos);
             GL11.glEnd();
+
+            if(isAssigned)
+            {
+            	GL11.glEnable(GL11.GL_BLEND);
+                GL11.glColor4f(assignedColor[0], assignedColor[1], assignedColor[2], .3f);
+                GL11.glBegin(GL11.GL_QUADS);                
+                GL11.glVertex2d(5 + xPos, HEIGHT * invert + yPos);
+                GL11.glVertex2d(5 + xPos, 0 + yPos);
+                GL11.glVertex2d(WIDTH - 5 + xPos, 0 + yPos);
+                GL11.glVertex2d(WIDTH - 5 + xPos, HEIGHT * invert + yPos);
+                GL11.glColor4f(color[0], color[1], color[2], 1.0f);
+                GL11.glEnd();
+                GL11.glDisable(GL11.GL_BLEND);
+            }            
         }
     }
 
@@ -176,5 +232,34 @@ public class ParkingSpot {
         color[0] = r;
         color[1] = g;
         color[2] = b;
+    }
+    
+    public void assignColor(float r, float g, float b){
+    	isAssigned = true;
+        assignedColor[0] = r;
+        assignedColor[1] = g;
+        assignedColor[2] = b;
+    }
+    
+    public void removeAssignment() {
+    	isAssigned = false;
+        assignedColor[0] = 1.0f;
+        assignedColor[1] = 1.0f;
+        assignedColor[2] = 1.0f;
+    }
+    
+    public void setFull(boolean full)
+    {
+    	this.full = full;
+    	ParkingSpot.fullCount++;
+    }
+    
+    public boolean getFull()
+    {
+    	return this.full;
+    }
+    
+    public boolean getAssigned() {
+    	return isAssigned;
     }
 }
