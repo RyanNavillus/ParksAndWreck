@@ -16,8 +16,10 @@ public class Oil {
 
     double scale;
 
+    public Oil(double x, double y, double rotation){
         xPos = x;
         yPos = y;
+        this.rotation = rotation;
 
         scale = 5;
     }
