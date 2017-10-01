@@ -54,7 +54,7 @@ public class Controller {
 		{
 			angle = 360 + angle;
 		}
-		System.out.println("Angle: " + angle + " degrees " + axes.get(1) + " " + axes.get(0));
+		//System.out.println("Angle: " + angle + " degrees " + axes.get(1) + " " + axes.get(0));
 		return angle;
 
 	}

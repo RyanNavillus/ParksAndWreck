@@ -3,9 +3,12 @@ package game;
 import com.polaris.engine.render.Texture;
 import com.polaris.engine.render.TextureManager;
 
+import sun.security.krb5.internal.crypto.crc32;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.dyn4j.dynamics.Body;
@@ -57,6 +60,11 @@ public class World {
 				
 		fireTexture = textureManager.getTexture("fire0");
 
+
+		// top
+		// parkingList.addAll(ParkingSpot.createParkingArea(580, 200, 9, 2));
+		// parkingList.addAll(ParkingSpot.createParkingArea(580, 200 +
+		// ParkingSpot.HEIGHT - 5, 9, 0));
 		parkingList.addAll(ParkingSpot.createParkingArea(200, 153, 10, 1));   //left
 		parkingList.addAll(ParkingSpot.createParkingArea(1720 - ParkingSpot.HEIGHT, 153, 10, 3));   //right
 
@@ -93,32 +101,31 @@ public class World {
 			ticksToInitialize = 10;
 		}
 
-//		if (playerCars[0] != null) {
-//			final double force = 5000 * delta;
-//			playerCars[0].thrust(force);
-//			System.out.println(playerCars[0].getLinearVelocity().getMagnitude());
-//		}
-		
-		if (playerCars[0] != null && players[0].controller != null) {
+		if (playerCars[0] != null && players[0].controller != null)
+		{
 			final double force = 500000 * delta;
 
-			if (players[0].controller.aButtonPressed()) {
+			if (players[0].controller.aButtonPressed())
+			{
 				playerCars[0].thrust(force);
 			}
 
-			if (players[0].controller.startButtonPressed()) {
+			if (players[0].controller.startButtonPressed())
+			{
 				playerCars[0].rotate(force * 0.1);
 			}
 		}
+		
+		if (playerCars[0] != null && players[0].controller != null
+				&& players[0].controller.getDirection() != Double.NaN)
+		{
+			// BLALDSLDASL " + )
+			playerCars[0].rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI)
+					- playerCars[0].getTransform().getRotation());
+		}
 
-//		if (playerCars[0] != null && players[0].controller != null
-//				&& players[0].controller.getDirection() != Double.NaN) {
-//			// BLALDSLDASL " + )
-//			playerCars[0].rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI)
-//					- playerCars[0].getTransform().getRotation());
-//		}
-
-		for (Car p : playerCars) {
+		for (Car p : playerCars)
+		{
 			if (p == null)
 				continue;
 
@@ -129,6 +136,38 @@ public class World {
 			s.update(delta);
 
 		physicsWorld.update(delta);
+		
+		for (ParkingSpot spot : parkingList)
+		{
+			for (Car car : playerCars)
+			{
+				if (car != null && spot.containsCar(car))
+				{
+					if(spot.id == car.parkingSpotId)
+					{
+						double timeInterval = ((new Date().getTime()) - car.parkingStartTime.getTime()) / 1000.0; // Seconds spent in parking spot
+						System.out.println("Time interval: " + timeInterval + " :" + spot.id);
+						if (timeInterval > 1)
+						{
+							System.out.println("Parked in spot: " + spot.id);
+						}
+					}
+					else
+					{
+						car.parkingSpotId = spot.id;
+						car.parkingStartTime = new Date();
+					}
+				}
+				else
+				{
+					if (car != null && spot.id == car.parkingSpotId)
+					{
+						car.parkingSpotId = 0;
+						car.parkingStartTime = null;
+					}
+				}
+			}
+		}
 	}
 	
 	public void render(double delta)

@@ -12,6 +12,7 @@ import org.dyn4j.samples.SimulationBody;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Car extends Body
@@ -21,12 +22,15 @@ public class Car extends Body
 	private static final double halfWidth = 22 * 2.2, halfHeight = 13.5 * 2.2;
 	
 	private double[] carColors = new double[3];
-
+	
 	private Texture car;
 	private Texture carFrame;
 	private Texture carFrameBroke;
 
 	private ArrayList<Double[]> fires = new ArrayList<>();
+	
+	public Date parkingStartTime;
+	public int parkingSpotId;
 	
 	private boolean broken;
 	private boolean leaking;
@@ -51,7 +55,7 @@ public class Car extends Body
 		// this may or may not need to be changed
 //		this.translate(0.0, 2.0);
 		setMass(MassType.NORMAL);
-
+		
 		car = manager.getTexture("car");
 		carFrame = manager.getTexture("carframe");
 		carFrameBroke = manager.getTexture("carframeBroke");
