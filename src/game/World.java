@@ -114,7 +114,7 @@ public class World {
 		@Override
 		public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Penetration penetration)
 		{
-			double damageSpeedThresh = 7;
+			double damageSpeedThresh = 4;
 			if (body1.getLinearVelocity().getMagnitude() > damageSpeedThresh ||
 					body2.getLinearVelocity().getMagnitude() > damageSpeedThresh)
 			{
@@ -169,6 +169,29 @@ public class World {
 			if (gameSettings.leftKey.isPressed())
 			{
 				playerCars[3].myrotate(-force);
+			}
+		}
+
+		if (playerCars[2] != null && !playerCars[3].isRecent())
+		{
+			if (gameSettings.go2Key.isPressed())
+			{
+				playerCars[2].thrust(force);
+			}
+
+			if (gameSettings.stop2Key.isPressed())
+			{
+				playerCars[2].thrust(-force);
+			}
+
+			if (gameSettings.right2Key.isPressed())
+			{
+				playerCars[2].myrotate(force);
+			}
+
+			if (gameSettings.left2Key.isPressed())
+			{
+				playerCars[2].myrotate(-force);
 			}
 		}
 			

@@ -63,7 +63,7 @@ public class Car extends Body
 		
 		this.translate(new Vector2(startX, startY).product(1/SCALE));
 		this.rotateAboutCenter(rotation);
-		Vector2 initVel = new Vector2(Math.cos(rotation), Math.sin(rotation)).multiply(25);
+		Vector2 initVel = new Vector2(Math.cos(rotation), Math.sin(rotation)).multiply(75);
 		setLinearVelocity(initVel);
 //		this.getLinearVelocity().multiply(0);
 		
@@ -299,7 +299,7 @@ public class Car extends Body
 	}
 	
 	public boolean recentlyHit() {
-		return (new Date().getTime() - hitTime.getTime()) < 300;
+		return (new Date().getTime() - hitTime.getTime()) < 200;
 	}
 
 	public void damageCar(){
@@ -308,7 +308,7 @@ public class Car extends Body
 		}
 		hitTime = new Date();
 		
-		health -= 3;
+		health -= 4;
 
 		if (health < 0)
 			health = 0;
