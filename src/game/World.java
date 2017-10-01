@@ -95,7 +95,6 @@ public class World {
 
 		if (playerCars[0] != null && players[0].controller != null
 				&& players[0].controller.getDirection() != Double.NaN) {
-			// System.out.println(players[0].controller.getDirection() + "
 			// BLALDSLDASL " + )
 			playerCars[0].rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI)
 					- playerCars[0].getTransform().getRotation());

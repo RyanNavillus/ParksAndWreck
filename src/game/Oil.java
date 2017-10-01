@@ -75,8 +75,6 @@ public class Oil {
 
         for(Oil oil : World.getOils()){
             if (!this.equals(oil) && Math.abs(xPos - oil.getxPos()) < oil.scale && Math.abs(yPos - oil.getyPos()) < oil.scale ){
-                System.out.println(oil);
-                System.out.println(this);
                 World.getOils().remove(this);
                 oil.grow(this.getScale());
                 break;
