@@ -329,12 +329,12 @@ public class World {
 						playerCars[0].thrust(-force);
 					}
 
-					if (players[i].controller.dRightButtonPressed())
+					if (players[i].controller.dLeftButtonPressed())
 					{
 						playerCars[0].myrotate(force);
 					}
 
-					if (players[i].controller.dLeftButtonPressed())
+					if (players[i].controller.dRightButtonPressed())
 					{
 						playerCars[0].myrotate(-force);
 					}
