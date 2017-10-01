@@ -81,13 +81,7 @@ public class World
 	{
 		if((ticksToInitialize -= delta) <= 0)
 		{
-			playerCars[0] = new Car(-65, 55,  0, 0, 0, GuiGame.playerColors[0], textureManager);
-
-			playerCars[1] = new Car(-65, 915, 0, 0, 0, GuiGame.playerColors[1], textureManager);
-
-			playerCars[2] = new Car(1920, 55,  180, 0, 0, GuiGame.playerColors[2], textureManager);
-
-			playerCars[3] = new Car(1920, 915,  180, 0, 0, GuiGame.playerColors[3], textureManager);
+			playerCars[0] = new Car(-65, 55, 0, GuiGame.playerColors[0], textureManager);
 			
 			ticksToInitialize = 0;
 		}

@@ -32,7 +32,7 @@ public class Car extends SimulationBody {
 	
 	private boolean broken;
 
-	public Car(double startX, double startY, double startVelX, double startVelY, double startRotation, double[] carColors, TextureManager manager)
+	public Car(double startX, double startY, double startRotation, double[] carColors, TextureManager manager)
 	{
 		this.getTransform().transform(new Vector2(startX, startY));
 		getTransform().setRotation(startRotation);
