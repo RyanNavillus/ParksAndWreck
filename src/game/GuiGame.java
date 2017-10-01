@@ -154,7 +154,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 		
 		float shiftX = 1920 / 2 - gameSettings.getFont().getWidth(formatter.format(60 - ticksExisted) + "s") / 2f;
 		GL11.glColor4f(1, 1, 0, 1);
-		gameSettings.getFont().draw(formatter.format(60 - ticksExisted) + "s", shiftX, 50, 0, .5f);
+		gameSettings.getFont().draw(formatter.format(60 - ticksExisted) + "s", shiftX, 65, 0, .5f);
 		
 		//title
 		GL11.glColor4d(.25f, .25f, .25f, 1);

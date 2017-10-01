@@ -363,7 +363,7 @@ public class World {
 			
 			GL11.glEnable(GL11.GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(0, 0, 0, .6f);
+			GL11.glColor4f(0, 0, 0, 1f);
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2d(0, 0);
 			GL11.glVertex2d(-8 + t.xPos, -8 + t.yPos);
