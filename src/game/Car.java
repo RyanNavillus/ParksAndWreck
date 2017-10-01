@@ -36,6 +36,7 @@ public class Car extends Body
 	private ArrayList<Double[]> fires = new ArrayList<>();
 	
 	public Date madeTime;
+	public Date hitTime;
 	public Date parkingStartTime;
 	public int parkingSpotId;
 	
@@ -46,7 +47,7 @@ public class Car extends Body
 	
 	public boolean isRecent()
 	{
-		return (new Date().getTime() - madeTime.getTime()) < 300;
+		return (new Date().getTime() - madeTime.getTime()) < 500;
 	}
 
 	private int health;
@@ -55,6 +56,7 @@ public class Car extends Body
 	{
 		super();
 		
+		hitTime = new Date();
 		madeTime = new Date();
 
 		double rotation = startRotation / 180 * Math.PI;
@@ -295,8 +297,17 @@ public class Car extends Body
         System.out.println(angle);
 		myrotate(force * angle);
 	}
+	
+	public boolean recentlyHit() {
+		return (new Date().getTime() - hitTime.getTime()) < 300;
+	}
 
 	public void damageCar(){
+		if (recentlyHit()) {
+			return;
+		}
+		hitTime = new Date();
+		
 		health -= 3;
 
 		if (health < 0)
