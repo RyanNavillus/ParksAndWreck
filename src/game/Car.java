@@ -23,6 +23,8 @@ public class Car extends Body
 	
 	private double[] carColors = new double[3];
 	
+	private boolean isSMatic = false;
+	
 	private Texture car;
 	private Texture carFrame;
 	private Texture carFrameBroke;
@@ -86,17 +88,27 @@ public class Car extends Body
 		return this.getWorldCenter().y * SCALE;
 	}
 	
+	public void setIAmStatic() {
+		this.isSMatic = true;
+	}
+	
+	public boolean iAmStatic() {
+		return this.isSMatic;
+	}
+	
 	public void update(double delta)
 	{
 		//setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
 
-		if(counter == 5){
-			double angle = this.getTransform().getRotation();
-			World.getTracks().add(new Track(getX() + halfWidth/SCALE - 20 * Math.abs(Math.sin(angle)), getY() + halfHeight/SCALE - 20 * Math.abs(Math.cos(angle)), angle, (int) (Math.random() * 6.0)));
-			World.getTracks().add(new Track(getX() + halfWidth/SCALE + 10 * Math.abs(Math.sin(angle)), getY() + halfHeight/SCALE + 10 * Math.abs(Math.cos(angle)), angle, (int) (Math.random() * 6.0)));
-			counter = 0;
-		} else {
-			counter++;
+		if (!iAmStatic()) {
+			if(counter == 5){
+				double angle = this.getTransform().getRotation();
+				World.getTracks().add(new Track(getX() + halfWidth/SCALE - 20 * Math.abs(Math.sin(angle)), getY() + halfHeight/SCALE - 20 * Math.abs(Math.cos(angle)), angle, (int) (Math.random() * 6.0)));
+				World.getTracks().add(new Track(getX() + halfWidth/SCALE + 10 * Math.abs(Math.sin(angle)), getY() + halfHeight/SCALE + 10 * Math.abs(Math.cos(angle)), angle, (int) (Math.random() * 6.0)));
+				counter = 0;
+			} else {
+				counter++;
+			}
 		}
 
 		if (leaking && Math.random() * 6 < 1){

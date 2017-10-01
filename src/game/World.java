@@ -16,6 +16,7 @@ import java.util.List;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.Force;
 import org.dyn4j.geometry.Geometry;
+import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 import org.dyn4j.samples.SimulationBody;
@@ -124,7 +125,7 @@ public class World {
 		{
 			if (playerCars[0] != null)
 			{
-				final double force = 5000 * delta;
+				final double force = 20000 * delta;
 
 				if (gameSettings.goKey.isPressed())
 				{
@@ -203,9 +204,16 @@ public class World {
 							removePlayerCar(i, car);
 							
 							//Immobilize car
-							car.setMass(MassType.INFINITE);
-							car.setLinearVelocity(0,0);
-							car.setAngularVelocity(0);
+//							Mass mas = new Mass(new Vector2(0, 0), 10000, )
+//							car.setMass(MassType.INFINITE);
+							Mass oldMass = car.getMass();
+							car.setMass(new Mass(oldMass.getCenter(), oldMass.getMass() * 10, oldMass.getInertia() * 10));
+							car.setIAmStatic();
+							
+							car.setLinearVelocity(car.getLinearVelocity().product(0.1));
+							car.setAngularVelocity(car.getAngularVelocity() * 0.1);
+							car.setAngularDamping(car.getAngularDamping() * 3);
+							car.setLinearDamping(car.getLinearDamping() * 3);
 							//Increase score of car.player
 							playerScores[i] += 10;
 							
@@ -433,8 +441,8 @@ public class World {
 	{
 		double scale = Car.SCALE;
 
-		double friction = 0.5;
-		double bounce = 0.5;
+		double friction = 0.9;
+		double bounce = 0.2;
 
 		//left wall
 		Body wall = new Body(1);
