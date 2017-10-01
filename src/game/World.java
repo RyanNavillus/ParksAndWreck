@@ -103,7 +103,7 @@ public class World {
 //		}
 		
 		if (playerCars[0] != null && players[0].controller != null) {
-			final double force = 500000 * delta;
+			final double force = 5000 * delta;
 
 			if (players[0].controller.aButtonPressed()) {
 				playerCars[0].thrust(force);

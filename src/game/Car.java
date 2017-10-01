@@ -45,6 +45,9 @@ public class Car extends SimulationBody {
 		
 		// the width and height are correct, do not change
 		addFixture(Geometry.createRectangle(height/SCALE, width/SCALE), 1, friction, bounce);
+		
+		this.setLinearDamping(1.0f);
+		this.setAngularDamping(0.2f);
 
 		// this may or may not need to be changed
 //		this.translate(0.0, 2.0);
