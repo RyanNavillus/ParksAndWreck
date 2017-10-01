@@ -208,7 +208,11 @@ public class World {
 		for (ParkingSpot parkingSpot : parkingList) {
 			parkingSpot.render(delta);
 		}
-		
+
+		GuiGame.renderScores(gameSettings, playerScores);
+
+		if (tracks.size() > 0)
+			renderTrack();
 		renderTracks();
 
 		for(Track track : tracks){
@@ -218,8 +222,6 @@ public class World {
 		for(Oil oil : oils){
 			oil.render(delta);
 		}
-
-		GuiGame.renderScores(gameSettings, playerScores);
 		
 		for(Car car : staticCars)
 		{
@@ -250,7 +252,7 @@ public class World {
 		return tracks;
 	}
 	
-	public static void renderTrack(double x, double y, double rotation)
+	public static void renderTrack()
 	{
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, trackFrameBuffer);
 		glViewport(0, 0, 1920, 1080);
@@ -262,6 +264,39 @@ public class World {
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		
 		//RENDER THE TRACK HERE
+
+		for( Track t : tracks){
+			GL11.glPushMatrix();
+
+			GL11.glTranslatef((float) (t.xPos + 16 / 2), (float) (t.yPos + 16 / 2), 0);
+			GL11.glRotatef((float) (t.rotation * 180 / Math.PI - 90), 0, 0, 1);
+			GL11.glTranslatef((float) -(t.xPos + 16 / 2), (float) -(t.yPos + 16 / 2), 0);
+
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glColor4f(0f, 0f, 0f, .2f);
+
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+
+			Track.getTrackTextures()[t.texture].bind();
+
+			GL11.glBegin(GL11.GL_QUADS);
+			GL11.glTexCoord2d(0, 0);
+			GL11.glVertex2d(0 + t.xPos, 0 + t.yPos);
+			GL11.glTexCoord2d(0, 1);
+			GL11.glVertex2d(0 + t.xPos, 16 + t.yPos);
+			GL11.glTexCoord2d(1, 1);
+			GL11.glVertex2d(16 + t.xPos, 16 + t.yPos);
+			GL11.glTexCoord2d(1, 0);
+			GL11.glVertex2d(16 + t.xPos, 0 + t.yPos);
+			GL11.glEnd();
+
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glDisable(GL11.GL_BLEND);
+
+			GL11.glPopMatrix();
+		}
+
+		tracks = new ArrayList<>();
 		
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 	}
