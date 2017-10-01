@@ -324,10 +324,5 @@ public class Car extends Body
 	public boolean isDead() {
 		return health == 0;
 	}
-
-	public void explode() {
-		// TODO Auto-generated method stub
-		
-	}
 }
 

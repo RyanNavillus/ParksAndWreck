@@ -90,7 +90,7 @@ public class World {
 
 		physicsWorld = new org.dyn4j.dynamics.World();
 		physicsWorld.setGravity(org.dyn4j.dynamics.World.ZERO_GRAVITY);
-		physicsWorld.addListener(new CustomCollision());
+		physicsWorld.addListener(new CustomCollision(this));
 
 		fireTexture = textureManager.getTexture("fire0");
 
@@ -126,12 +126,33 @@ public class World {
 		assignParkingSpot(car4);
 
 	}
+	
+	private static class DESTROY extends Body {
+		
+	}
 
 	private static class CustomCollision extends CollisionAdapter {
+		private World w;
+		
+		public CustomCollision(World w) {
+			this.w = w;
+		}
 
 		@Override
 		public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Penetration penetration)
 		{
+			if (body1 instanceof DESTROY) {
+				if (body2 instanceof Car) {
+					w.explode((Car)body2);
+				}
+			}
+			if (body2 instanceof DESTROY) {
+				if (body1 instanceof Car) {
+					w.explode((Car)body1);
+				}
+			}
+
+
 			double damageSpeedThresh = 3;
 			if (body1.getLinearVelocity().getMagnitude() > damageSpeedThresh ||
 					body2.getLinearVelocity().getMagnitude() > damageSpeedThresh)
@@ -142,7 +163,7 @@ public class World {
 					if (boomMode) {
 						body1.applyImpulse(body2.getLinearVelocity().product(3));
 						Car c1 = (Car)body1;
-						if (c1.isDead()) c1.explode();
+						if (c1.isDead()) w.explode(c1);
 					}
 				}
 				if (body2 instanceof Car) {
@@ -150,7 +171,7 @@ public class World {
 					if (boomMode) {
 						body2.applyImpulse(body1.getLinearVelocity().product(3));
 						Car c2 = (Car)body1;
-						if (c2.isDead()) c2.explode();
+						if (c2.isDead()) w.explode(c2);
 					}
 				}
 			}
@@ -171,7 +192,46 @@ public class World {
 	{
 		playerCars[id] = null;
 		parkedCars.add(car);
-		//physicsWorld.removeBody(car);
+	}
+	
+	private void explode(Car car) {
+		boolean found = false;
+		for (int i = 0; i < 4; i++) {
+			if (car == playerCars[i]) {
+				found = true;
+		switch (i)
+		{
+			case 0: 
+				Car newCar1 = new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager);
+				addPlayerCar(0, newCar1);
+				assignParkingSpot(newCar1);
+				break;
+			case 1:
+				Car newCar2 = new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager);
+				addPlayerCar(1, newCar2);
+				assignParkingSpot(newCar2);
+				break;
+			case 2:
+				Car newCar3 = new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager);
+				addPlayerCar(2, newCar3);
+				assignParkingSpot(newCar3);
+				break;
+			case 3:
+				Car newCar4 = new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager);
+				addPlayerCar(3, newCar4);
+				assignParkingSpot(newCar4);
+				break;
+			default:
+				break;
+		}
+			}
+		}
+
+		if (!found) {
+			parkedCars.remove(car);
+		}
+
+		physicsWorld.removeBody(car);
 	}
 
 	public void update(double delta)
@@ -642,6 +702,39 @@ public class World {
 		wall.setMass(MassType.INFINITE);
 
 		physicsWorld.addBody(wall);
+
+		// destroy bounds
+
+		double RIP = 0;
+		double SHRED = 0;
+		DESTROY DeStRoY;
+		DeStRoY = new DESTROY();
+		DeStRoY.translate((1920 + 400) / scale, -800 / scale);
+		DeStRoY.addFixture(Geometry.createRectangle(400 / scale, 1920 + 1600 / scale), 1, RIP, SHRED);
+		DeStRoY.setMass(MassType.INFINITE);
+
+		physicsWorld.addBody(DeStRoY);
+
+		DeStRoY = new DESTROY();
+		DeStRoY.translate((-400) / scale, -800 / scale);
+		DeStRoY.addFixture(Geometry.createRectangle(400 / scale, 1920 + 1600 / scale), 1, RIP, SHRED);
+		DeStRoY.setMass(MassType.INFINITE);
+
+		physicsWorld.addBody(DeStRoY);
+
+//		DeStRoY = new DESTROY();
+//		DeStRoY.translate((-400) / scale, -800 / scale);
+//		DeStRoY.addFixture(Geometry.createRectangle(400 / scale, 1920 + 1600 / scale), 1, RIP, SHRED);
+//		DeStRoY.setMass(MassType.INFINITE);
+//
+//		physicsWorld.addBody(DeStRoY);
+//
+//		DeStRoY = new DESTROY();
+//		DeStRoY.translate((-400) / scale, -800 / scale);
+//		DeStRoY.addFixture(Geometry.createRectangle(400 / scale, 1920 + 1600 / scale), 1, RIP, SHRED);
+//		DeStRoY.setMass(MassType.INFINITE);
+//
+//		physicsWorld.addBody(DeStRoY);
 	}
 
 	private void assignParkingSpot(Car car) {
