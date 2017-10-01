@@ -47,6 +47,8 @@ public class World {
 	private float totalTime = 0;
 
 	private Player[] players;
+	
+	private Date lastModeChange;
 
 	private List<Car> staticCars;
 	private Car[] playerCars;
@@ -64,9 +66,14 @@ public class World {
 
 	private static ArrayList<Oil> oils = new ArrayList<>();
 	public static ArrayList<Track> tracks = new ArrayList<>();
+	
+	private boolean recentModeChange() {
+		return (new Date().getTime() - lastModeChange.getTime()) < 200;
+	}
 
 	public World(GameSettings settings, TextureManager manager)
 	{
+		lastModeChange = new Date();
 		staticCars = new ArrayList<>();
 		playerCars = new Car[4];
 		parkedCars = new ArrayList<>();
@@ -146,6 +153,8 @@ public class World {
 		physicsWorld.addListener(new CustomCollision());
 	}
 	
+	private static boolean reverseMode = false;
+	
 	private void removePlayerCar(int id, Car car)
 	{
 		playerCars[id] = null;
@@ -157,8 +166,13 @@ public class World {
 	{
 		final double force = 20000 * delta;
 		
-		if (gameSettings.uKey.isPressed()) {
+		// mode changes
+		if (!recentModeChange() && gameSettings.uKey.isPressed()) {
 			boomMode = !boomMode;
+		}
+
+		if (!recentModeChange() && gameSettings.iKey.isPressed()) {
+			reverseMode = !reverseMode;
 		}
 
 		if (playerCars[3] != null && !playerCars[3].isRecent())
@@ -168,7 +182,7 @@ public class World {
 				playerCars[3].thrust(force);
 			}
 
-			if (gameSettings.stopKey.isPressed())
+			if (reverseMode && gameSettings.stopKey.isPressed())
 			{
 				playerCars[3].thrust(-force);
 			}
@@ -191,7 +205,7 @@ public class World {
 				playerCars[2].thrust(force);
 			}
 
-			if (gameSettings.stop2Key.isPressed())
+			if (reverseMode && gameSettings.stop2Key.isPressed())
 			{
 				playerCars[2].thrust(-force);
 			}
@@ -213,32 +227,34 @@ public class World {
 			{
 				if (!playerCars[i].isRecent())
 				{
-					if (playerCars[0] != null && !playerCars[0].isRecent())
+					if (players[i].controller.dUpButtonPressed())
 					{
-						if (players[i].controller.dUpButtonPressed())
-						{
-							playerCars[0].thrust(force);
-						}
-
-						if (players[i].controller.dDownButtonPressed())
-						{
-							playerCars[0].thrust(-force);
-						}
-
-						if (players[i].controller.dRightButtonPressed())
-						{
-							playerCars[0].myrotate(force);
-						}
-
-						if (players[i].controller.dLeftButtonPressed())
-						{
-							playerCars[0].myrotate(-force);
-						}
+						playerCars[0].thrust(force);
 					}
 
+					if (reverseMode && players[i].controller.dDownButtonPressed())
+					{
+						playerCars[0].thrust(-force);
+					}
+
+					if (players[i].controller.dRightButtonPressed())
+					{
+						playerCars[0].myrotate(force);
+					}
+
+					if (players[i].controller.dLeftButtonPressed())
+					{
+						playerCars[0].myrotate(-force);
+					}
+					
 					if (players[i].controller.aButtonPressed())
 					{
 						playerCars[i].thrust(force);
+					}
+
+					if (reverseMode && players[i].controller.bButtonPressed())
+					{
+						playerCars[i].thrust(-force);
 					}
 
 					double angle = players[i].controller.getDirection();

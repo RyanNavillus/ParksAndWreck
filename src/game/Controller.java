@@ -84,6 +84,15 @@ public class Controller {
 		}
 		return false;
 	}
+
+	public boolean bButtonPressed() 
+	{
+		ByteBuffer buttons = GLFW.glfwGetJoystickButtons(id);
+		if (buttons.get(1) == 1) {
+			return true;
+		}
+		return false;
+	}
 	
 	public boolean backButtonPressed() 
 	{
