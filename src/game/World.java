@@ -43,7 +43,7 @@ public class World
 		textureManager = manager;
 		
 		physicsWorld = new org.dyn4j.dynamics.World();
-		physicsWorld.setGravity(new Vector2(0, 0));
+		physicsWorld.setGravity(org.dyn4j.dynamics.World.ZERO_GRAVITY);
 				
 		fireTexture = textureManager.getTexture("fire0");
 

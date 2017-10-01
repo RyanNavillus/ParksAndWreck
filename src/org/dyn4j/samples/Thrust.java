@@ -32,7 +32,10 @@ import java.awt.event.KeyListener;
 import java.awt.geom.Line2D;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.dyn4j.collision.narrowphase.Penetration;
+import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.dynamics.CollisionAdapter;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
@@ -48,16 +51,70 @@ import org.dyn4j.geometry.Vector2;
 public class Thrust extends SimulationFrame {
 	/** The serial version id */
 	private static final long serialVersionUID = 3770932661470247325L;
+	
+	private int num_of_ships;
 
 	/** The controlled ship */
-	private SimulationBody ship;
+	private Ship[] ships;
 	
 	// Some booleans to indicate that a key is pressed
 	
-	private AtomicBoolean forwardThrustOn = new AtomicBoolean(false);
-	private AtomicBoolean reverseThrustOn = new AtomicBoolean(false);
-	private AtomicBoolean leftThrustOn = new AtomicBoolean(false);
-	private AtomicBoolean rightThrustOn = new AtomicBoolean(false);
+	private AtomicBoolean[] forwardThrustOn;
+	private AtomicBoolean[] reverseThrustOn;
+	private AtomicBoolean[] leftThrustOn;
+	private AtomicBoolean[] rightThrustOn;
+	
+	private static class StopContactListener extends CollisionAdapter {
+		private Body b1, b2;
+		
+		public StopContactListener(Body b1, Body b2) {
+			this.b1 = b1;
+			this.b2 = b2;
+		}
+		@Override
+		public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Penetration penetration) {
+			// the bodies can appear in either order
+
+			if ((body1 == b1 && body2 == b2) ||
+			    (body1 == b2 && body2 == b1)) {
+				// its the collision we were looking for
+				// do whatever you need to do here
+				
+				Vector2 impulse1 = null;
+				Vector2 impulse2 = null;
+				
+				double minImpulse = 2;
+				double impulseAdjust = 0.5;
+
+				Object userData1 = fixture1.getUserData();
+				if (userData1 != null && userData1 instanceof DynData) {
+					DynData data1 = (DynData) userData1;
+					if (data1.isHead()) {
+						impulse1 = new Vector2(body1.getLinearVelocity()).multiply(impulseAdjust);
+						if (impulse1.getMagnitude() < minImpulse) {
+							impulse1.setMagnitude(minImpulse);
+						}
+						body2.applyImpulse(impulse1);
+					}
+				}
+
+				Object userData2 = fixture2.getUserData();
+				if (userData2 != null && userData2 instanceof DynData) {
+					DynData data2 = (DynData) userData2;
+					if (data2.isHead()) {
+						impulse2 = new Vector2(body2.getLinearVelocity()).multiply(impulseAdjust);
+						if (impulse2.getMagnitude() < minImpulse) {
+							impulse2.setMagnitude(minImpulse);
+						}
+						body1.applyImpulse(impulse2);
+					}
+				}
+				
+				return impulse1 == null && impulse2 == null;
+			}
+			return true;
+		}
+	}
 	
 	/**
 	 * Custom key adapter to listen for key events.
@@ -68,38 +125,75 @@ public class Thrust extends SimulationFrame {
 	private class CustomKeyListener extends KeyAdapter {
 		@Override
 		public void keyPressed(KeyEvent e) {
-			switch (e.getKeyCode()) {
-				case KeyEvent.VK_UP:
-					forwardThrustOn.set(true);
-					break;
-				case KeyEvent.VK_DOWN:
-					reverseThrustOn.set(true);
-					break;
-				case KeyEvent.VK_LEFT:
-					leftThrustOn.set(true);
-					break;
-				case KeyEvent.VK_RIGHT:
-					rightThrustOn.set(true);
-					break;
+			if (num_of_ships > 0) {
+				switch (e.getKeyCode()) {
+					case KeyEvent.VK_UP:
+						forwardThrustOn[0].set(true);
+						break;
+					case KeyEvent.VK_DOWN:
+						reverseThrustOn[0].set(true);
+						break;
+					case KeyEvent.VK_LEFT:
+						leftThrustOn[0].set(true);
+						break;
+					case KeyEvent.VK_RIGHT:
+						rightThrustOn[0].set(true);
+						break;
+			    }
+			}
+			if (num_of_ships > 1) {
+				switch (e.getKeyCode()) {
+					case KeyEvent.VK_W:
+						forwardThrustOn[1].set(true);
+						break;
+					case KeyEvent.VK_S:
+						reverseThrustOn[1].set(true);
+						break;
+					case KeyEvent.VK_A:
+						leftThrustOn[1].set(true);
+						break;
+					case KeyEvent.VK_D:
+						rightThrustOn[1].set(true);
+						break;
+			    }
 			}
 			
 		}
 		
 		@Override
 		public void keyReleased(KeyEvent e) {
+			if (num_of_ships > 0) {
 			switch (e.getKeyCode()) {
 				case KeyEvent.VK_UP:
-					forwardThrustOn.set(false);
+					forwardThrustOn[0].set(false);
 					break;
 				case KeyEvent.VK_DOWN:
-					reverseThrustOn.set(false);
+					reverseThrustOn[0].set(false);
 					break;
 				case KeyEvent.VK_LEFT:
-					leftThrustOn.set(false);
+					leftThrustOn[0].set(false);
 					break;
 				case KeyEvent.VK_RIGHT:
-					rightThrustOn.set(false);
+					rightThrustOn[0].set(false);
 					break;
+			}
+			}
+			
+			if (num_of_ships > 1) {
+				switch (e.getKeyCode()) {
+					case KeyEvent.VK_W:
+						forwardThrustOn[1].set(false);
+						break;
+					case KeyEvent.VK_S:
+						reverseThrustOn[1].set(false);
+						break;
+					case KeyEvent.VK_A:
+						leftThrustOn[1].set(false);
+						break;
+					case KeyEvent.VK_D:
+						rightThrustOn[1].set(false);
+						break;
+				}
 			}
 		}
 	}
@@ -122,40 +216,53 @@ public class Thrust extends SimulationFrame {
 		this.world.setGravity(new Vector2(0, 0));
 		
 		// create all your bodies/joints
+		double offset = 5;
 		
 		// the bounds so we can keep playing
 		SimulationBody l = new SimulationBody();
-		l.addFixture(Geometry.createRectangle(1, 15));
-		l.translate(-5, 0);
+		l.addFixture(Geometry.createRectangle(1, offset * 15));
+		l.translate(-offset, 0);
 		l.setMass(MassType.INFINITE);
 		this.world.addBody(l);
 		
 		SimulationBody r = new SimulationBody();
-		r.addFixture(Geometry.createRectangle(1, 15));
-		r.translate(5, 0);
+		r.addFixture(Geometry.createRectangle(1, offset * 3));
+		r.translate(offset, 0);
 		r.setMass(MassType.INFINITE);
 		this.world.addBody(r);
 		
 		SimulationBody t = new SimulationBody();
-		t.addFixture(Geometry.createRectangle(15, 1));
-		t.translate(0, 5);
+		t.addFixture(Geometry.createRectangle(offset * 3, 1));
+		t.translate(0, offset);
 		t.setMass(MassType.INFINITE);
 		this.world.addBody(t);
 		
 		SimulationBody b = new SimulationBody();
-		b.addFixture(Geometry.createRectangle(15, 1));
-		b.translate(0, -5);
+		b.addFixture(Geometry.createRectangle(offset * 3, 1));
+		b.translate(0, -offset);
 		b.setMass(MassType.INFINITE);
 		this.world.addBody(b);
 		
 		// the ship
-		ship = new SimulationBody();
-		ship.addFixture(Geometry.createRectangle(0.5, 1.5), 1, 0.2, 0.2);
-		BodyFixture bf2 = ship.addFixture(Geometry.createEquilateralTriangle(0.5), 1, 0.2, 0.2);
-		bf2.getShape().translate(0, 0.9);
-		ship.translate(0.0, 2.0);
-		ship.setMass(MassType.NORMAL);
-		this.world.addBody(ship);
+		this.num_of_ships = 2;
+		this.ships = new Ship[this.num_of_ships];
+		this.forwardThrustOn = new AtomicBoolean[num_of_ships];
+		this.reverseThrustOn = new AtomicBoolean[num_of_ships];
+		this.leftThrustOn = new AtomicBoolean[num_of_ships];
+		this.rightThrustOn = new AtomicBoolean[num_of_ships];
+
+		for (int i = 0; i < ships.length; i++) {
+			this.ships[i] = new Ship();
+			this.world.addBody(ships[i]);
+			this.forwardThrustOn[i] = new AtomicBoolean(false);
+			this.reverseThrustOn[i] = new AtomicBoolean(false);
+			this.leftThrustOn[i] = new AtomicBoolean(false);
+			this.rightThrustOn[i] = new AtomicBoolean(false);
+			
+			for (int j = 0; j < i; j++) {
+				this.world.addListener(new StopContactListener(ships[i], ships[j]));
+			}
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -166,60 +273,48 @@ public class Thrust extends SimulationFrame {
 		super.update(g, elapsedTime);
 		
 		final double scale = this.scale;
-		final double force = 1000 * elapsedTime;
+		final double force = 5000 * elapsedTime;
 		
-        final Vector2 r = new Vector2(ship.getTransform().getRotation() + Math.PI * 0.5);
-        final Vector2 c = ship.getWorldCenter();
+        final Vector2 r = new Vector2(ships[0].getTransform().getRotation() + Math.PI * 0.5);
+        final Vector2 c = ships[0].getWorldCenter();
 		
 		// apply thrust
-        if (this.forwardThrustOn.get()) {
-        	Vector2 f = r.product(force);
-        	Vector2 p = c.sum(r.product(-0.9));
-        	
-        	ship.applyForce(f);
-        	
-        	g.setColor(Color.ORANGE);
-        	g.draw(new Line2D.Double(p.x * scale, p.y * scale, (p.x - f.x) * scale, (p.y - f.y) * scale));
-        } 
-        if (this.reverseThrustOn.get()) {
-        	Vector2 f = r.product(-force);
-        	Vector2 p = c.sum(r.product(0.9));
-        	
-        	ship.applyForce(f);
-        	
-        	g.setColor(Color.ORANGE);
-        	g.draw(new Line2D.Double(p.x * scale, p.y * scale, (p.x - f.x) * scale, (p.y - f.y) * scale));
-        }
-        if (this.leftThrustOn.get()) {
-        	Vector2 f1 = r.product(force * 0.1).right();
-        	Vector2 f2 = r.product(force * 0.1).left();
-        	Vector2 p1 = c.sum(r.product(0.9));
-        	Vector2 p2 = c.sum(r.product(-0.9));
-        	
-        	// apply a force to the top going left
-        	ship.applyForce(f1, p1);
-        	// apply a force to the bottom going right
-        	ship.applyForce(f2, p2);
-        	
-        	g.setColor(Color.RED);
-        	g.draw(new Line2D.Double(p1.x * scale, p1.y * scale, (p1.x - f1.x) * scale, (p1.y - f1.y) * scale));
-        	g.draw(new Line2D.Double(p2.x * scale, p2.y * scale, (p2.x - f2.x) * scale, (p2.y - f2.y) * scale));
-        }
-        if (this.rightThrustOn.get()) {
-        	Vector2 f1 = r.product(force * 0.1).left();
-        	Vector2 f2 = r.product(force * 0.1).right();
-        	Vector2 p1 = c.sum(r.product(0.9));
-        	Vector2 p2 = c.sum(r.product(-0.9));
-        	
-        	// apply a force to the top going left
-        	ship.applyForce(f1, p1);
-        	// apply a force to the bottom going right
-        	ship.applyForce(f2, p2);
-        	
-        	g.setColor(Color.RED);
-        	g.draw(new Line2D.Double(p1.x * scale, p1.y * scale, (p1.x - f1.x) * scale, (p1.y - f1.y) * scale));
-        	g.draw(new Line2D.Double(p2.x * scale, p2.y * scale, (p2.x - f2.x) * scale, (p2.y - f2.y) * scale));
-        }
+			
+		if (num_of_ships > 0) {
+            if (this.forwardThrustOn[0].get()) {
+            	ships[0].thrust(g, force, scale);
+            } 
+
+            if (this.reverseThrustOn[0].get()) {
+        	    ships[0].thrust(g, -force, scale);
+            }
+
+            if (this.leftThrustOn[0].get()) {
+            	ships[0].rotate(g, force, scale);
+            }
+
+            if (this.rightThrustOn[0].get()) {
+            	ships[0].rotate(g, -force, scale);
+            }
+		}
+
+		if (num_of_ships > 1) {
+            if (this.forwardThrustOn[1].get()) {
+            	ships[1].thrust(g, force, scale);
+            } 
+
+            if (this.reverseThrustOn[1].get()) {
+        	    ships[1].thrust(g, -force, scale);
+            }
+
+            if (this.leftThrustOn[1].get()) {
+            	ships[1].rotate(g, force, scale);
+            }
+
+            if (this.rightThrustOn[1].get()) {
+            	ships[1].rotate(g, -force, scale);
+            }
+		}
 	}
 	
 	/**
