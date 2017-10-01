@@ -44,7 +44,7 @@ public class Car extends Body
 		double rotation = startRotation / 180 * Math.PI;
 		
 		this.translate(new Vector2(startX, startY).product(1/SCALE));
-//		this.rotateAboutCenter(rotation);
+		this.rotateAboutCenter(rotation);
 		Vector2 initVel = new Vector2(Math.cos(rotation), Math.sin(rotation)).multiply(10);
 		setLinearVelocity(initVel);
 //		this.getLinearVelocity().multiply(0);
