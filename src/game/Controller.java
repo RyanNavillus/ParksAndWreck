@@ -53,6 +53,7 @@ public class Controller {
 		}
 		System.out.println("Angle: " + angle + " degrees");
 		return angle;
+
 	}
 	
 	/*

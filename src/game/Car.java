@@ -2,15 +2,25 @@ package game;
 
 import com.polaris.engine.render.Texture;
 import com.polaris.engine.render.TextureManager;
+
+import org.dyn4j.collision.Fixture;
+import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.dynamics.Force;
+import org.dyn4j.geometry.Geometry;
+import org.dyn4j.geometry.MassType;
+import org.dyn4j.geometry.Rectangle;
+import org.dyn4j.geometry.Vector2;
+import org.dyn4j.samples.SimulationBody;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class Car {
+public class Car extends SimulationBody {
 	
-	private double posX, posY;
+	private static final double height = 44 * 2.5, width = 27 * 2.5;
+	private static final double halfHeight = 22 * 2.5, halfWidth = 13.5 * 2.5;
 	
-	private double velX, velY;
 	
 	private double[] carColors = new double[3];
 
@@ -19,17 +29,22 @@ public class Car {
 	private Texture carFrameBroke;
 
 	private ArrayList<Double[]> fires = new ArrayList<>();
-
-	private double rotation;
+	
 	private boolean broken;
 
 	public Car(double startX, double startY, double startVelX, double startVelY, double startRotation, double[] carColors, TextureManager manager)
 	{
-		posX = startX;
-		posY = startY;
+		translate(startX, startY);
+		getTransform().setRotation(startRotation);
+		setLinearVelocity(Math.cos(startRotation / 180 * Math.PI) * 100000, Math.sin(startRotation / 180 * Math.PI) * 100000);
 		
-		velX = startVelX;
-		velY = startVelY;
+		
+		double posX = this.getTransform().getTranslationX();
+		double posY = this.getTransform().getTranslationY();
+		double rotation = this.getTransform().getRotation();
+		System.out.println(posX + " " + posY + " " + rotation);
+		addFixture(Geometry.createRectangle(80, 120),  1, 0.2, 0.2);
+		setMass(MassType.NORMAL);
 
 		car = manager.getTexture("car");
 		carFrame = manager.getTexture("carframe");
@@ -42,7 +57,7 @@ public class Car {
 		for (int i = 0; i < 5; i++)
 			generateFire();
 
-		broken = true;
+		broken = false;
 	}
 	
 	/*
@@ -63,10 +78,17 @@ public class Car {
 	
 	public void render(double delta)
 	{
+		
+		double posX = this.getTransform().getTranslationX();
+		double posY = this.getTransform().getTranslationY();
+		double rotation = this.getTransform().getRotation();
+		
+		
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float) (posX + (27 * 2.5 / 2)), (float) (posY + (44 * 2.5 / 2)), 0);
-		GL11.glRotatef((float) rotation++, 0, 0, 1);
-		GL11.glTranslatef((float) -(posX + 27 * 2.5 / 2), (float) -(posY + (44 * 2.5 / 2)), 0);
+		
+		GL11.glTranslatef((float) (posX + (width / 2)), (float) (posY + (height / 2)), 0);
+		GL11.glRotatef((float) (rotation * 180 / Math.PI - 90), 0, 0, 1);
+
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 
@@ -77,13 +99,13 @@ public class Car {
 		GL11.glBegin(GL11.GL_QUADS);
 
 		GL11.glTexCoord2d(0, 0);
-		GL11.glVertex2d(0 + posX, 0 + posY);
+		GL11.glVertex2d(-halfWidth, -halfHeight);
 		GL11.glTexCoord2d(0, 1);
-		GL11.glVertex2d(0 + posX, 44 * 2.5 + posY);
+		GL11.glVertex2d(-halfWidth, halfHeight);
 		GL11.glTexCoord2d(1, 1);
-		GL11.glVertex2d(27 * 2.5 + posX, 44 * 2.5 + posY);
+		GL11.glVertex2d(halfWidth, halfHeight);
 		GL11.glTexCoord2d(1, 0);
-		GL11.glVertex2d(27 * 2.5 + posX, 0 + posY);
+		GL11.glVertex2d(halfWidth, -halfHeight);
 
 		GL11.glEnd();
 
@@ -96,15 +118,15 @@ public class Car {
 		}
 
 		GL11.glBegin(GL11.GL_QUADS);
-
+		
 		GL11.glTexCoord2d(0, 0);
-		GL11.glVertex2d(0 + posX, 0 + posY);
+		GL11.glVertex2d(-halfWidth, -halfHeight);
 		GL11.glTexCoord2d(0, 1);
-		GL11.glVertex2d(0 + posX, 0 + 44 * 2.5 + posY);
+		GL11.glVertex2d(-halfWidth, halfHeight);
 		GL11.glTexCoord2d(1, 1);
-		GL11.glVertex2d(0 + 27 * 2.5 + posX, 0 + 44 * 2.5 + posY);
+		GL11.glVertex2d(halfWidth, halfHeight);
 		GL11.glTexCoord2d(1, 0);
-		GL11.glVertex2d(0 + 27 * 2.5 + posX, 0 + posY);
+		GL11.glVertex2d(halfWidth, -halfHeight);
 
 		GL11.glEnd();
 
@@ -121,15 +143,17 @@ public class Car {
 			double y =  fires.get(i)[1];
 
 			GL11.glTexCoord2d(0, 0);
-			GL11.glVertex2d(0 + posX + x, 0 + posY + y);
+			GL11.glVertex2d(-halfWidth + x, -halfHeight + y);
 			GL11.glTexCoord2d(0, 1);
-			GL11.glVertex2d(0 + posX + x, 20 + posY + y);
+			GL11.glVertex2d(-halfWidth + x, -halfHeight + y + 20);
 			GL11.glTexCoord2d(1, 1);
-			GL11.glVertex2d(20 + posX + x, 20 + posY + y);
+			GL11.glVertex2d(-halfWidth + x + 20, -halfHeight + y + 20);
 			GL11.glTexCoord2d(1, 0);
-			GL11.glVertex2d(20 + posX + x, 0 + posY + y);
+			GL11.glVertex2d(-halfWidth + x + 20, -halfHeight + y);
 		}
+		
 		GL11.glEnd();
+		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 		GL11.glPopMatrix();
@@ -143,20 +167,6 @@ public class Car {
 			y = Math.random() * (44 * 2.5 - 30) + 5;
 
 		fires.add(new Double[] {x, y});
-	}
-	
-	public double getPosX()
-	{
-		return posX;
-	}
-	
-	public double getPosY()
-	{
-		return posY;
-	}
-
-	public void setRotation(double rotation){
-		this.rotation = rotation;
 	}
 
 	public void setBroken(boolean broken){

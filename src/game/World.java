@@ -6,6 +6,10 @@ import com.polaris.engine.render.TextureManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dyn4j.dynamics.Force;
+import org.dyn4j.geometry.Vector2;
+import org.dyn4j.samples.SimulationBody;
+
 /**
  * Created by Killian Le Clainche on 9/30/2017.
  */
@@ -23,7 +27,10 @@ public class World
 	
 	private GameSettings gameSettings;
 	private TextureManager textureManager;
-	
+		
+	private org.dyn4j.dynamics.World physicsWorld;
+	private double ticksToInitialize = 2;
+
 	public World(GameSettings settings, TextureManager manager)
 	{
 		staticCars = new ArrayList<>();
@@ -35,16 +42,15 @@ public class World
 		
 		textureManager = manager;
 		
+		physicsWorld = new org.dyn4j.dynamics.World();
+		physicsWorld.setGravity(new Vector2(0, 0));
+				
 		fireTexture = textureManager.getTexture("fire0");
 
 		/*Car car = new Car(100, 100, 0, 0, 0, manager);
 		playerCars[0] = car;
 		car = new Car(100, 200, 0, 0, 45, manager);
 		playerCars[1] = car;*/
-
-		for(int i = 0; i < playerCars.length; i++){
-			playerCars[i] = new Car(100 + i*200, 200, 0, 0, 45, GuiGame.playerColors[i], manager);;
-		}
 
 		//parkingList.add(new ParkingSpot(0, 0, false));
 
@@ -66,7 +72,30 @@ public class World
 	
 	public void update(double delta)
 	{
-	
+		if((ticksToInitialize -= delta) <= 0)
+		{
+			playerCars[0] = new Car(-65, 55,  0, 0, 0, GuiGame.playerColors[0], textureManager);
+
+			playerCars[1] = new Car(-65, 915, 0, 0, 0, GuiGame.playerColors[1], textureManager);
+
+			playerCars[2] = new Car(1920, 55,  180, 0, 0, GuiGame.playerColors[2], textureManager);
+
+			playerCars[3] = new Car(1920, 915,  180, 0, 0, GuiGame.playerColors[3], textureManager);
+			
+			ticksToInitialize = 2;
+		}
+		
+		for(Car p : playerCars){
+			if (p == null)
+				continue;
+
+			p.update(delta);
+		}
+		
+		for(Car s : staticCars)
+			s.update(0);
+		
+		physicsWorld.update(delta);
 	}
 	
 	public void render(double delta)
@@ -94,6 +123,9 @@ public class World
 		
 		for(Car car : playerCars)
 		{
+			if (car == null)
+				continue;
+
 			car.render(delta);
 		}
 	}
