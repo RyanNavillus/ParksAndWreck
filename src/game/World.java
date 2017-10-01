@@ -57,6 +57,7 @@ public class World {
 	private List<Car> parkedCars;
 	
 	private List<ParkingSpot> parkingList;
+	private ParkingSpot[] activeParking;
 
 	private GameSettings gameSettings;
 	private TextureManager textureManager;
@@ -79,6 +80,7 @@ public class World {
 		parkedCars = new ArrayList<>();
 
 		parkingList = new ArrayList<>();
+		activeParking = new ParkingSpot[4];
 		playerScores = new int[4];
 		displayScores = new int[4];
 
@@ -114,16 +116,16 @@ public class World {
 		}
 		Car car1 = new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager);
 		addPlayerCar(0, car1);
-		assignParkingSpot(car1);
+		assignParkingSpot(0, car1);
 		Car car2 = new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager);
 		addPlayerCar(1, car2);
-		assignParkingSpot(car2);
+		assignParkingSpot(1, car2);
 		Car car3 = new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager);
 		addPlayerCar(2, car3);
-		assignParkingSpot(car3);
+		assignParkingSpot(2, car3);
 		Car car4 = new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager);
 		addPlayerCar(3, car4);
-		assignParkingSpot(car4);
+		assignParkingSpot(3, car4);
 
 	}
 	
@@ -142,14 +144,18 @@ public class World {
 		public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Penetration penetration)
 		{
 			if (body1 instanceof DESTROY) {
+				try {
 				if (body2 instanceof Car) {
 					w.explode((Car)body2);
 				}
+				}catch(Error e){}
 			}
 			if (body2 instanceof DESTROY) {
+				try {
 				if (body1 instanceof Car) {
 					w.explode((Car)body1);
 				}
+				}catch(Error e){}
 			}
 
 
@@ -159,20 +165,28 @@ public class World {
 			{
 				if (body1 instanceof Car) 
 				{
+					try {
 					((Car)body1).damageCar();
 					if (boomMode) {
 						body1.applyImpulse(body2.getLinearVelocity().product(3));
 						Car c1 = (Car)body1;
 						if (c1.isDead()) w.explode(c1);
 					}
+					}
+					catch (Error e)
+					{}
 				}
 				if (body2 instanceof Car) {
+					try {
 					((Car)body2).damageCar();
 					if (boomMode) {
 						body2.applyImpulse(body1.getLinearVelocity().product(3));
 						Car c2 = (Car)body1;
 						if (c2.isDead()) w.explode(c2);
 					}
+					}
+					catch (Error e)
+					{}
 				}
 			}
 
@@ -204,22 +218,26 @@ public class World {
 			case 0: 
 				Car newCar1 = new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager);
 				addPlayerCar(0, newCar1);
-				assignParkingSpot(newCar1);
+				activeParking[0].assignedCar = newCar1;
+//				assignParkingSpot(0, newCar1);
 				break;
 			case 1:
 				Car newCar2 = new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager);
 				addPlayerCar(1, newCar2);
-				assignParkingSpot(newCar2);
+				activeParking[1].assignedCar = newCar2;
+//				assignParkingSpot(1, newCar2);
 				break;
 			case 2:
 				Car newCar3 = new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager);
 				addPlayerCar(2, newCar3);
-				assignParkingSpot(newCar3);
+				activeParking[2].assignedCar = newCar3;
+//				assignParkingSpot(2, newCar3);
 				break;
 			case 3:
 				Car newCar4 = new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager);
 				addPlayerCar(3, newCar4);
-				assignParkingSpot(newCar4);
+				activeParking[3].assignedCar = newCar4;
+//				assignParkingSpot(3, newCar4);
 				break;
 			default:
 				break;
@@ -375,7 +393,7 @@ public class World {
 
 		physicsWorld.update(delta);
 
-		for (ParkingSpot spot : parkingList)
+		for (ParkingSpot spot : activeParking)
 		{
 			for (int i = 0; i < playerCars.length; i++)
 			{
@@ -414,22 +432,22 @@ public class World {
 								case 0: 
 									Car newCar1 = new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager);
 									addPlayerCar(0, newCar1);
-									assignParkingSpot(newCar1);
+									assignParkingSpot(0, newCar1);
 									break;
 								case 1:
 									Car newCar2 = new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager);
 									addPlayerCar(1, newCar2);
-									assignParkingSpot(newCar2);
+									assignParkingSpot(1, newCar2);
 									break;
 								case 2:
 									Car newCar3 = new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager);
 									addPlayerCar(2, newCar3);
-									assignParkingSpot(newCar3);
+									assignParkingSpot(2, newCar3);
 									break;
 								case 3:
 									Car newCar4 = new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager);
 									addPlayerCar(3, newCar4);
-									assignParkingSpot(newCar4);
+									assignParkingSpot(3, newCar4);
 									break;
 								default:
 									break;
@@ -737,7 +755,7 @@ public class World {
 //		physicsWorld.addBody(DeStRoY);
 	}
 
-	private void assignParkingSpot(Car car) {
+	private void assignParkingSpot(int id, Car car) {
 		if(ParkingSpot.fullCount == ParkingSpot.count)
 		{
 			System.out.println("All spots filled");
@@ -751,6 +769,7 @@ public class World {
 			index = (int) (Math.random() * parkingList.size());
 			spot = parkingList.get(index);
 		}
+		activeParking[id] = spot;
 		spot.assignColor((float)car.getCarColors()[0], (float)car.getCarColors()[1], (float)car.getCarColors()[2]);
 		spot.assignedCar = car;
 		
