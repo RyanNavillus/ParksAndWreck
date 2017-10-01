@@ -91,6 +91,19 @@ public class World {
 		setupFrameBuffers();
 
 		createWalls();
+
+		if (playerCars[0] != null)
+		{
+			staticCars.add(playerCars[0]);
+			staticCars.add(playerCars[1]);
+			staticCars.add(playerCars[2]);
+			staticCars.add(playerCars[3]);
+		}
+
+		addPlayerCar(0, new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager));
+		addPlayerCar(1, new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager));
+		addPlayerCar(2, new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager));
+		addPlayerCar(3, new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager));
 	}
 
 	private void addPlayerCar(int id, Car car)
@@ -108,53 +121,36 @@ public class World {
 
 	public void update(double delta)
 	{
-		if((ticksToInitialize -= delta) <= 0)
+		if (playerCars[0] != null && !playerCars[0].isRecent())
 		{
-			if (playerCars[0] != null)
+			final double force = 20000 * delta;
+
+			if (gameSettings.goKey.isPressed())
 			{
-				staticCars.add(playerCars[0]);
-				staticCars.add(playerCars[1]);
-				staticCars.add(playerCars[2]);
-				staticCars.add(playerCars[3]);
+				playerCars[0].thrust(force);
 			}
 
-			addPlayerCar(0, new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager));
-			addPlayerCar(1, new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager));
-			addPlayerCar(2, new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager));
-			addPlayerCar(3, new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager));
-			ticksToInitialize = 100;
+			if (gameSettings.stopKey.isPressed())
+			{
+				playerCars[0].thrust(-force);
+			}
+
+			if (gameSettings.rightKey.isPressed())
+			{
+				playerCars[0].myrotate(force);
+			}
+
+			if (gameSettings.leftKey.isPressed())
+			{
+				playerCars[0].myrotate(-force);
+			}
 		}
-
-		if (ticksToInitialize < 99)
-		{
-			if (playerCars[0] != null)
-			{
-				final double force = 20000 * delta;
-
-				if (gameSettings.goKey.isPressed())
-				{
-					playerCars[0].thrust(force);
-				}
-
-				if (gameSettings.stopKey.isPressed())
-				{
-					playerCars[0].thrust(-force);
-				}
-
-				if (gameSettings.rightKey.isPressed())
-				{
-					playerCars[0].myrotate(force);
-				}
-
-				if (gameSettings.leftKey.isPressed())
-				{
-					playerCars[0].myrotate(-force);
-				}
-			}
 			
-			for(int i = 0; i < playerCars.length; i++)
+		for(int i = 0; i < playerCars.length; i++)
+		{
+			if(playerCars[i] != null && players[i].controller != null)
 			{
-				if(playerCars[i] != null && players[i].controller != null)
+				if (!playerCars[i].isRecent())
 				{
 					double angle = players[i].controller.getDirection();
 					

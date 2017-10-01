@@ -31,6 +31,7 @@ public class Car extends Body
 
 	private ArrayList<Double[]> fires = new ArrayList<>();
 	
+	public Date madeTime;
 	public Date parkingStartTime;
 	public int parkingSpotId;
 	
@@ -38,12 +39,19 @@ public class Car extends Body
 	private boolean leaking;
 
 	private int counter = 0;
+	
+	public boolean isRecent()
+	{
+		return (new Date().getTime() - madeTime.getTime()) < 300;
+	}
 
 	private int health;
 
 	public Car(double startX, double startY, double startRotation, double[] carColors, TextureManager manager)
 	{
 		super();
+		
+		madeTime = new Date();
 
 		double rotation = startRotation / 180 * Math.PI;
 		
