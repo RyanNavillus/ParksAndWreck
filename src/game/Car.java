@@ -85,7 +85,7 @@ public class Car extends Body
 	
 	public void update(double delta)
 	{
-		setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
+		//setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
 
 		if(counter == 5){
 			double angle = this.getTransform().getRotation();

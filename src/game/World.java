@@ -119,7 +119,7 @@ public class World {
 
 		if (playerCars[0] != null && players[0].controller != null)
 		{
-			final double force = 500000 * delta;
+			final double force = 5000 * delta;
 
 			if (players[0].controller.aButtonPressed())
 			{
@@ -136,7 +136,6 @@ public class World {
 				&& players[0].controller.getDirection() != Double.NaN)
 		{
 			// BLALDSLDASL " + )
-			System.out.println("TURBO");
 			playerCars[0].rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI)
 					- playerCars[0].getTransform().getRotation());
 		}
