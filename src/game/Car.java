@@ -252,6 +252,9 @@ public class Car extends Body
 		if (health < 0)
 			health = 0;
 
+		if (health < 50)
+			broken = true;
+
 		while (10 - (health % 10) > fires.size()){
 			generateFire();
 		}
