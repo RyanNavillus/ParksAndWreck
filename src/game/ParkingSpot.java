@@ -149,12 +149,14 @@ public class ParkingSpot {
     		xPos2 = xPos + WIDTH;
     		yPos2 = yPos + HEIGHT;
     	}
+    	
+    	//System.out.println(centerX + ", " + centerY);
     	//System.out.println("id: " + id + "(" + xPos + ", " + yPos + ")" + "(" + xPos2 + ", " + yPos2 + ")");
 
-    	if(centerX > xPos && centerX < (xPos + WIDTH) && centerY < yPos && centerY > (yPos + HEIGHT)) 
+    	if(centerX > xPos && centerX < xPos2 && centerY > yPos && centerY < yPos2) 
     	{
     		//System.out.println("Parked in parking spot: " + id);
-        	System.out.println("id: " + id + "(" + xPos + ", " + yPos + ")" + "(" + (xPos + WIDTH) + ", " + (yPos + HEIGHT) + ")");
+        	//System.out.println("id: " + id);
     		return true;
     	}
     	return false;

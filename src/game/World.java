@@ -108,7 +108,7 @@ public class World {
 			addPlayerCar(2, new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager));
 			addPlayerCar(3, new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager));
 			
-			ticksToInitialize = 10;
+			ticksToInitialize = 100;
 		}
 
 //		if (playerCars[2] != null)
@@ -162,7 +162,7 @@ public class World {
 					if(spot.id == car.parkingSpotId)
 					{
 						double timeInterval = ((new Date().getTime()) - car.parkingStartTime.getTime()) / 1000.0; // Seconds spent in parking spot
-						System.out.println("Time interval: " + timeInterval + " :" + spot.id);
+						//System.out.println("Time interval: " + timeInterval + " :" + spot.id);
 						if (timeInterval > 1)
 						{
 							System.out.println("Parked in spot: " + spot.id);

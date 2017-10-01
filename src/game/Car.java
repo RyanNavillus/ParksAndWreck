@@ -49,6 +49,9 @@ public class Car extends Body
 //		setLinearVelocity(initVel);
 		this.getLinearVelocity().multiply(0);
 		
+		setLinearDamping(2);
+		setAngularDamping(0.5);
+		
 		double friction = 0.0;
 		double bounce = 0.2;
 		
