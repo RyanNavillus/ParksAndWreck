@@ -36,8 +36,8 @@ public class Car extends SimulationBody {
 	{
 		super();
 
-		this.getTransform().transform(new Vector2(startX, startY));
-		getTransform().setRotation(startRotation);
+		this.translate(new Vector2(startX, startY));
+		this.rotateAboutCenter(startRotation / 180 * Math.PI);
 		setLinearVelocity(Math.cos(startRotation / 180 * Math.PI) * 1000, Math.sin(startRotation / 180 * Math.PI) * 1000);
 		
 		double friction = 0.0;
@@ -47,7 +47,7 @@ public class Car extends SimulationBody {
 		double posY = this.getTransform().getTranslationY();
 		double rotation = this.getTransform().getRotation();
 		// might have to switch height and width
-		addFixture(Geometry.createRectangle(width, height),  1, friction, bounce);
+		addFixture(Geometry.createRectangle(height, width),  1, friction, bounce);
 
 		// this may or may not need to be changed
 //		this.translate(0.0, 2.0);
@@ -93,7 +93,7 @@ public class Car extends SimulationBody {
 		
 		GL11.glPushMatrix();
 		
-		GL11.glTranslatef((float) (posX + (halfWidth)), (float) (posY + (halfHeight)), 0);
+		GL11.glTranslatef((float) (posX + halfWidth), (float) (posY + halfHeight), 0);
 		GL11.glRotatef((float) (rotation * 180 / Math.PI - 90), 0, 0, 1);
 
 

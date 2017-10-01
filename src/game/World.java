@@ -81,7 +81,18 @@ public class World
 	{
 		if((ticksToInitialize -= delta) <= 0)
 		{
-			addPlayerCar(0, new Car(-65, 55, 0, GuiGame.playerColors[0], textureManager));
+			if (playerCars[0] != null)
+			{
+				staticCars.add(playerCars[0]);
+				staticCars.add(playerCars[1]);
+				staticCars.add(playerCars[2]);
+				staticCars.add(playerCars[3]);
+			}
+			
+			addPlayerCar(0, new Car(-65, 60, 0, GuiGame.playerColors[0], textureManager));
+			addPlayerCar(1, new Car(-65, 915, 0, GuiGame.playerColors[1], textureManager));
+			addPlayerCar(2, new Car(1950, 60, 180, GuiGame.playerColors[2], textureManager));
+			addPlayerCar(3, new Car(1950, 915, 180, GuiGame.playerColors[3], textureManager));
 			
 			ticksToInitialize = 10;
 		}

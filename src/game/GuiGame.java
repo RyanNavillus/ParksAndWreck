@@ -6,6 +6,7 @@ import com.polaris.engine.render.Shader;
 import com.polaris.engine.render.Texture;
 import com.polaris.engine.render.TextureManager;
 
+import com.polaris.engine.util.MathHelper;
 import org.dyn4j.geometry.Vector2;
 import org.lwjgl.opengl.*;
 
@@ -19,6 +20,9 @@ import static org.lwjgl.opengl.GL11.glViewport;
  */
 public class GuiGame extends GuiScreen<GameSettings>
 {
+	
+	
+	private static final String title = "PARKS AND WRECK";
 	
 	private Shader shader;
 	private int texID;
@@ -34,8 +38,6 @@ public class GuiGame extends GuiScreen<GameSettings>
 	private int frameBufferTexture;
 	
 	private int renderBuffer;
-
-	private String title = "PARKS AND WRECK";
 
 	private ArrayList<ParkingSpot> parkingSpots;
 	
@@ -58,7 +60,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 
 		playerColors = new double[4][3];
 		for(int i = 0; i < playerColors.length; i++){
-			playerColors[i] = generatePlayerColor();
+			playerColors[i] = generatePlayerColor(playerColors, i);
 		}
 	}
 	
@@ -68,10 +70,14 @@ public class GuiGame extends GuiScreen<GameSettings>
 		world = new World(this.gameSettings, application.getTextureManager());
 		
 		shader = Shader.createShader(new File("shaders/overlay.vert"), new File("shaders/overlay.frag"));
+		shader1 = Shader.createShader(new File("shaders/fontoutline.vert"), new File("shaders/fontoutline.frag"));
 		
 		texID = GL20.glGetUniformLocation(shader.getShaderId(), "renderedTexture");
 		windowSize = GL20.glGetUniformLocation(shader.getShaderId(), "window");
 		time = GL20.glGetUniformLocation(shader.getShaderId(), "time");
+		
+		texID1 = GL20.glGetUniformLocation(shader1.getShaderId(), "renderedTexture");
+		windowSize1 = GL20.glGetUniformLocation(shader1.getShaderId(), "window");
 		
 		frameBuffer = GL30.glGenFramebuffers();
 		frameBufferTexture = GL11.glGenTextures();
@@ -133,9 +139,9 @@ public class GuiGame extends GuiScreen<GameSettings>
 		background.render(delta);
 
 		gameSettings.getFont().bind();
-
+		
 		//title
-		GL11.glColor4d(.3f, .3f, .3f, 0.1);
+		GL11.glColor4d(.25f, .25f, .25f, 1);
 		float shiftX = 1920 / 2 - gameSettings.getFont().getWidth(title) / 2f;
 		gameSettings.getFont().draw(title, shiftX, 600, 0, 1f);
 
@@ -205,12 +211,40 @@ public class GuiGame extends GuiScreen<GameSettings>
 		GL11.glColor4d(colors[0], colors[1], colors[2], 0.1);
 	}
 
-	private double[] generatePlayerColor(){
-		double[] colors = new double[3];
-		colors[0] = Math.random();
-		colors[1] = Math.random();
-		colors[2] = Math.random();
+	private double[] generatePlayerColor(double[][] colors, int size){
+		
+		boolean foundColor = false;
+		int red = 0, green = 0, blue = 0, maxDiff = 0;
+		
+		while(!foundColor)
+		{
+			foundColor = true;
+			red = MathHelper.random(256);
+			green = MathHelper.random(256);
+			blue = MathHelper.random(256);
+			
+			maxDiff = Math.max(Math.abs(red - green), Math.abs(red - blue));
+			maxDiff = Math.max(maxDiff, Math.abs(green - blue));
+			
+			if(maxDiff < 128)
+			{
+				foundColor = false;
+				continue;
+			}
+			
+			for(int i = 0; i < size; i++)
+			{
+				maxDiff = (int) Math.abs(colors[i][0] * 255 - red);
+				maxDiff += (int) Math.abs(colors[i][1] * 255 - green);
+				maxDiff += (int) Math.abs(colors[i][2] * 255 - blue);
+				if(maxDiff < 275)
+				{
+					foundColor = false;
+				}
+			}
+			
+		}
 
-		return colors;
+		return new double[] {red / 255.0, green / 255.0, blue / 255.0};
 	}
 }
