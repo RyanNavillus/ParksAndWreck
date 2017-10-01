@@ -35,6 +35,8 @@ public class World
 	private org.dyn4j.dynamics.World physicsWorld;
 	private double ticksToInitialize = 2;
 
+	private static ArrayList<Oil> oils = new ArrayList<>();
+
 	public World(GameSettings settings, TextureManager manager)
 	{
 		staticCars = new ArrayList<>();
@@ -122,6 +124,10 @@ public class World
 		{
 			parkingSpot.render(delta);
 		}
+
+		for(Oil oil : oils){
+			oil.render(delta);
+		}
 		
 		for(Car car : staticCars)
 		{
@@ -143,6 +149,10 @@ public class World
 
 	public int[] getPlayerScores(){
 		return playerScores;
+	}
+
+	public static ArrayList<Oil> getOils(){
+		return oils;
 	}
 	
 }

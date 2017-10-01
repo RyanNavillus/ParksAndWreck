@@ -21,7 +21,6 @@ public class Car extends SimulationBody {
 	private static final double height = 44 * 2.5, width = 27 * 2.5;
 	private static final double halfHeight = 22 * 2.5, halfWidth = 13.5 * 2.5;
 	
-	
 	private double[] carColors = new double[3];
 
 	private Texture car;
@@ -31,6 +30,7 @@ public class Car extends SimulationBody {
 	private ArrayList<Double[]> fires = new ArrayList<>();
 	
 	private boolean broken;
+	private boolean leaking;
 
 	public Car(double startX, double startY, double startRotation, double[] carColors, TextureManager manager)
 	{
@@ -66,6 +66,7 @@ public class Car extends SimulationBody {
 		//	generateFire();
 
 		broken = false;
+		leaking = Math.random() * 10 < 5;
 	}
 	
 	/*
@@ -82,6 +83,26 @@ public class Car extends SimulationBody {
 	public void update(double delta)
 	{
 		setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
+
+		if (leaking){
+			double x = this.getTransform().getTranslationX();
+			double y = this.getTransform().getTranslationY() + 100;
+			boolean grew = false;
+
+			for(Oil oil : World.getOils()){
+				if (Math.abs(x - oil.getxPos()) < oil.scale && Math.abs(y - oil.getyPos()) < oil.scale ){
+					oil.grow(5);
+					grew = true;
+
+					break;
+				}
+			}
+
+			if (!grew)
+				World.getOils().add(new Oil(x, y));
+
+			System.out.println(World.getOils().size());
+		}
 	}
 	
 	public void render(double delta)
