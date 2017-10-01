@@ -82,7 +82,7 @@ public class World {
 		
 		setupFrameBuffers();
 		
-		//createWalls();
+		createWalls();
 	}
 	
 	private void addPlayerCar(int id, Car car)
@@ -355,18 +355,23 @@ public class World {
 	
 	private void createWalls()
 	{
+		double scale = Car.SCALE;
+		
+		double friction = 0.5;
+		double bounce = 0.5;
+		
 		//left wall
 		Body wall = new Body(1);
-		wall.translate(100, 150 + (930 - 150) / 2);
-		wall.addFixture(Geometry.createRectangle(200, 930 - 150), 20, 1, 1);
+		wall.translate(100 / scale, (150 + (930 - 150) / 2) / scale);
+		wall.addFixture(Geometry.createRectangle(200 / scale, (930 - 150) / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
 		
 		physicsWorld.addBody(wall);
 		
 		//right wall
 		wall = new Body(1);
-		wall.translate(1820, 150 + (930 - 150) / 2);
-		wall.addFixture(Geometry.createRectangle(200, 930 - 150), 20, 1, 1);
+		wall.translate(1820 / scale, (150 + (930 - 150) / 2) / scale);
+		wall.addFixture(Geometry.createRectangle(200 / scale, (930 - 150) / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
 		
 		physicsWorld.addBody(wall);
@@ -374,8 +379,8 @@ public class World {
 		
 		//upper wall left
 		wall = new Body(1);
-		wall.translate(50, 25);
-		wall.addFixture(Geometry.createRectangle(100, 50), 20, 1, 1);
+		wall.translate(50 / scale, 25 / scale);
+		wall.addFixture(Geometry.createRectangle(100 / scale, 50 / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
 		
 		physicsWorld.addBody(wall);
@@ -383,8 +388,8 @@ public class World {
 		//upper wall middle
 		
 		wall = new Body(1);
-		wall.translate(100 + 1720 / 2, 75 / 2);
-		wall.addFixture(Geometry.createRectangle(1720, 75), 20, 1, 1);
+		wall.translate((100 + 1720 / 2) / scale, (75 / 2) / scale);
+		wall.addFixture(Geometry.createRectangle(1720 / scale, 75 / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
 		
 		physicsWorld.addBody(wall);
@@ -392,8 +397,8 @@ public class World {
 		//upper wall right
 		
 		wall = new Body(1);
-		wall.translate(1870, 25);
-		wall.addFixture(Geometry.createRectangle(100, 50), 20, 1, 1);
+		wall.translate(1870 / scale, 25 / scale);
+		wall.addFixture(Geometry.createRectangle(100 / scale, 50 / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
 		
 		physicsWorld.addBody(wall);
@@ -401,8 +406,8 @@ public class World {
 		//lower wall left
 		
 		wall = new Body(1);
-		wall.translate(50, 1055);
-		wall.addFixture(Geometry.createRectangle(100, 50), 20, 1, 1);
+		wall.translate(50 / scale, 1055 / scale);
+		wall.addFixture(Geometry.createRectangle(100 / scale, 50 / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
 		
 		physicsWorld.addBody(wall);
@@ -410,8 +415,8 @@ public class World {
 		//lower wall middle
 		
 		wall = new Body(1);
-		wall.translate(100 + 1720 / 2, 1080 - 75 / 2);
-		wall.addFixture(Geometry.createRectangle(1720, 75), 20, 1, 1);
+		wall.translate((100 + 1720 / 2) / scale, (1080 - 75 / 2) / scale);
+		wall.addFixture(Geometry.createRectangle(1720 / scale, 75 / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
 		
 		physicsWorld.addBody(wall);
@@ -419,8 +424,8 @@ public class World {
 		//lower wall right
 		
 		wall = new Body(1);
-		wall.translate(1920 - 50, 1055);
-		wall.addFixture(Geometry.createRectangle(100, 50), 20, 1, 1);
+		wall.translate((1920 - 50) / scale, 1055 / scale);
+		wall.addFixture(Geometry.createRectangle(100 / scale, 50 / scale), 20, friction, bounce);
 		wall.setMass(MassType.INFINITE);
 		
 		physicsWorld.addBody(wall);
