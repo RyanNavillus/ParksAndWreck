@@ -61,8 +61,8 @@ public class Car extends Body
 		setLinearVelocity(initVel);
 //		this.getLinearVelocity().multiply(0);
 		
-		setLinearDamping(4);
-		setAngularDamping(.1);
+		setLinearDamping(3);
+		setAngularDamping(1.3);
 		
 		double friction = 0.0;
 		double bounce = 0.2;
@@ -251,16 +251,37 @@ public class Car extends Body
 	public void myrotate(double force) {
         final Vector2 r = new Vector2(this.getTransform().getRotation() + Math.PI * 0.5).left();
         final Vector2 c = this.getWorldCenter();
-
-        Vector2 f1 = r.product(force * 0.05).right();
-        Vector2 f2 = r.product(force * 0.05).left();
+        
+        Vector2 orthV = new Vector2(this.getLinearVelocity()).project(new Vector2(r));
+//        System.out.println(orthV);
+        
+        double mag = orthV.getMagnitude();
+        mag = Math.max(mag, 3);
+        
+        Vector2 f1 = r.product(force * mag / 100).right();
+//        Vector2 f2 = r.product(force * mag).left();
         Vector2 p1 = c.sum(r.product(0.9));
-        Vector2 p2 = c.sum(r.product(-0.9));
+//        Vector2 p2 = c.sum(r.product(-0.9));
         	
         // apply a force to the top going left
         this.applyForce(f1, p1);
         // apply a force to the bottom going right
-        this.applyForce(f2, p2);
+//        this.applyForce(f2, p2);
+	}
+	
+	public void myrotate2(double force, double iniangle) {
+        final Vector2 r = new Vector2(this.getTransform().getRotation() + Math.PI * 0.5).left().getNormalized().product(1);
+        
+        Vector2 right = new Vector2(1, 0).rotate(-iniangle);
+
+        double angle = r.getAngleBetween(right);
+
+		double limit = Math.PI / 3;
+		if (angle > limit) angle = limit;
+		if (angle < -limit) angle = -limit;
+		angle = angle / limit;
+        System.out.println(angle);
+		myrotate(force * angle);
 	}
 
 	public void damageCar(){

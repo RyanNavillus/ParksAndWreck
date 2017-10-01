@@ -121,10 +121,10 @@ public class World {
 
 	public void update(double delta)
 	{
+		final double force = 20000 * delta;
+
 		if (playerCars[0] != null && !playerCars[0].isRecent())
 		{
-			final double force = 20000 * delta;
-
 			if (gameSettings.goKey.isPressed())
 			{
 				playerCars[0].thrust(force);
@@ -152,29 +152,36 @@ public class World {
 			{
 				if (!playerCars[i].isRecent())
 				{
+					if (players[i].controller.aButtonPressed())
+					{
+						playerCars[0].thrust(force);
+					}
+
 					double angle = players[i].controller.getDirection();
 					
 					if(angle != 0.0)
 					{
 						angle = angle / 180 * Math.PI;
 						
-						double rotation = playerCars[i].getTransform().getRotation();
-						if(rotation < 0)
-							rotation += Math.PI * 2;
+						playerCars[i].myrotate2(force, angle);
 						
-						double travel1 = angle - rotation;
-						double travel2 = rotation + angle;
-						
-						System.out.println(playerCars[i].getTransform().getRotation());
-						
-						if(Math.abs(travel1) < Math.abs(travel2))
-						{
-							playerCars[i].rotateAboutCenter(Math.min(travel1, 8 * Math.PI * delta) - 2 * Math.PI);
-						}
-						else
-						{
-							playerCars[i].rotateAboutCenter(-Math.min(travel2, 8 * Math.PI * delta));
-						}
+//						double rotation = playerCars[i].getTransform().getRotation();
+//						if(rotation < 0)
+//							rotation += Math.PI * 2;
+//						
+//						double travel1 = angle - rotation;
+//						double travel2 = rotation + angle;
+//						
+//						System.out.println(playerCars[i].getTransform().getRotation());
+//						
+//						if(Math.abs(travel1) < Math.abs(travel2))
+//						{
+//							playerCars[i].rotateAboutCenter(Math.min(travel1, 8 * Math.PI * delta) - 2 * Math.PI);
+//						}
+//						else
+//						{
+//							playerCars[i].rotateAboutCenter(-Math.min(travel2, 8 * Math.PI * delta));
+//						}
 					}
 				}
 			}
@@ -218,10 +225,10 @@ public class World {
 							car.setMass(new Mass(oldMass.getCenter(), oldMass.getMass() * 10, oldMass.getInertia() * 10));
 							car.setIAmStatic();
 							
-							car.setLinearVelocity(car.getLinearVelocity().product(0.1));
-							car.setAngularVelocity(car.getAngularVelocity() * 0.1);
-							car.setAngularDamping(car.getAngularDamping() * 3);
-							car.setLinearDamping(car.getLinearDamping() * 3);
+							car.setLinearVelocity(car.getLinearVelocity().product(0.01));
+							car.setAngularVelocity(car.getAngularVelocity() * 0.01);
+							car.setAngularDamping(car.getAngularDamping() * 5);
+							car.setLinearDamping(car.getLinearDamping() * 5);
 							//Increase score of car.player
 							playerScores[i] += 10;
 							
