@@ -149,26 +149,26 @@ public class World {
 	{
 		final double force = 20000 * delta;
 
-		if (playerCars[0] != null && !playerCars[0].isRecent())
+		if (playerCars[3] != null && !playerCars[3].isRecent())
 		{
 			if (gameSettings.goKey.isPressed())
 			{
-				playerCars[0].thrust(force);
+				playerCars[3].thrust(force);
 			}
 
 			if (gameSettings.stopKey.isPressed())
 			{
-				playerCars[0].thrust(-force);
+				playerCars[3].thrust(-force);
 			}
 
 			if (gameSettings.rightKey.isPressed())
 			{
-				playerCars[0].myrotate(force);
+				playerCars[3].myrotate(force);
 			}
 
 			if (gameSettings.leftKey.isPressed())
 			{
-				playerCars[0].myrotate(-force);
+				playerCars[3].myrotate(-force);
 			}
 		}
 			
