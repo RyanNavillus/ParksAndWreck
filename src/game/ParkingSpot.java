@@ -134,13 +134,28 @@ public class ParkingSpot {
     }
 
     public boolean containsCar(Car car) {
-    	double centerX = car.getWorldCenter().x;
-    	double centerY = car.getWorldCenter().y;
-    	
-    	if(centerX > xPos && centerX < (xPos + WIDTH) && centerY > yPos && centerY > (yPos - HEIGHT)) 
+    	double centerX = car.getX();
+    	double centerY = car.getY();
+    	double xPos2, yPos2;
+    	if (direction == 1 )
+    	{
+    		xPos2 = xPos + HEIGHT;
+    		yPos2 = yPos + WIDTH;
+    	} else if (direction == 3 )
+    	{
+    		xPos2 = xPos + HEIGHT;
+    		yPos2 = yPos + WIDTH;
+    	} else 
+    	{
+    		xPos2 = xPos + WIDTH;
+    		yPos2 = yPos + HEIGHT;
+    	}
+    	System.out.println("id: " + id + "(" + xPos + ", " + yPos + ")" + "(" + xPos2 + ", " + yPos2 + ")");
+
+    	if(centerX > xPos && centerX < (xPos + WIDTH) && centerY < yPos && centerY > (yPos + HEIGHT)) 
     	{
     		//System.out.println("Parked in parking spot: " + id);
-        	System.out.println("id: " + id + "x: " + xPos + "y: " + yPos);
+        	System.out.println("id: " + id + "(" + xPos + ", " + yPos + ")" + "(" + (xPos + WIDTH) + ", " + (yPos + HEIGHT) + ")");
     		return true;
     	}
     	return false;
