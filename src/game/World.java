@@ -110,17 +110,23 @@ public class World {
 	}
 
 	private static class CustomCollision extends CollisionAdapter {
-		private Car b1;
-		
-		public CustomCollision(Car b1) {
-			this.b1 = b1;
-		}
+
 		@Override
-		public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Penetration penetration) {
-			if ((body1 == b1) || (body2 == b1)) {
-				b1.damageCar();
-				return true;
+		public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Penetration penetration)
+		{
+			double damageSpeedThresh = 7;
+			if (body1.getLinearVelocity().getMagnitude() > damageSpeedThresh ||
+					body2.getLinearVelocity().getMagnitude() > damageSpeedThresh)
+			{
+				if (body1 instanceof Car) 
+				{
+					((Car)body1).damageCar();
+				}
+				if (body2 instanceof Car) {
+					((Car)body2).damageCar();
+				}
 			}
+
 			return true;
 		}
 	}
@@ -129,7 +135,7 @@ public class World {
 	{
 		playerCars[id] = car;
 		physicsWorld.addBody(car);
-		physicsWorld.addListener(new CustomCollision(car));
+		physicsWorld.addListener(new CustomCollision());
 	}
 	
 	private void removePlayerCar(int id, Car car)
