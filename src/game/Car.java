@@ -42,8 +42,7 @@ public class Car extends SimulationBody {
 		double posX = this.getTransform().getTranslationX();
 		double posY = this.getTransform().getTranslationY();
 		double rotation = this.getTransform().getRotation();
-		System.out.println(posX + " " + posY + " " + rotation);
-		addFixture(Geometry.createRectangle(80, 120),  1, 0.2, 0.2);
+		addFixture(Geometry.createRectangle(height, width),  1, 0.2, 0.2);
 		setMass(MassType.NORMAL);
 
 		car = manager.getTexture("car");
