@@ -194,4 +194,26 @@ public class Car extends SimulationBody {
 	public double[] getCarColors(){
 		return carColors;
 	}
+
+	public void thrust(double force) {
+        final Vector2 r = new Vector2(this.getTransform().getRotation() + Math.PI * 0.5).left();
+       	Vector2 f = r.product(force);
+       	applyForce(f);
+	}
+
+	public void rotate(double force) {
+        final Vector2 r = new Vector2(this.getTransform().getRotation() + Math.PI * 0.5).left();
+        final Vector2 c = this.getWorldCenter();
+
+        Vector2 f1 = r.product(force * 0.05).right();
+        Vector2 f2 = r.product(force * 0.05).left();
+        Vector2 p1 = c.sum(r.product(0.9));
+        Vector2 p2 = c.sum(r.product(-0.9));
+        	
+        // apply a force to the top going left
+        this.applyForce(f1, p1);
+        // apply a force to the bottom going right
+        this.applyForce(f2, p2);
+	}
 }
+

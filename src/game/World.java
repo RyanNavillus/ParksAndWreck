@@ -96,12 +96,30 @@ public class World {
 			ticksToInitialize = 10;
 		}
 
-		if (playerCars[0] != null && players[0].controller != null
-				&& players[0].controller.getDirection() != Double.NaN) {
-			// BLALDSLDASL " + )
-			playerCars[0].rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI)
-					- playerCars[0].getTransform().getRotation());
+//		if (playerCars[0] != null) {
+//			final double force = 5000 * delta;
+//			playerCars[0].thrust(force);
+//			System.out.println(playerCars[0].getLinearVelocity().getMagnitude());
+//		}
+		
+		if (playerCars[0] != null && players[0].controller != null) {
+			final double force = 500000 * delta;
+
+			if (players[0].controller.aButtonPressed()) {
+				playerCars[0].thrust(force);
+			}
+
+			if (players[0].controller.startButtonPressed()) {
+				playerCars[0].rotate(force * 0.1);
+			}
 		}
+
+//		if (playerCars[0] != null && players[0].controller != null
+//				&& players[0].controller.getDirection() != Double.NaN) {
+//			// BLALDSLDASL " + )
+//			playerCars[0].rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI)
+//					- playerCars[0].getTransform().getRotation());
+//		}
 
 		for (Car p : playerCars) {
 			if (p == null)
