@@ -90,6 +90,12 @@ public class Car extends Body
 		leaking = Math.random() * 10 < 1 || broken;
 
 		health = 100;
+
+		if(broken){
+			for (int i = 0; i < 17; i++) {
+				damageCar();
+			}
+		}
 	}
 	
 	public double getX() {
@@ -225,11 +231,13 @@ public class Car extends Body
 	}
 
 	private void generateFire(){
-		double x = Math.random() * (width - 30) + 5;
-		double y = 70;
+		double x = 50;
+		double y = Math.random() * (height - 30) + 5;
 
-		while (y > (.3636 * height) && y < (.3636 * 2 * height))
-			y = Math.random() * (height - 30) + 5;
+		while (x > 30 && x < 70)
+			x = Math.random() * (width - 30) + 5;
+
+		System.out.println(x + " " + y);
 
 		fires.add(new Double[] {x, y});
 	}
@@ -293,7 +301,7 @@ public class Car extends Body
 		if (health < 50)
 			broken = true;
 
-		while (10 - (health % 10) > fires.size()){
+		while (5 - Math.ceil(health / 20.0) > fires.size()){
 			generateFire();
 		}
 	}
