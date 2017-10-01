@@ -66,7 +66,7 @@ public class Car extends SimulationBody {
 		//	generateFire();
 
 		broken = false;
-		leaking = Math.random() * 10 < 5;
+		leaking = Math.random() * 10 < 1;
 	}
 	
 	/*
@@ -85,8 +85,8 @@ public class Car extends SimulationBody {
 		setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
 
 		if (leaking){
-			double x = this.getTransform().getTranslationX();
-			double y = this.getTransform().getTranslationY() + 100;
+			double x = this.getTransform().getTranslationX() + halfWidth;
+			double y = this.getTransform().getTranslationY() + halfHeight;
 			boolean grew = false;
 
 			for(Oil oil : World.getOils()){
@@ -99,7 +99,7 @@ public class Car extends SimulationBody {
 			}
 
 			if (!grew)
-				World.getOils().add(new Oil(x, y));
+				World.getOils().add(new Oil(x, y, Math.random() * 360));
 
 			System.out.println(World.getOils().size());
 		}
