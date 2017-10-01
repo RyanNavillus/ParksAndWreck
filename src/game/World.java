@@ -202,6 +202,10 @@ public class World {
 			for (int i = 0; i < playerCars.length; i++)
 			{
 				Car car = playerCars[i];
+				if (car != null)
+				{
+					assignParkingSpot(car);
+				}
 				if (car != null && spot.containsCar(car))
 				{
 					if(spot.id == car.parkingSpotId)
@@ -510,4 +514,13 @@ public class World {
 		physicsWorld.addBody(wall);
 	}
 
+	private void assignParkingSpot(Car car) {
+		System.out.println("Hi");
+		int index = (int) (Math.random() * parkingList.size());
+		ParkingSpot spot = parkingList.get(index);
+		spot.assignColor((float)car.getCarColors()[0], (float)car.getCarColors()[1], (float)car.getCarColors()[2]);
+		spot.assignedCar = car;
+		
+	}
+	
 }

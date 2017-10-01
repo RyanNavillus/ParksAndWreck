@@ -18,6 +18,11 @@ public class ParkingSpot {
     int direction;
     private Car car;
     private float[] color = new float[3];
+    
+    private float[] assignedColor = new float[3];
+    
+    private boolean isAssigned = true;
+
     public int id;
     
     public Car assignedCar;
@@ -28,6 +33,10 @@ public class ParkingSpot {
         color[0] = 1.0f;
         color[1] = 1.0f;
         color[2] = 1.0f;
+        
+        assignedColor[0] = 1.0f;
+        assignedColor[1] = 1.0f;
+        assignedColor[2] = 1.0f;
 
         if (direction > 4){
             System.out.println("Parking spot direction needs to be a number 0-4!");
@@ -96,6 +105,17 @@ public class ParkingSpot {
             GL11.glVertex2d(WIDTH - 5 + xPos, HEIGHT * invert + yPos);
             GL11.glVertex2d(WIDTH + xPos, HEIGHT * invert + yPos);
             GL11.glVertex2d(WIDTH + xPos, 0 + yPos);
+            
+            if(isAssigned) 
+            {
+                GL11.glColor3f(assignedColor[0], assignedColor[1], assignedColor[2]);
+                GL11.glVertex2d(5 + xPos, HEIGHT * invert + yPos);
+                GL11.glVertex2d(5 + xPos, 0 + yPos);
+                GL11.glVertex2d(WIDTH + xPos, HEIGHT * invert + yPos);
+                GL11.glVertex2d(WIDTH + xPos, 0 + yPos);
+                GL11.glColor3f(color[0], color[1], color[2]);
+            }
+            
             GL11.glEnd();
         } else if (direction == 1 || direction == 3){
             //top
@@ -116,6 +136,17 @@ public class ParkingSpot {
             GL11.glVertex2d(0 + xPos, WIDTH + yPos);
             GL11.glVertex2d(HEIGHT * invert + xPos, WIDTH + yPos);
             GL11.glVertex2d(HEIGHT * invert + xPos, WIDTH - 5 + yPos);
+            
+            if (isAssigned) 
+            {
+                GL11.glColor3f(assignedColor[0], assignedColor[1], assignedColor[2]);
+                GL11.glVertex2d(0 + xPos, 5 + yPos);
+                GL11.glVertex2d(HEIGHT * invert + xPos, 5 + yPos);
+                GL11.glVertex2d(0 + xPos, WIDTH - 5 + yPos);
+                GL11.glVertex2d(HEIGHT * invert + xPos, WIDTH - 5 + yPos);
+                GL11.glColor3f(color[0], color[1], color[2]);
+            }
+            
             GL11.glEnd();
         } else {
             //left
@@ -130,6 +161,17 @@ public class ParkingSpot {
             GL11.glVertex2d(WIDTH - 5 + xPos, HEIGHT * invert + yPos);
             GL11.glVertex2d(WIDTH + xPos, HEIGHT * invert + yPos);
             GL11.glVertex2d(WIDTH + xPos, 0 + yPos);
+            
+            if(isAssigned)
+            {
+                GL11.glColor3f(assignedColor[0], assignedColor[1], assignedColor[2]);
+                GL11.glVertex2d(5 + xPos, HEIGHT * invert + yPos);
+                GL11.glVertex2d(5 + xPos, 0 + yPos);
+                GL11.glVertex2d(WIDTH - 5 + xPos, 0 + yPos);
+                GL11.glVertex2d(WIDTH - 5 + xPos, HEIGHT * invert + yPos);
+                GL11.glColor3f(color[0], color[1], color[2]);
+            }
+            
             GL11.glEnd();
         }
     }
@@ -176,5 +218,19 @@ public class ParkingSpot {
         color[0] = r;
         color[1] = g;
         color[2] = b;
+    }
+    
+    public void assignColor(float r, float g, float b){
+    	isAssigned = true;
+        assignedColor[0] = r;
+        assignedColor[1] = g;
+        assignedColor[2] = b;
+    }
+    
+    public void removeAssignment() {
+    	isAssigned = false;
+        assignedColor[0] = 1.0f;
+        assignedColor[1] = 1.0f;
+        assignedColor[2] = 1.0f;
     }
 }
