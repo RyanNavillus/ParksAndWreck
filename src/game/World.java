@@ -8,7 +8,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.Force;
+import org.dyn4j.geometry.Geometry;
+import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 import org.dyn4j.samples.SimulationBody;
 
@@ -17,82 +20,76 @@ import org.dyn4j.samples.SimulationBody;
  */
 public class World {
 	public static Texture fireTexture;
-
+	
 	private float totalTime = 0;
-
+	
 	private Player[] players;
-
+	
 	private List<Car> staticCars;
 	private Car[] playerCars;
 	private int[] playerScores;
-
+	
 	private List<ParkingSpot> parkingList;
-
+	
 	private GameSettings gameSettings;
 	private TextureManager textureManager;
-
+		
 	private org.dyn4j.dynamics.World physicsWorld;
 	private double ticksToInitialize = 2;
 
 	private static ArrayList<Oil> oils = new ArrayList<>();
 
-	public World(GameSettings settings, TextureManager manager) {
+	public World(GameSettings settings, TextureManager manager)
+	{
 		staticCars = new ArrayList<>();
 		playerCars = new Car[4];
 		parkingList = new ArrayList<>();
 		playerScores = new int[4];
-
-		players = new Player[] { new Player(), new Player(), new Player(), new Player() };
-
+		
+		players = new Player[] {new Player(), new Player(), new Player(), new Player()};
+		
 		gameSettings = settings;
-
+		
 		textureManager = manager;
-
+		
 		physicsWorld = new org.dyn4j.dynamics.World();
 		physicsWorld.setGravity(org.dyn4j.dynamics.World.ZERO_GRAVITY);
-
+				
 		fireTexture = textureManager.getTexture("fire0");
 
-		// parkingList.add(new ParkingSpot(0, 0, false));
-
-		parkingList.addAll(ParkingSpot.createParkingArea(200, 153, 10, 1)); // left
-		parkingList.addAll(ParkingSpot.createParkingArea(1720 - ParkingSpot.HEIGHT, 153, 10, 3)); // right
-
-		// top
-		// parkingList.addAll(ParkingSpot.createParkingArea(580, 200, 9, 2));
-		// parkingList.addAll(ParkingSpot.createParkingArea(580, 200 +
-		// ParkingSpot.HEIGHT - 5, 9, 0));
+		parkingList.addAll(ParkingSpot.createParkingArea(200, 153, 10, 1));   //left
+		parkingList.addAll(ParkingSpot.createParkingArea(1720 - ParkingSpot.HEIGHT, 153, 10, 3));   //right
 
 		parkingList.addAll(ParkingSpot.createParkingArea(580, 200 + ParkingSpot.HEIGHT / 2, 9, 4));
 
-		// bottom
-		// parkingList.addAll(ParkingSpot.createParkingArea(580, 880 -
-		// ParkingSpot.HEIGHT * 2 + 5, 9, 2));
-		// parkingList.addAll(ParkingSpot.createParkingArea(580, 880 -
-		// ParkingSpot.HEIGHT, 9, 0));
-
 		parkingList.addAll(ParkingSpot.createParkingArea(580, 880 - ParkingSpot.HEIGHT / 2 - ParkingSpot.HEIGHT, 9, 4));
+		
+		createWalls();
 	}
-
-	private void addPlayerCar(int id, Car car) {
+	
+	private void addPlayerCar(int id, Car car)
+	{
 		playerCars[id] = car;
 		physicsWorld.addBody(car);
 	}
-
-	public void update(double delta) {
-		if ((ticksToInitialize -= delta) <= 0) {
-			if (playerCars[0] != null) {
+	
+	public void update(double delta)
+	{
+		if((ticksToInitialize -= delta) <= 0)
+		{
+			if (playerCars[0] != null)
+			{
 				staticCars.add(playerCars[0]);
 				staticCars.add(playerCars[1]);
 				staticCars.add(playerCars[2]);
 				staticCars.add(playerCars[3]);
 			}
-
-			addPlayerCar(0, new Car(-65, 60, 0, GuiGame.playerColors[0], textureManager));
-			addPlayerCar(1, new Car(-65, 915, 0, GuiGame.playerColors[1], textureManager));
-			addPlayerCar(2, new Car(1950, 60, 180, GuiGame.playerColors[2], textureManager));
-			addPlayerCar(3, new Car(1950, 915, 180, GuiGame.playerColors[3], textureManager));
-
+			
+			addPlayerCar(0, new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager));
+			addPlayerCar(1, new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager));
+			addPlayerCar(2, new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager));
+			addPlayerCar(3, new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager));
+			
 			ticksToInitialize = 10;
 		}
 
@@ -133,8 +130,9 @@ public class World {
 
 		physicsWorld.update(delta);
 	}
-
-	public void render(double delta) {
+	
+	public void render(double delta)
+	{
 		totalTime += delta;
 
 		if (totalTime % .4 <= .2 && fireTexture.getName().equals("fire1")) {
@@ -174,5 +172,78 @@ public class World {
 	public static ArrayList<Oil> getOils() {
 		return oils;
 	}
-
+	
+	private void createWalls()
+	{
+		//left wall
+		Body wall = new Body(1);
+		wall.translate(100, 150 + (930 - 150) / 2);
+		wall.addFixture(Geometry.createRectangle(200, 930 - 150), 20, 1, 1);
+		wall.setMass(MassType.INFINITE);
+		
+		physicsWorld.addBody(wall);
+		
+		//right wall
+		wall = new Body(1);
+		wall.translate(1820, 150 + (930 - 150) / 2);
+		wall.addFixture(Geometry.createRectangle(200, 930 - 150), 20, 1, 1);
+		wall.setMass(MassType.INFINITE);
+		
+		physicsWorld.addBody(wall);
+		
+		
+		//upper wall left
+		wall = new Body(1);
+		wall.translate(50, 25);
+		wall.addFixture(Geometry.createRectangle(100, 50), 20, 1, 1);
+		wall.setMass(MassType.INFINITE);
+		
+		physicsWorld.addBody(wall);
+		
+		//upper wall middle
+		
+		wall = new Body(1);
+		wall.translate(100 + 1720 / 2, 75 / 2);
+		wall.addFixture(Geometry.createRectangle(1720, 75), 20, 1, 1);
+		wall.setMass(MassType.INFINITE);
+		
+		physicsWorld.addBody(wall);
+		
+		//upper wall right
+		
+		wall = new Body(1);
+		wall.translate(1870, 25);
+		wall.addFixture(Geometry.createRectangle(100, 50), 20, 1, 1);
+		wall.setMass(MassType.INFINITE);
+		
+		physicsWorld.addBody(wall);
+		
+		//lower wall left
+		
+		wall = new Body(1);
+		wall.translate(50, 1055);
+		wall.addFixture(Geometry.createRectangle(100, 50), 20, 1, 1);
+		wall.setMass(MassType.INFINITE);
+		
+		physicsWorld.addBody(wall);
+		
+		//lower wall middle
+		
+		wall = new Body(1);
+		wall.translate(100 + 1720 / 2, 1080 - 75 / 2);
+		wall.addFixture(Geometry.createRectangle(1720, 75), 20, 1, 1);
+		wall.setMass(MassType.INFINITE);
+		
+		physicsWorld.addBody(wall);
+		
+		//lower wall right
+		
+		wall = new Body(1);
+		wall.translate(1920 - 50, 1055);
+		wall.addFixture(Geometry.createRectangle(100, 50), 20, 1, 1);
+		wall.setMass(MassType.INFINITE);
+		
+		physicsWorld.addBody(wall);
+	}
+	
 }
