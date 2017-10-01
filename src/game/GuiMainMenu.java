@@ -96,7 +96,7 @@ public class GuiMainMenu extends GuiScreen<GameSettings>
 		
 		try {
 			///introIn = AudioSystem.getAudioInputStream(new URL("file:///" + System.getProperty("user.dir") + "/" + "resources/Dire_Straits_Intro_02.wav"));
-			songIn = AudioSystem.getAudioInputStream(new URL("file:///" + System.getProperty("user.dir") + "/" + "resources/Dire_Straits_Money_for_Nothing_Instrumental.wav"));
+			songIn = AudioSystem.getAudioInputStream(new URL("file:///" + System.getProperty("user.dir") + "/" + "resources/Dire_Straits_Money_for_Nothing_Instrumental_Combo.wav"));
 			clip = AudioSystem.getClip();
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
 			clip.open(songIn);

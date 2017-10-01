@@ -21,7 +21,7 @@ public class ParkingSpot {
     
     private float[] assignedColor = new float[3];
     
-    private boolean isAssigned = true;
+    private boolean isAssigned = false;
 
     public int id;
     
@@ -105,18 +105,21 @@ public class ParkingSpot {
             GL11.glVertex2d(WIDTH - 5 + xPos, HEIGHT * invert + yPos);
             GL11.glVertex2d(WIDTH + xPos, HEIGHT * invert + yPos);
             GL11.glVertex2d(WIDTH + xPos, 0 + yPos);
+            GL11.glEnd();
             
             if(isAssigned) 
             {
-                GL11.glColor3f(assignedColor[0], assignedColor[1], assignedColor[2]);
+            	GL11.glEnable(GL11.GL_BLEND);
+                GL11.glColor4f(assignedColor[0], assignedColor[1], assignedColor[2], .3f);
+                GL11.glBegin(GL11.GL_QUADS);
                 GL11.glVertex2d(5 + xPos, HEIGHT * invert + yPos);
-                GL11.glVertex2d(5 + xPos, 0 + yPos);
                 GL11.glVertex2d(WIDTH + xPos, HEIGHT * invert + yPos);
                 GL11.glVertex2d(WIDTH + xPos, 0 + yPos);
-                GL11.glColor3f(color[0], color[1], color[2]);
+                GL11.glVertex2d(5 + xPos, 0 + yPos);
+                GL11.glColor4f(color[0], color[1], color[2], 1.0f);
+                GL11.glEnd();
+                GL11.glDisable(GL11.GL_BLEND);
             }
-            
-            GL11.glEnd();
         } else if (direction == 1 || direction == 3){
             //top
             GL11.glBegin(GL11.GL_QUADS);
@@ -136,18 +139,22 @@ public class ParkingSpot {
             GL11.glVertex2d(0 + xPos, WIDTH + yPos);
             GL11.glVertex2d(HEIGHT * invert + xPos, WIDTH + yPos);
             GL11.glVertex2d(HEIGHT * invert + xPos, WIDTH - 5 + yPos);
-            
+            GL11.glEnd();
+
             if (isAssigned) 
             {
-                GL11.glColor3f(assignedColor[0], assignedColor[1], assignedColor[2]);
+            	GL11.glEnable(GL11.GL_BLEND);
+                GL11.glColor4f(assignedColor[0], assignedColor[1], assignedColor[2], .3f);
+                GL11.glBegin(GL11.GL_QUADS);
                 GL11.glVertex2d(0 + xPos, 5 + yPos);
                 GL11.glVertex2d(HEIGHT * invert + xPos, 5 + yPos);
-                GL11.glVertex2d(0 + xPos, WIDTH - 5 + yPos);
                 GL11.glVertex2d(HEIGHT * invert + xPos, WIDTH - 5 + yPos);
-                GL11.glColor3f(color[0], color[1], color[2]);
+                GL11.glVertex2d(0 + xPos, WIDTH - 5 + yPos);
+                GL11.glColor4f(color[0], color[1], color[2], 1.0f);
+                GL11.glEnd();
+                GL11.glDisable(GL11.GL_BLEND);
             }
             
-            GL11.glEnd();
         } else {
             //left
             GL11.glBegin(GL11.GL_QUADS);
@@ -161,18 +168,21 @@ public class ParkingSpot {
             GL11.glVertex2d(WIDTH - 5 + xPos, HEIGHT * invert + yPos);
             GL11.glVertex2d(WIDTH + xPos, HEIGHT * invert + yPos);
             GL11.glVertex2d(WIDTH + xPos, 0 + yPos);
-            
+            GL11.glEnd();
+
             if(isAssigned)
             {
-                GL11.glColor3f(assignedColor[0], assignedColor[1], assignedColor[2]);
+            	GL11.glEnable(GL11.GL_BLEND);
+                GL11.glColor4f(assignedColor[0], assignedColor[1], assignedColor[2], .3f);
+                GL11.glBegin(GL11.GL_QUADS);                
                 GL11.glVertex2d(5 + xPos, HEIGHT * invert + yPos);
                 GL11.glVertex2d(5 + xPos, 0 + yPos);
                 GL11.glVertex2d(WIDTH - 5 + xPos, 0 + yPos);
                 GL11.glVertex2d(WIDTH - 5 + xPos, HEIGHT * invert + yPos);
-                GL11.glColor3f(color[0], color[1], color[2]);
-            }
-            
-            GL11.glEnd();
+                GL11.glColor4f(color[0], color[1], color[2], 1.0f);
+                GL11.glEnd();
+                GL11.glDisable(GL11.GL_BLEND);
+            }            
         }
     }
 

@@ -99,11 +99,19 @@ public class World {
 			staticCars.add(playerCars[2]);
 			staticCars.add(playerCars[3]);
 		}
+		Car car1 = new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager);
+		addPlayerCar(0, car1);
+		assignParkingSpot(car1);
+		Car car2 = new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager);
+		addPlayerCar(1, car2);
+		assignParkingSpot(car2);
+		Car car3 = new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager);
+		addPlayerCar(2, car3);
+		assignParkingSpot(car3);
+		Car car4 = new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager);
+		addPlayerCar(3, car4);
+		assignParkingSpot(car4);
 
-		addPlayerCar(0, new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager));
-		addPlayerCar(1, new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager));
-		addPlayerCar(2, new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager));
-		addPlayerCar(3, new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager));
 	}
 
 	private void addPlayerCar(int id, Car car)
@@ -199,10 +207,6 @@ public class World {
 			for (int i = 0; i < playerCars.length; i++)
 			{
 				Car car = playerCars[i];
-				if (car != null)
-				{
-					assignParkingSpot(car);
-				}
 				if (car != null && spot.containsCar(car))
 				{
 					if(spot.id == car.parkingSpotId)
