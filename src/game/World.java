@@ -169,10 +169,12 @@ public class World {
 		// mode changes
 		if (!recentModeChange() && gameSettings.uKey.isPressed()) {
 			boomMode = !boomMode;
+			lastModeChange = new Date();
 		}
 
 		if (!recentModeChange() && gameSettings.iKey.isPressed()) {
 			reverseMode = !reverseMode;
+			lastModeChange = new Date();
 		}
 
 		if (playerCars[3] != null && !playerCars[3].isRecent())
