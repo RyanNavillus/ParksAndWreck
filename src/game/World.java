@@ -101,6 +101,12 @@ public class World {
 			ticksToInitialize = 10;
 		}
 
+//		if (playerCars[2] != null)
+//		{
+//			final double force = 500000 * delta;
+//			playerCars[2].thrust(force);
+//		}
+
 		if (playerCars[0] != null && players[0].controller != null)
 		{
 			final double force = 500000 * delta;
