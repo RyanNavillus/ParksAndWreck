@@ -36,6 +36,7 @@ public class World
 	private double ticksToInitialize = 2;
 
 	private static ArrayList<Oil> oils = new ArrayList<>();
+	private static ArrayList<Track> tracks = new ArrayList<>();
 
 	public World(GameSettings settings, TextureManager manager)
 	{
@@ -136,9 +137,15 @@ public class World
 			parkingSpot.render(delta);
 		}
 
+		for(Track track : tracks){
+			track.render(delta);
+		}
+
 		for(Oil oil : oils){
 			oil.render(delta);
 		}
+
+		GuiGame.renderScores(gameSettings, playerScores);
 		
 		for(Car car : staticCars)
 		{
@@ -164,6 +171,10 @@ public class World
 
 	public static ArrayList<Oil> getOils(){
 		return oils;
+	}
+
+	public static ArrayList<Track> getTracks(){
+		return tracks;
 	}
 	
 }
