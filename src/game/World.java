@@ -82,7 +82,7 @@ public class World {
 		
 		setupFrameBuffers();
 		
-		createWalls();
+		//createWalls();
 	}
 	
 	private void addPlayerCar(int id, Car car)
@@ -210,7 +210,7 @@ public class World {
 			parkingSpot.render(delta);
 		}
 		
-		renderTracks();
+		//renderTracks();
 
 		for (Oil oil : oils) {
 			oil.render(delta);
