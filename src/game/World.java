@@ -43,7 +43,8 @@ public class World {
 	private List<Car> staticCars;
 	private Car[] playerCars;
 	private int[] playerScores;
-
+	private List<Car> parkedCars;
+	
 	private List<ParkingSpot> parkingList;
 
 	private GameSettings gameSettings;
@@ -59,6 +60,8 @@ public class World {
 	{
 		staticCars = new ArrayList<>();
 		playerCars = new Car[4];
+		parkedCars = new ArrayList<>();
+
 		parkingList = new ArrayList<>();
 		playerScores = new int[4];
 
@@ -90,6 +93,13 @@ public class World {
 		playerCars[id] = car;
 		physicsWorld.addBody(car);
 	}
+	
+	private void removePlayerCar(int id, Car car)
+	{
+		playerCars[id] = null;
+		parkedCars.add(car);
+		//physicsWorld.removeBody(car);
+	}
 
 	public void update(double delta)
 	{
@@ -107,7 +117,6 @@ public class World {
 			addPlayerCar(1, new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager));
 			addPlayerCar(2, new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager));
 			addPlayerCar(3, new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager));
-
 			ticksToInitialize = 100;
 		}
 
@@ -140,7 +149,7 @@ public class World {
 
 			if (playerCars[0] != null && players[0].controller != null)
 			{
-				final double force = 5000 * delta;
+				final double force = 20000 * delta;
 
 				if (players[0].controller.aButtonPressed())
 				{
@@ -178,26 +187,46 @@ public class World {
 
 		for (ParkingSpot spot : parkingList)
 		{
-			for (Car car : playerCars)
+			for (int i = 0; i < playerCars.length; i++)
 			{
+				Car car = playerCars[i];
 				if (car != null && spot.containsCar(car))
 				{
 					if(spot.id == car.parkingSpotId)
 					{
 						double timeInterval = ((new Date().getTime()) - car.parkingStartTime.getTime()) / 1000.0; // Seconds spent in parking spot
-						System.out.println("Time interval: " + timeInterval + " :" + spot.id);
+						//System.out.println("Time interval: " + timeInterval + " :" + spot.id);
 						if (timeInterval > 1)
 						{
 							System.out.println("Parked in spot: " + spot.id);
+							
+							removePlayerCar(i, car);
+							
 							//Immobilize car
-							//car.setMass(MassType.INFINITE);
-							//car.setLinearVelocity(0,0);
-
+							car.setMass(MassType.INFINITE);
+							car.setLinearVelocity(0,0);
+							car.setAngularVelocity(0);
 							//Increase score of car.player
-
+							playerScores[i] += 10;
+							
 							//Spawn a new car for player
-
-
+							switch (i)
+							{
+							case 0: 
+								addPlayerCar(0, new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager));
+								break;
+							case 1:
+								addPlayerCar(1, new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager));
+								break;
+							case 2:
+								addPlayerCar(2, new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager));
+								break;
+							case 3:
+								addPlayerCar(3, new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager));
+								break;
+							default:
+								break;
+							}
 						}
 					}
 					else
@@ -232,9 +261,9 @@ public class World {
 			parkingSpot.render(delta);
 		}
 
-		GuiGame.renderScores(gameSettings, playerScores);
-
 		renderTracks();
+
+		GuiGame.renderScores(gameSettings, playerScores);
 
 		for(Track track : tracks){
 			track.render(delta);
@@ -249,10 +278,20 @@ public class World {
 			car.render(delta);
 		}
 
-		for (Car car : playerCars) {
+		for (Car car : playerCars) 
+		{
 			if (car == null)
 				continue;
 
+			car.render(delta);
+		}
+		
+		for (Car car : parkedCars) 
+		{
+			if (car == null)
+			{
+				continue;
+			}
 			car.render(delta);
 		}
 	}
@@ -412,7 +451,6 @@ public class World {
 		wall.setMass(MassType.INFINITE);
 
 		physicsWorld.addBody(wall);
-
 
 		//upper wall left
 		wall = new Body(1);
