@@ -292,6 +292,8 @@ public class World {
 		
 		GL20.glDisableVertexAttribArray(0);
 		
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		
 		colorShader.unbind();
 	}
 	
@@ -307,7 +309,7 @@ public class World {
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, trackFrameBuffer);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, trackTexture);
 		
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 1920, 1080, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, 0);
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, 1920, 1080, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, 0);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		
