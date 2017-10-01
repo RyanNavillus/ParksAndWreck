@@ -4,6 +4,8 @@ import com.polaris.engine.render.Texture;
 import com.polaris.engine.render.TextureManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.dyn4j.dynamics.Force;
@@ -18,6 +20,8 @@ public class World
 	public static Texture fireTexture;
 	
 	private float totalTime = 0;
+	
+	private Player[] players;
 	
 	private List<Car> staticCars;
 	private List<Car> playerCars;
@@ -35,6 +39,8 @@ public class World
 		staticCars = new ArrayList<>();
 		playerCars = new ArrayList<>();
 		parkingList = new ArrayList<>();
+		
+		players = new Player[] {new Player(), new Player(), new Player(), new Player()};
 		
 		gameSettings = settings;
 		
@@ -73,15 +79,17 @@ public class World
 	{
 		if((ticksToInitialize -= delta) <= 0)
 		{
+			staticCars.addAll(playerCars);
+			
 			addPlayerCar(new Car(-65, 55,  0, textureManager));
 			
-			addPlayerCar(new Car(-65, 915,  0, textureManager));
-			
-			addPlayerCar(new Car(1920, 55,  180, textureManager));
-			
-			addPlayerCar(new Car(1920, 915,  180, textureManager));
-			
-			ticksToInitialize = 2;
+			ticksToInitialize = 10;
+		}
+		
+		if(playerCars.size() > 0 && players[0].controller.getDirection() != Double.NaN)
+		{
+			//System.out.println(players[0].controller.getDirection() + " BLALDSLDASL " + )
+			playerCars.get(0).rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI) - playerCars.get(0).getTransform().getRotation());
 		}
 		
 		for(Car p : playerCars)

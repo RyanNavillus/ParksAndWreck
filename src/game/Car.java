@@ -34,16 +34,16 @@ public class Car extends SimulationBody {
 
 	public Car(double startX, double startY, double startRotation, TextureManager manager)
 	{
-		translate(startX, startY);
+		this.getTransform().transform(new Vector2(startX, startY));
 		getTransform().setRotation(startRotation);
-		setLinearVelocity(Math.cos(startRotation / 180 * Math.PI) * 100000, Math.sin(startRotation / 180 * Math.PI) * 100000);
+		setLinearVelocity(Math.cos(startRotation / 180 * Math.PI) * 1000, Math.sin(startRotation / 180 * Math.PI) * 1000);
 		
 		
 		double posX = this.getTransform().getTranslationX();
 		double posY = this.getTransform().getTranslationY();
 		double rotation = this.getTransform().getRotation();
 		System.out.println(posX + " " + posY + " " + rotation);
-		addFixture(Geometry.createRectangle(80, 120),  1, 0.2, 0.2);
+		addFixture(Geometry.createRectangle(width, height),  1, 0, 0.2);
 		setMass(MassType.NORMAL);
 
 		car = manager.getTexture("car");
@@ -76,6 +76,7 @@ public class Car extends SimulationBody {
 	
 	public void update(double delta)
 	{
+		setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
 	
 	}
 	
@@ -86,10 +87,9 @@ public class Car extends SimulationBody {
 		double posY = this.getTransform().getTranslationY();
 		double rotation = this.getTransform().getRotation();
 		
-		
 		GL11.glPushMatrix();
 		
-		GL11.glTranslatef((float) (posX + (width / 2)), (float) (posY + (height / 2)), 0);
+		GL11.glTranslatef((float) (posX + (halfWidth)), (float) (posY + (halfHeight)), 0);
 		GL11.glRotatef((float) (rotation * 180 / Math.PI - 90), 0, 0, 1);
 
 

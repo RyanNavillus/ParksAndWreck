@@ -15,8 +15,6 @@ import org.dyn4j.samples.SimulationBody;
 import org.dyn4j.samples.SimulationFrame;
 public class ParksAndWreck extends App<GameSettings>
 {
-	
-	private ArrayList<Player> players;
 		
 	public static void main(String[] args)
 	{
@@ -40,20 +38,6 @@ public class ParksAndWreck extends App<GameSettings>
 	public void init()
 	{
 		super.init();
-		
-		//Testing
-		int maximumPlayers = 4;
-		players = new ArrayList<Player>();
-		for (int i = 0; i < maximumPlayers; i++) 
-		{
-			Player nextPlayer = new Player();
-			if (nextPlayer != null)
-			{
-				players.add(nextPlayer);
-			}
-		}
-
-		int numberOfPlayers = players.size();
 				
 		//simulationWorld.run();
 		// End Testing
