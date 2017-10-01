@@ -25,11 +25,14 @@ public class GuiGame extends GuiScreen<GameSettings>
 	
 	private Background background;
 	private World world;
+	public static double[][] playerColors;
 	
 	private int frameBuffer;
 	private int frameBufferTexture;
 	
 	private int renderBuffer;
+
+	private String title = "PARKS AND WRECK";
 
 	private ArrayList<ParkingSpot> parkingSpots;
 	
@@ -46,6 +49,11 @@ public class GuiGame extends GuiScreen<GameSettings>
 		application.getTextureManager().genTexture("carframeBroke", new File("resources/carframeBroke.png"));
 		application.getTextureManager().genTexture("fire0", new File("resources/flame0.png"));
 		application.getTextureManager().genTexture("fire1", new File("resources/flame1.png"));
+
+		playerColors = new double[4][3];
+		for(int i = 0; i < playerColors.length; i++){
+			playerColors[i] = generatePlayerColor();
+		}
 	}
 	
 	public void init()
@@ -114,6 +122,33 @@ public class GuiGame extends GuiScreen<GameSettings>
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		
 		background.render(delta);
+
+		gameSettings.getFont().bind();
+
+		//title
+		GL11.glColor4d(.3f, .3f, .3f, 0.1);
+		float shiftX = 1920 / 2 - gameSettings.getFont().getWidth(title) / 2f;
+		gameSettings.getFont().draw(title, shiftX, 600, 0, 1f);
+
+		//scores
+		setColorToCar(0);
+		shiftX = 470 - gameSettings.getFont().getWidth("0") / 2f;
+		gameSettings.getFont().draw(Integer.toString(world.getPlayerScores()[0]), shiftX, 200, 0, .5f);
+
+		setColorToCar(1);
+		shiftX = 1450 - gameSettings.getFont().getWidth("24") / 2f;
+		gameSettings.getFont().draw(Integer.toString(world.getPlayerScores()[1]), shiftX, 200, 0, .5f);
+
+		setColorToCar(2);
+		shiftX = 470 - gameSettings.getFont().getWidth("56") / 2f;
+		gameSettings.getFont().draw(Integer.toString(world.getPlayerScores()[2]), shiftX, 950, 0, .5f);
+
+		setColorToCar(3);
+		shiftX = 1450 - gameSettings.getFont().getWidth("2") / 2f;
+		gameSettings.getFont().draw(Integer.toString(world.getPlayerScores()[3]), shiftX, 950, 0, .5f);
+
+
+		gameSettings.getFont().unbind();
 		
 		world.render(delta);
 		
@@ -154,5 +189,19 @@ public class GuiGame extends GuiScreen<GameSettings>
 
 		shader.unbind();
 		
+	}
+
+	private void setColorToCar(int player){
+		double[] colors = playerColors[player];
+		GL11.glColor4d(colors[0], colors[1], colors[2], 0.1);
+	}
+
+	private double[] generatePlayerColor(){
+		double[] colors = new double[3];
+		colors[0] = Math.random();
+		colors[1] = Math.random();
+		colors[2] = Math.random();
+
+		return colors;
 	}
 }

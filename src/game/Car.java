@@ -23,7 +23,7 @@ public class Car {
 	private double rotation;
 	private boolean broken;
 
-	public Car(double startX, double startY, double startVelX, double startVelY, double startRotation, TextureManager manager)
+	public Car(double startX, double startY, double startVelX, double startVelY, double startRotation, double[] carColors, TextureManager manager)
 	{
 		posX = startX;
 		posY = startY;
@@ -35,16 +35,12 @@ public class Car {
 		carFrame = manager.getTexture("carframe");
 		carFrameBroke = manager.getTexture("carframeBroke");
 
-		carColors[0] = Math.random();
-		carColors[1] = Math.random();
-		carColors[2] = Math.random();
-
-		//System.out.println(carColors[1] + " " + carColors[1] + " " + carColors[2]);
-
 		rotation = startRotation;
 
-		//for (int i = 0; i < 5; i++)
-		//	generateFire();
+		this.carColors = carColors;
+
+		for (int i = 0; i < 5; i++)
+			generateFire();
 
 		broken = true;
 	}
@@ -119,11 +115,11 @@ public class Car {
 		
 		GL11.glBegin(GL11.GL_QUADS);
 
+
 		for (int i = 0; i < fires.size(); i++){
-			//System.out.println("fire");
 			double x = fires.get(i)[0];
 			double y =  fires.get(i)[1];
-			
+
 			GL11.glTexCoord2d(0, 0);
 			GL11.glVertex2d(0 + posX + x, 0 + posY + y);
 			GL11.glTexCoord2d(0, 1);
@@ -140,11 +136,11 @@ public class Car {
 	}
 
 	private void generateFire(){
-		double x = Math.random() * (27 * 2.5 - 20);
+		double x = Math.random() * (27 * 2.5 - 30) + 5;
 		double y = 70;
 
 		while (y > 40 && y < 80)
-			y = Math.random() * (44 * 2.5 - 20);
+			y = Math.random() * (44 * 2.5 - 30) + 5;
 
 		fires.add(new Double[] {x, y});
 	}
@@ -161,5 +157,13 @@ public class Car {
 
 	public void setRotation(double rotation){
 		this.rotation = rotation;
+	}
+
+	public void setBroken(boolean broken){
+		this.broken = broken;
+	}
+
+	public double[] getCarColors(){
+		return carColors;
 	}
 }

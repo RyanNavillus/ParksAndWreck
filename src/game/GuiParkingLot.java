@@ -19,6 +19,7 @@ public class GuiParkingLot extends GuiScreen<GameSettings> {
 
     private ArrayList<ParkingSpot> parkingSpots = new ArrayList<>();
 
+
     public GuiParkingLot(App<GameSettings> app) {
         super(app);
 

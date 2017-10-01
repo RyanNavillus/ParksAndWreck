@@ -3,6 +3,7 @@ package game;
 import com.polaris.engine.options.Input;
 import com.polaris.engine.options.Settings;
 import com.polaris.engine.options.WindowMode;
+import com.polaris.engine.render.Font;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
@@ -14,6 +15,8 @@ import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
  */
 public class GameSettings extends Settings
 {
+
+	private Font gameFont;
 	
 	public void init(Input i)
 	{
@@ -25,7 +28,7 @@ public class GameSettings extends Settings
 	
 	public void createFonts()
 	{
-		//gameFont = Font.createFont(new File("font/copper.ttf"), 128);
+		gameFont = Font.createFont(new File("resources/VCR_OSD_MONO.ttf"), 110);
 	}
 	
 	public void getKeys()
@@ -37,6 +40,10 @@ public class GameSettings extends Settings
 		this.rightKey = new Key[]{input.getKey(GLFW.GLFW_KEY_D), input.getKey(GLFW.GLFW_KEY_L), input.getKey(GLFW.GLFW_KEY_H), input.getKey(GLFW.GLFW_KEY_RIGHT)};
 		this.beamKey = new Key[]{input.getKey(GLFW.GLFW_KEY_E), input.getKey(GLFW.GLFW_KEY_O), input.getKey(GLFW.GLFW_KEY_Y), input.getKey(GLFW.GLFW_KEY_RIGHT_SHIFT)};
 		this.superKey = new Key[]{input.getKey(GLFW.GLFW_KEY_Q), input.getKey(GLFW.GLFW_KEY_U), input.getKey(GLFW.GLFW_KEY_R), input.getKey(GLFW.GLFW_KEY_SLASH)};*/
+	}
+
+	public Font getFont(){
+		return gameFont;
 	}
 	
 }

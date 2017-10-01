@@ -16,7 +16,8 @@ public class World
 	private float totalTime = 0;
 	
 	private List<Car> staticCars;
-	private List<Car> playerCars;
+	private Car[] playerCars;
+	private int[] playerScores;
 	
 	private List<ParkingSpot> parkingList;
 	
@@ -26,8 +27,9 @@ public class World
 	public World(GameSettings settings, TextureManager manager)
 	{
 		staticCars = new ArrayList<>();
-		playerCars = new ArrayList<>();
+		playerCars = new Car[4];
 		parkingList = new ArrayList<>();
+		playerScores = new int[4];
 		
 		gameSettings = settings;
 		
@@ -35,10 +37,14 @@ public class World
 		
 		fireTexture = textureManager.getTexture("fire0");
 
-		Car car = new Car(100, 100, 0, 0, 0, manager);
-		playerCars.add(car);
+		/*Car car = new Car(100, 100, 0, 0, 0, manager);
+		playerCars[0] = car;
 		car = new Car(100, 200, 0, 0, 45, manager);
-		playerCars.add(car);
+		playerCars[1] = car;*/
+
+		for(int i = 0; i < playerCars.length; i++){
+			playerCars[i] = new Car(100 + i*200, 200, 0, 0, 45, GuiGame.playerColors[i], manager);;
+		}
 
 		//parkingList.add(new ParkingSpot(0, 0, false));
 
@@ -90,6 +96,14 @@ public class World
 		{
 			car.render(delta);
 		}
+	}
+
+	public Car[] getPlayerCars(){
+		return playerCars;
+	}
+
+	public int[] getPlayerScores(){
+		return playerScores;
 	}
 	
 }
