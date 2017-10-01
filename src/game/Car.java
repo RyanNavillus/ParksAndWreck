@@ -92,8 +92,6 @@ public class Car extends SimulationBody {
 
 			if (!grew)
 				World.getOils().add(new Oil(x, y, Math.random() * 360));
-
-			System.out.println(World.getOils().size());
 		}
 	}
 	
