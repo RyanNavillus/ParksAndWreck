@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Car extends SimulationBody {
-	
+	private static final double SCALE = 32.0;
 	private static final double height = 44 * 2.5, width = 27 * 2.5;
 	private static final double halfHeight = 22 * 2.5, halfWidth = 13.5 * 2.5;
 	
@@ -36,15 +36,15 @@ public class Car extends SimulationBody {
 	{
 		super();
 
-		this.translate(new Vector2(startX, startY));
+		this.translate(new Vector2(startX, startY).product(1/SCALE));
 		this.rotateAboutCenter(startRotation / 180 * Math.PI);
-		setLinearVelocity(Math.cos(startRotation / 180 * Math.PI) * 1000, Math.sin(startRotation / 180 * Math.PI) * 1000);
+		setLinearVelocity(Math.cos(startRotation / 180 * Math.PI), Math.sin(startRotation / 180 * Math.PI));
 		
 		double friction = 0.0;
 		double bounce = 0.2;
 		
 		// the width and height are correct, do not change
-		addFixture(Geometry.createRectangle(height, width), 1, friction, bounce);
+		addFixture(Geometry.createRectangle(height/SCALE, width/SCALE), 1, friction, bounce);
 
 		// this may or may not need to be changed
 //		this.translate(0.0, 2.0);
@@ -67,17 +67,15 @@ public class Car extends SimulationBody {
 	}
 	
 	public double getX() {
-		return this.getWorldCenter().x;
+		return this.getWorldCenter().x * SCALE;
 	}
 
 	public double getY() {
-		return this.getWorldCenter().y;
+		return this.getWorldCenter().y * SCALE;
 	}
 	
 	public void update(double delta)
 	{
-		setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
-
 		if (leaking){
 			double x = getX();
 			double y = getY() + 100;
@@ -94,16 +92,18 @@ public class Car extends SimulationBody {
 
 			if (!grew)
 				World.getOils().add(new Oil(x, y));
-
-			System.out.println(World.getOils().size());
+		}
+		
+		if (this.getLinearVelocity().getMagnitude() > 100) {
+			System.out.println("Going too fast");
 		}
 	}
 	
 	public void render(double delta)
 	{
 		
-		double posX = this.getTransform().getTranslationX();
-		double posY = this.getTransform().getTranslationY();
+		double posX = this.getX();
+		double posY = this.getY();
 		double rotation = this.getTransform().getRotation();
 		
 		GL11.glPushMatrix();

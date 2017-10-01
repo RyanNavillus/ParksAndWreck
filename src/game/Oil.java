@@ -16,7 +16,7 @@ public class Oil {
         xPos = x;
         yPos = y;
 
-        scale = 5;
+        scale = 1;
     }
 
     public void render(double delta){
