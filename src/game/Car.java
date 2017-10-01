@@ -34,11 +34,23 @@ public class Car extends SimulationBody {
 
 	public Car(double startX, double startY, double startRotation, double[] carColors, TextureManager manager)
 	{
+		super();
+
 		this.getTransform().transform(new Vector2(startX, startY));
 		getTransform().setRotation(startRotation);
 		setLinearVelocity(Math.cos(startRotation / 180 * Math.PI) * 1000, Math.sin(startRotation / 180 * Math.PI) * 1000);
 		
-		addFixture(Geometry.createRectangle(width, height),  1, 0, 0.2);
+		double friction = 0.0;
+		double bounce = 0.2;
+		
+		double posX = this.getTransform().getTranslationX();
+		double posY = this.getTransform().getTranslationY();
+		double rotation = this.getTransform().getRotation();
+		// might have to switch height and width
+		addFixture(Geometry.createRectangle(width, height),  1, friction, bounce);
+
+		// this may or may not need to be changed
+//		this.translate(0.0, 2.0);
 		setMass(MassType.NORMAL);
 
 		car = manager.getTexture("car");
@@ -46,6 +58,9 @@ public class Car extends SimulationBody {
 		carFrameBroke = manager.getTexture("carframeBroke");
 
 		this.carColors = carColors;
+
+//		this.setAngularDamping(10.0f);
+//		this.setLinearDamping(3.0f);
 
 		//for (int i = 0; i < 5; i++)
 		//	generateFire();
