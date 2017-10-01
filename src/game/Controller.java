@@ -45,6 +45,7 @@ public class Controller {
 		if(axes.get(0) == 0.0 && axes.get(1) == 0.0)
 			return 0;
 		
+		
 		double angle = Math.toDegrees(Math.atan(axes.get(1) / axes.get(0)));
 		if (axes.get(0) < 0 ) 
 		{

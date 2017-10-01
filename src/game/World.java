@@ -22,7 +22,9 @@ import org.dyn4j.geometry.Vector2;
 import org.dyn4j.samples.SimulationBody;
 import org.lwjgl.opengl.*;
 
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 
 /**
  * Created by Killian Le Clainche on 9/30/2017.
@@ -147,28 +149,36 @@ public class World {
 					playerCars[0].myrotate(-force);
 				}
 			}
-
-			if (playerCars[0] != null && players[0].controller != null)
+			
+			for(int i = 0; i < playerCars.length; i++)
 			{
-				final double force = 20000 * delta;
-
-				if (players[0].controller.aButtonPressed())
+				if(playerCars[i] != null && players[i].controller != null)
 				{
-					playerCars[0].thrust(force);
+					double angle = players[i].controller.getDirection();
+					
+					if(angle != 0.0)
+					{
+						angle = angle / 180 * Math.PI;
+						
+						double rotation = playerCars[i].getTransform().getRotation();
+						if(rotation < 0)
+							rotation += Math.PI * 2;
+						
+						double travel1 = angle - rotation;
+						double travel2 = rotation + angle;
+						
+						System.out.println(playerCars[i].getTransform().getRotation());
+						
+						if(Math.abs(travel1) < Math.abs(travel2))
+						{
+							playerCars[i].rotateAboutCenter(Math.min(travel1, 8 * Math.PI * delta) - 2 * Math.PI);
+						}
+						else
+						{
+							playerCars[i].rotateAboutCenter(-Math.min(travel2, 8 * Math.PI * delta));
+						}
+					}
 				}
-
-				if (players[0].controller.startButtonPressed())
-				{
-					playerCars[0].rotate(force * 0.1);
-				}
-			}
-
-			if (playerCars[0] != null && players[0].controller != null
-					&& players[0].controller.getDirection() != Double.NaN)
-			{
-				// BLALDSLDASL " + )
-				playerCars[0].rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI)
-						- playerCars[0].getTransform().getRotation());
 			}
 		}
 
@@ -332,7 +342,11 @@ public class World {
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
 		//RENDER THE TRACK HERE
-
+		
+		
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		glAlphaFunc(GL_GREATER, .05f);
+		
 		for( Track t : tracks){
 			GL11.glPushMatrix();
 
@@ -340,29 +354,27 @@ public class World {
 			GL11.glRotatef((float) (t.rotation * 180 / Math.PI - 90), 0, 0, 1);
 			GL11.glTranslatef((float) -(t.xPos + 16 / 2), (float) -(t.yPos + 16 / 2), 0);
 
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glColor4f(0f, 0f, 0f, .2f);
-
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-
 			Track.getTrackTextures()[t.texture].bind();
-
+			
+			GL11.glEnable(GL11.GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glColor4f(0, 0, 0, .6f);
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2d(0, 0);
-			GL11.glVertex2d(0 + t.xPos, 0 + t.yPos);
+			GL11.glVertex2d(-8 + t.xPos, -8 + t.yPos);
 			GL11.glTexCoord2d(0, 1);
-			GL11.glVertex2d(0 + t.xPos, 16 + t.yPos);
+			GL11.glVertex2d(-8 + t.xPos, 8 + t.yPos);
 			GL11.glTexCoord2d(1, 1);
-			GL11.glVertex2d(16 + t.xPos, 16 + t.yPos);
+			GL11.glVertex2d(8 + t.xPos, 8 + t.yPos);
 			GL11.glTexCoord2d(1, 0);
-			GL11.glVertex2d(16 + t.xPos, 0 + t.yPos);
+			GL11.glVertex2d(8 + t.xPos, -8 + t.yPos);
 			GL11.glEnd();
-
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_BLEND);
+
 
 			GL11.glPopMatrix();
 		}
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 		tracks = new ArrayList<>();
 
@@ -371,33 +383,23 @@ public class World {
 
 	private void renderTracks()
 	{
-		colorShader.bind();
-
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glEnable(GL11.GL_BLEND);
+		
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, trackTexture);
 
-		GL20.glUniform1i(texID, 0);
-		GL20.glUniform2f(windowSize, gameSettings.getWindowWidth(), gameSettings.getWindowHeight());
-
-		GL20.glEnableVertexAttribArray(0);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, renderBuffer);
-		GL20.glVertexAttribPointer(
-				0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-				3,                  // size
-				GL11.GL_FLOAT,           // type
-				false,           // normalized?
-				0,                  // stride
-				0            // array buffer offset
-		);
-
-		// Draw the triangles !
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6); // 2*3 indices starting at 0 -> 2 triangles
-
-		GL20.glDisableVertexAttribArray(0);
-
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-
-		colorShader.unbind();
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2d(0, 1);
+		GL11.glVertex2d(0, 0);
+		GL11.glTexCoord2d(0, 0);
+		GL11.glVertex2d(0, 1080);
+		GL11.glTexCoord2d(1, 0);
+		GL11.glVertex2d(1920, 1080);
+		GL11.glTexCoord2d(1, 1);
+		GL11.glVertex2d(1920, 0);
+		GL11.glEnd();
+		
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	private void setupFrameBuffers()
@@ -413,8 +415,8 @@ public class World {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, trackTexture);
 
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, 1920, 1080, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, 0);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 
 		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, trackTexture, 0);
 
