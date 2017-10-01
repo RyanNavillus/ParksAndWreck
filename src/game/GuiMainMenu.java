@@ -118,14 +118,19 @@ public class GuiMainMenu extends GuiScreen<GameSettings>
 	public void close()
 	{
 		super.close();
-		clip.close();
 	}
 	
 	public void render(double delta)
 	{
 		
-		if(ticksExisted > SCENE_LENGTH + .5 && startGame.isPressed())
-			application.initGui(new GuiGame(application, shader, texID, windowSize, time, frameBuffer, frameBufferTexture, renderBuffer));
+		if(startGame.isPressed())
+		{
+			if (ticksExisted < SCENE_LENGTH + .5)
+			{
+				ticksExisted = SCENE_LENGTH + .5;
+			}
+			else application.initGui(new GuiGame(application, shader, texID, windowSize, time, frameBuffer, frameBufferTexture, renderBuffer));
+		}
 		
 		super.render(delta);
 		
