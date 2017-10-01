@@ -14,6 +14,7 @@ import org.dyn4j.samples.SimulationBody;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Car extends SimulationBody {
@@ -21,14 +22,16 @@ public class Car extends SimulationBody {
 	private static final double height = 44 * 2.5, width = 27 * 2.5;
 	private static final double halfHeight = 22 * 2.5, halfWidth = 13.5 * 2.5;
 	
-	
 	private double[] carColors = new double[3];
-
+	
 	private Texture car;
 	private Texture carFrame;
 	private Texture carFrameBroke;
 
 	private ArrayList<Double[]> fires = new ArrayList<>();
+	
+	public Date parkingStartTime;
+	public int parkingSpotId;
 	
 	private boolean broken;
 
@@ -40,7 +43,7 @@ public class Car extends SimulationBody {
 		
 		addFixture(Geometry.createRectangle(width, height),  1, 0, 0.2);
 		setMass(MassType.NORMAL);
-
+		
 		car = manager.getTexture("car");
 		carFrame = manager.getTexture("carframe");
 		carFrameBroke = manager.getTexture("carframeBroke");
