@@ -158,7 +158,7 @@ public class World {
 		final double force = 20000 * delta;
 		
 		if (gameSettings.uKey.isPressed()) {
-			boomMode = true;
+			boomMode = !boomMode;
 		}
 
 		if (playerCars[3] != null && !playerCars[3].isRecent())
