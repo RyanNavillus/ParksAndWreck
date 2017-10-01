@@ -3,23 +3,19 @@ package game;
 import com.polaris.engine.render.Texture;
 import com.polaris.engine.render.TextureManager;
 
-import org.dyn4j.collision.Fixture;
-import org.dyn4j.dynamics.BodyFixture;
-import org.dyn4j.dynamics.Force;
+import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
-import org.dyn4j.geometry.Rectangle;
 import org.dyn4j.geometry.Vector2;
-import org.dyn4j.samples.SimulationBody;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class Car extends SimulationBody {
+public class Car extends Body
+{
 	
-	private static final double height = 44 * 2.5, width = 27 * 2.5;
-	private static final double halfHeight = 22 * 2.5, halfWidth = 13.5 * 2.5;
+	private static final double width = 44 * 2.2, height = 27 * 2.2;
+	private static final double halfWidth = 22 * 2.2, halfHeight = 13.5 * 2.2;
 	
 	private double[] carColors = new double[3];
 
@@ -36,18 +32,19 @@ public class Car extends SimulationBody {
 	{
 		super();
 
+		double rotation = startRotation / 180 * Math.PI;
+		
 		this.translate(new Vector2(startX, startY));
-		this.rotateAboutCenter(startRotation / 180 * Math.PI);
-		setLinearVelocity(Math.cos(startRotation / 180 * Math.PI) * 1000, Math.sin(startRotation / 180 * Math.PI) * 1000);
+		this.rotateAboutCenter(rotation);
+		setLinearVelocity(Math.cos(rotation) * 1000, Math.sin(rotation) * 1000);
 		
 		double friction = 0.0;
 		double bounce = 0.2;
 		
-		double posX = this.getTransform().getTranslationX();
-		double posY = this.getTransform().getTranslationY();
-		double rotation = this.getTransform().getRotation();
-		// might have to switch height and width
-		addFixture(Geometry.createRectangle(height, width),  1, friction, bounce);
+		System.out.println(this.getWorldCenter());
+		
+		// might have to switch width and height
+		addFixture(Geometry.createRectangle(width, height),  1, friction, bounce);
 
 		// this may or may not need to be changed
 //		this.translate(0.0, 2.0);
@@ -82,7 +79,7 @@ public class Car extends SimulationBody {
 	
 	public void update(double delta)
 	{
-		setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
+		//setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
 
 		if (leaking){
 			double x = this.getTransform().getTranslationX();
@@ -101,21 +98,19 @@ public class Car extends SimulationBody {
 			if (!grew)
 				World.getOils().add(new Oil(x, y));
 
-			System.out.println(World.getOils().size());
 		}
 	}
 	
 	public void render(double delta)
 	{
 		
-		double posX = this.getTransform().getTranslationX();
-		double posY = this.getTransform().getTranslationY();
+		Vector2 pos = this.getWorldCenter();
 		double rotation = this.getTransform().getRotation();
 		
 		GL11.glPushMatrix();
 		
-		GL11.glTranslatef((float) (posX + halfWidth), (float) (posY + halfHeight), 0);
-		GL11.glRotatef((float) (rotation * 180 / Math.PI - 90), 0, 0, 1);
+		GL11.glTranslatef((float) (pos.x), (float) (pos.y), 0);
+		GL11.glRotatef((float) (rotation * 180 / Math.PI), 0, 0, 1);
 
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -188,11 +183,11 @@ public class Car extends SimulationBody {
 	}
 
 	private void generateFire(){
-		double x = Math.random() * (27 * 2.5 - 30) + 5;
+		double x = Math.random() * (width - 30) + 5;
 		double y = 70;
 
-		while (y > 40 && y < 80)
-			y = Math.random() * (44 * 2.5 - 30) + 5;
+		while (y > (.3636 * height) && y < (.3636 * 2 * height))
+			y = Math.random() * (height - 30) + 5;
 
 		fires.add(new Double[] {x, y});
 	}
