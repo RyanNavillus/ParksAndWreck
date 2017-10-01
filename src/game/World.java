@@ -53,7 +53,7 @@ public class World {
 	private double ticksToInitialize = 2;
 
 	private static ArrayList<Oil> oils = new ArrayList<>();
-	private static ArrayList<Track> tracks = new ArrayList<>();
+	public static ArrayList<Track> tracks = new ArrayList<>();
 
 	public World(GameSettings settings, TextureManager manager)
 	{
@@ -229,9 +229,7 @@ public class World {
 		}
 
 		GuiGame.renderScores(gameSettings, playerScores);
-
-		if (tracks.size() > 0)
-			renderTrack();
+		
 		renderTracks();
 
 		for(Track track : tracks){
