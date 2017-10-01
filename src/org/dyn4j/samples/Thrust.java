@@ -79,14 +79,20 @@ public class Thrust extends SimulationFrame {
 			    (body1 == b2 && body2 == b1)) {
 				// its the collision we were looking for
 				// do whatever you need to do here
-
-				System.out.println("WHAT UP");
+				
+				Vector2 impulse1 = null;
+				Vector2 impulse2 = null;
+				
+				double minImpulse = 2;
 
 				Object userData1 = fixture1.getUserData();
 				if (userData1 != null && userData1 instanceof DynData) {
 					DynData data1 = (DynData) userData1;
 					if (data1.isHead()) {
-						Vector2 impulse1 = new Vector2(body1.getLinearVelocity()).multiply(1);
+						impulse1 = new Vector2(body1.getLinearVelocity());
+						if (impulse1.getMagnitude() < minImpulse) {
+							impulse1.setMagnitude(minImpulse);
+						}
 						body2.applyImpulse(impulse1);
 					}
 				}
@@ -95,12 +101,15 @@ public class Thrust extends SimulationFrame {
 				if (userData2 != null && userData2 instanceof DynData) {
 					DynData data2 = (DynData) userData2;
 					if (data2.isHead()) {
-						Vector2 impulse2 = new Vector2(body2.getLinearVelocity()).multiply(1);
+						impulse2 = new Vector2(body2.getLinearVelocity()).multiply(1);
+						if (impulse2.getMagnitude() < minImpulse) {
+							impulse2.setMagnitude(minImpulse);
+						}
 						body1.applyImpulse(impulse2);
 					}
 				}
-
-				return true;
+				
+				return impulse1 == null && impulse2 == null;
 			}
 			return true;
 		}
