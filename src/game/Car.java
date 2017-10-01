@@ -38,11 +38,6 @@ public class Car extends SimulationBody {
 		getTransform().setRotation(startRotation);
 		setLinearVelocity(Math.cos(startRotation / 180 * Math.PI) * 1000, Math.sin(startRotation / 180 * Math.PI) * 1000);
 		
-		
-		double posX = this.getTransform().getTranslationX();
-		double posY = this.getTransform().getTranslationY();
-		double rotation = this.getTransform().getRotation();
-		System.out.println(posX + " " + posY + " " + rotation);
 		addFixture(Geometry.createRectangle(width, height),  1, 0, 0.2);
 		setMass(MassType.NORMAL);
 
@@ -50,12 +45,10 @@ public class Car extends SimulationBody {
 		carFrame = manager.getTexture("carframe");
 		carFrameBroke = manager.getTexture("carframeBroke");
 
-		rotation = startRotation;
-
 		this.carColors = carColors;
 
-		for (int i = 0; i < 5; i++)
-			generateFire();
+		//for (int i = 0; i < 5; i++)
+		//	generateFire();
 
 		broken = false;
 	}
@@ -74,7 +67,6 @@ public class Car extends SimulationBody {
 	public void update(double delta)
 	{
 		setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
-	
 	}
 	
 	public void render(double delta)
