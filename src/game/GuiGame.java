@@ -124,6 +124,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 	public void update(double delta)
 	{
 		super.update(delta);
+		if(ticksExisted < 60)
 		world.update(delta);
 	}
 	
