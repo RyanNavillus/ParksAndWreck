@@ -126,7 +126,7 @@ public class World {
 		{
 			if (playerCars[0] != null)
 			{
-				final double force = 5000 * delta;
+				final double force = 20000 * delta;
 
 				if (gameSettings.goKey.isPressed())
 				{

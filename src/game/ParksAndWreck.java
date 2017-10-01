@@ -38,36 +38,6 @@ public class ParksAndWreck extends App<GameSettings>
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
 			clip.open(songIn);
 			clip.start();
-			/*clip.open(introIn);
-			LineListener listener = new LineListener() {
-				
-				@Override
-				public void update(LineEvent event) {
-					// TODO Auto-generated method stub
-					System.out.println("Yo");
-					if (!clip.isActive())
-					{
-						System.out.println("Yo");
-						clip.close();
-						try {
-							clip.open(songIn);
-							clip.loop(Clip.LOOP_CONTINUOUSLY);
-							clip.start();
-						} catch (LineUnavailableException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-					}
-				}
-			};
-			
-			clip.addLineListener(listener);
-			clip.start();
-			*/
 			
 		} catch (LineUnavailableException e) {
 				// TODO Auto-generated catch block
