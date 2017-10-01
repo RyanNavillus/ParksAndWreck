@@ -1,6 +1,7 @@
 package game;
 
 import com.polaris.engine.options.Input;
+import com.polaris.engine.options.Key;
 import com.polaris.engine.options.Settings;
 import com.polaris.engine.options.WindowMode;
 import com.polaris.engine.render.Font;
@@ -15,8 +16,14 @@ import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
  */
 public class GameSettings extends Settings
 {
+	private static final long serialVersionUID = 1L;
 
 	private Font gameFont;
+
+	public Key goKey;
+	public Key stopKey;
+	public Key rightKey;
+	public Key leftKey;
 	
 	public void init(Input i)
 	{
@@ -33,6 +40,10 @@ public class GameSettings extends Settings
 	
 	public void getKeys()
 	{
+		this.goKey = GameSettings.getKey(GLFW.GLFW_KEY_UP);
+		this.stopKey = GameSettings.getKey(GLFW.GLFW_KEY_DOWN);
+		this.rightKey = GameSettings.getKey(GLFW.GLFW_KEY_RIGHT);
+		this.leftKey = GameSettings.getKey(GLFW.GLFW_KEY_LEFT);
 		
 		/*this.jumpKey = new Key[]{input.getKey(GLFW.GLFW_KEY_W), input.getKey(GLFW.GLFW_KEY_I), input.getKey(GLFW.GLFW_KEY_T), input.getKey(GLFW.GLFW_KEY_UP)};
 		this.smashKey = new Key[]{input.getKey(GLFW.GLFW_KEY_S), input.getKey(GLFW.GLFW_KEY_K), input.getKey(GLFW.GLFW_KEY_G), input.getKey(GLFW.GLFW_KEY_DOWN)};
