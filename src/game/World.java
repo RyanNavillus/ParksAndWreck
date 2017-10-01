@@ -83,7 +83,7 @@ public class World
 		{
 			addPlayerCar(0, new Car(-65, 55, 0, GuiGame.playerColors[0], textureManager));
 			
-			ticksToInitialize = 0;
+			ticksToInitialize = 10;
 		}
 		
 		if(playerCars[0] != null && players[0].controller.getDirection() != Double.NaN)
