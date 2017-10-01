@@ -43,9 +43,19 @@ public class GuiGame extends GuiScreen<GameSettings>
 	
 	private float dist = 0;
 	
-	public GuiGame(App<GameSettings> app)
+	public GuiGame(App<GameSettings> app, Shader shader, int texID, int windowSize, int time, int frameBuffer, int frameBufferTexture, int renderBuffer)
 	{
 		super(app);
+		
+		this.shader = shader;
+		this.texID = texID;
+		this.windowSize = windowSize;
+		this.time = time;
+		
+		this.frameBuffer = frameBuffer;
+		this.frameBufferTexture = frameBufferTexture;
+		
+		this.renderBuffer = renderBuffer;
 		
 		background = new Background();
 		
@@ -100,42 +110,6 @@ public class GuiGame extends GuiScreen<GameSettings>
 	{
 		super.init();
 		world = new World(this.gameSettings, application.getTextureManager());
-		
-		shader = Shader.createShader(new File("shaders/overlay.vert"), new File("shaders/overlay.frag"));
-		
-		texID = GL20.glGetUniformLocation(shader.getShaderId(), "renderedTexture");
-		windowSize = GL20.glGetUniformLocation(shader.getShaderId(), "window");
-		time = GL20.glGetUniformLocation(shader.getShaderId(), "time");
-		
-		frameBuffer = GL30.glGenFramebuffers();
-		frameBufferTexture = GL11.glGenTextures();
-		
-		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, frameBufferTexture);
-		
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 1920, 1080, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, 0);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-		
-		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, frameBufferTexture, 0);
-		
-		GL20.glDrawBuffers(GL30.GL_COLOR_ATTACHMENT0);
-		
-		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-		
-		float[] g_quad_vertex_buffer_data = {
-				0, 0, 0.0f,
-				1920, 0, 0.0f,
-				0,  1080, 0.0f,
-				0,  1080, 0.0f,
-				1920, 0, 0.0f,
-				1920,  1080, 0.0f,
-				};
-		
-		renderBuffer = GL15.glGenBuffers();
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, renderBuffer);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, g_quad_vertex_buffer_data, GL15.GL_STATIC_DRAW);
 	}
 	
 	private void initializePhysics() {

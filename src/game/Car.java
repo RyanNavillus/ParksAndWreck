@@ -88,8 +88,6 @@ public class Car extends Body
 	
 	public void update(double delta)
 	{
-		
-		//this.thrust(12500 * delta);
 
 		if(counter == 5){
 			double angle = this.getTransform().getRotation();
