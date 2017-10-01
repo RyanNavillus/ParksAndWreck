@@ -19,8 +19,12 @@ public class Ship extends SimulationBody {
 		double bounce = 0.5;
 		
 		this.addFixture(Geometry.createRectangle(0.5, 1.5), 1, friction, bounce);
-		BodyFixture bf2 = this.addFixture(Geometry.createEquilateralTriangle(0.25), 1, friction, bounce);
-//		bf2.getShape().translate(0, 0.9);
+		this.addFixture(Geometry.createEquilateralTriangle(0.25), 1, friction, bounce);
+
+		BodyFixture head = this.addFixture(Geometry.createRectangle(0.5, 0.1), 1, friction, bounce);
+		head.getShape().translate(0, 0.8);
+		head.setUserData(new DynData());
+
 		this.translate(0.0, 2.0);
 		this.setMass(MassType.NORMAL);
 //		this.setMass(new Mass(new Vector2(0, 0), 1, 0.5));

@@ -74,19 +74,33 @@ public class Thrust extends SimulationFrame {
 		@Override
 		public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Penetration penetration) {
 			// the bodies can appear in either order
+
 			if ((body1 == b1 && body2 == b2) ||
 			    (body1 == b2 && body2 == b1)) {
 				// its the collision we were looking for
 				// do whatever you need to do here
-				
-				// stopping them like this isn't really recommended
-				// there are probably better ways to do what you want
-				
-				body1.getLinearVelocity().zero();
-				body1.setAngularVelocity(0.0);
-				body2.getLinearVelocity().zero();
-				body2.setAngularVelocity(0.0);
-				return false;
+
+				System.out.println("WHAT UP");
+
+				Object userData1 = fixture1.getUserData();
+				if (userData1 != null && userData1 instanceof DynData) {
+					DynData data1 = (DynData) userData1;
+					if (data1.isHead()) {
+						Vector2 impulse1 = new Vector2(body1.getLinearVelocity()).multiply(1);
+						body2.applyImpulse(impulse1);
+					}
+				}
+
+				Object userData2 = fixture2.getUserData();
+				if (userData2 != null && userData2 instanceof DynData) {
+					DynData data2 = (DynData) userData2;
+					if (data2.isHead()) {
+						Vector2 impulse2 = new Vector2(body2.getLinearVelocity()).multiply(1);
+						body1.applyImpulse(impulse2);
+					}
+				}
+
+				return true;
 			}
 			return true;
 		}
