@@ -37,15 +37,15 @@ public class Car extends Body
 
 		double rotation = startRotation / 180 * Math.PI;
 		
-		this.translate(new Vector2(startX, startY));
+		this.translate(new Vector2(startX, startY).product(1/SCALE));
 		this.rotateAboutCenter(rotation);
-		setLinearVelocity(Math.cos(rotation), Math.sin(rotation));
+//		setLinearVelocity(Math.cos(rotation), Math.sin(rotation));
 		
 		double friction = 0.0;
 		double bounce = 0.2;
 		
 		// might have to switch width and height
-		addFixture(Geometry.createRectangle(width, height),  1, friction, bounce);
+		addFixture(Geometry.createRectangle(width/SCALE, height/SCALE),  1, friction, bounce);
 
 		// this may or may not need to be changed
 //		this.translate(0.0, 2.0);
