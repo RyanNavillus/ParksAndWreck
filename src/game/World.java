@@ -24,7 +24,8 @@ public class World
 	private Player[] players;
 	
 	private List<Car> staticCars;
-	private List<Car> playerCars;
+	private Car[] playerCars;
+	private int[] playerScores;
 	
 	private List<ParkingSpot> parkingList;
 	
@@ -37,8 +38,9 @@ public class World
 	public World(GameSettings settings, TextureManager manager)
 	{
 		staticCars = new ArrayList<>();
-		playerCars = new ArrayList<>();
+		playerCars = new Car[4];
 		parkingList = new ArrayList<>();
+		playerScores = new int[4];
 		
 		players = new Player[] {new Player(), new Player(), new Player(), new Player()};
 		
@@ -47,7 +49,7 @@ public class World
 		textureManager = manager;
 		
 		physicsWorld = new org.dyn4j.dynamics.World();
-		physicsWorld.setGravity(new Vector2(0, 0));
+		physicsWorld.setGravity(org.dyn4j.dynamics.World.ZERO_GRAVITY);
 				
 		fireTexture = textureManager.getTexture("fire0");
 
@@ -69,9 +71,9 @@ public class World
 		parkingList.addAll(ParkingSpot.createParkingArea(580, 880 - ParkingSpot.HEIGHT / 2 - ParkingSpot.HEIGHT, 9, 4));
 	}
 	
-	private void addPlayerCar(Car car)
+	private void addPlayerCar(int id, Car car)
 	{
-		playerCars.add(car);
+		playerCars[id] = car;
 		physicsWorld.addBody(car);
 	}
 	
@@ -79,21 +81,29 @@ public class World
 	{
 		if((ticksToInitialize -= delta) <= 0)
 		{
-			staticCars.addAll(playerCars);
+			playerCars[0] = new Car(-65, 55,  0, 0, 0, GuiGame.playerColors[0], textureManager);
+
+			playerCars[1] = new Car(-65, 915, 0, 0, 0, GuiGame.playerColors[1], textureManager);
+
+			playerCars[2] = new Car(1920, 55,  180, 0, 0, GuiGame.playerColors[2], textureManager);
+
+			playerCars[3] = new Car(1920, 915,  180, 0, 0, GuiGame.playerColors[3], textureManager);
 			
-			addPlayerCar(new Car(-65, 55,  0, textureManager));
-			
-			ticksToInitialize = 10;
+			ticksToInitialize = 0;
 		}
 		
-		if(playerCars.size() > 0 && players[0].controller.getDirection() != Double.NaN)
+		if(playerCars.length > 0 && players[0].controller.getDirection() != Double.NaN)
 		{
 			//System.out.println(players[0].controller.getDirection() + " BLALDSLDASL " + )
-			playerCars.get(0).rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI) - playerCars.get(0).getTransform().getRotation());
+			playerCars[0].rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI) - playerCars[0].getTransform().getRotation());
 		}
 		
-		for(Car p : playerCars)
+		for(Car p : playerCars){
+			if (p == null)
+				continue;
+
 			p.update(delta);
+		}
 		
 		for(Car s : staticCars)
 			s.update(0);
@@ -126,8 +136,19 @@ public class World
 		
 		for(Car car : playerCars)
 		{
+			if (car == null)
+				continue;
+
 			car.render(delta);
 		}
+	}
+
+	public Car[] getPlayerCars(){
+		return playerCars;
+	}
+
+	public int[] getPlayerScores(){
+		return playerScores;
 	}
 	
 }
