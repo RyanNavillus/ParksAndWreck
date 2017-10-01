@@ -3,7 +3,10 @@ package game;
 import com.polaris.engine.render.Texture;
 import com.polaris.engine.render.TextureManager;
 
+import org.dyn4j.collision.narrowphase.Penetration;
 import org.dyn4j.dynamics.Body;
+import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.dynamics.CollisionAdapter;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Rectangle;
@@ -17,6 +20,7 @@ import java.util.List;
 
 public class Car extends Body
 {
+
 	public static final double SCALE = 32.0;
 	private static final double width = 44 * 2.2, height = 27 * 2.2;
 	private static final double halfWidth = 22 * 2.2, halfHeight = 13.5 * 2.2;
@@ -61,7 +65,7 @@ public class Car extends Body
 		setLinearVelocity(initVel);
 //		this.getLinearVelocity().multiply(0);
 		
-		setLinearDamping(3);
+		setLinearDamping(3.5);
 		setAngularDamping(1.3);
 		
 		double friction = 0.0;

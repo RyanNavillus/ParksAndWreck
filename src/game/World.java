@@ -13,7 +13,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.dyn4j.collision.narrowphase.Penetration;
 import org.dyn4j.dynamics.Body;
+import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.dynamics.CollisionAdapter;
 import org.dyn4j.dynamics.Force;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.Mass;
@@ -114,10 +117,27 @@ public class World {
 
 	}
 
+	private static class CustomCollision extends CollisionAdapter {
+		private Car b1;
+		
+		public CustomCollision(Car b1) {
+			this.b1 = b1;
+		}
+		@Override
+		public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Penetration penetration) {
+			if ((body1 == b1) || (body2 == b1)) {
+				b1.damageCar();
+				return true;
+			}
+			return true;
+		}
+	}
+
 	private void addPlayerCar(int id, Car car)
 	{
 		playerCars[id] = car;
 		physicsWorld.addBody(car);
+		physicsWorld.addListener(new CustomCollision(car));
 	}
 	
 	private void removePlayerCar(int id, Car car)
@@ -162,7 +182,7 @@ public class World {
 				{
 					if (players[i].controller.aButtonPressed())
 					{
-						playerCars[0].thrust(force);
+						playerCars[i].thrust(force);
 					}
 
 					double angle = players[i].controller.getDirection();
@@ -380,7 +400,7 @@ public class World {
 			
 			GL11.glEnable(GL11.GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(0, 0, 0, .6f);
+			GL11.glColor4f(0, 0, 0, 1f);
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2d(0, 0);
 			GL11.glVertex2d(-8 + t.xPos, -8 + t.yPos);
