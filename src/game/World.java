@@ -53,7 +53,7 @@ public class World {
 	private double ticksToInitialize = 2;
 
 	private static ArrayList<Oil> oils = new ArrayList<>();
-	
+	private static ArrayList<Track> tracks = new ArrayList<>();
 
 	public World(GameSettings settings, TextureManager manager)
 	{
@@ -212,11 +212,18 @@ public class World {
 		
 		//renderTracks();
 
-		for (Oil oil : oils) {
+		for(Track track : tracks){
+			track.render(delta);
+		}
+
+		for(Oil oil : oils){
 			oil.render(delta);
 		}
 
-		for (Car car : staticCars) {
+		GuiGame.renderScores(gameSettings, playerScores);
+		
+		for(Car car : staticCars)
+		{
 			car.render(delta);
 		}
 
@@ -238,6 +245,10 @@ public class World {
 
 	public static ArrayList<Oil> getOils() {
 		return oils;
+	}
+
+	public static ArrayList<Track> getTracks(){
+		return tracks;
 	}
 	
 	public static void renderTrack(double x, double y, double rotation)
@@ -282,6 +293,8 @@ public class World {
 		
 		GL20.glDisableVertexAttribArray(0);
 		
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		
 		colorShader.unbind();
 	}
 	
@@ -297,7 +310,7 @@ public class World {
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, trackFrameBuffer);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, trackTexture);
 		
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 1920, 1080, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, 0);
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, 1920, 1080, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, 0);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		

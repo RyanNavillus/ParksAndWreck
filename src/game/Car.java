@@ -35,6 +35,8 @@ public class Car extends Body
 	private boolean broken;
 	private boolean leaking;
 
+	private int counter = 0;
+
 	public Car(double startX, double startY, double startRotation, double[] carColors, TextureManager manager)
 	{
 		super();
@@ -69,8 +71,8 @@ public class Car extends Body
 		//for (int i = 0; i < 5; i++)
 		//	generateFire();
 
-		broken = false;
-		leaking = Math.random() * 10 < 1;
+		broken = Math.random() * 9 < 1;
+		leaking = Math.random() * 10 < 1 || broken;
 	}
 	
 	public double getX() {
@@ -83,9 +85,21 @@ public class Car extends Body
 	
 	public void update(double delta)
 	{
-		if (leaking){
+		setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
+
+		if(counter == 5){
+			double angle = this.getTransform().getRotation();
+			World.getTracks().add(new Track(this.getTransform().getTranslationX() + halfWidth - 20 * Math.abs(Math.sin(angle)), this.getTransform().getTranslationY() + halfHeight - 20 * Math.abs(Math.cos(angle)), angle, (int) (Math.random() * 6.0)));
+			World.getTracks().add(new Track(this.getTransform().getTranslationX() + halfWidth + 10 * Math.abs(Math.sin(angle)), this.getTransform().getTranslationY() + halfHeight + 10 * Math.abs(Math.cos(angle)), angle, (int) (Math.random() * 6.0)));
+			counter = 0;
+		} else {
+			counter++;
+		}
+
+		if (leaking && Math.random() * 6 < 1){
 			double x = getX() + halfWidth/SCALE;
 			double y = getY() + halfWidth/SCALE;
+
 			boolean grew = false;
 
 			for(Oil oil : World.getOils()){

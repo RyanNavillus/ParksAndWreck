@@ -64,12 +64,28 @@ public class GuiGame extends GuiScreen<GameSettings>
 		application.getTextureManager().genTexture("puddle_large", new File("resources/puddle_large.png"));
 		application.getTextureManager().genTexture("puddle_xlarge", new File("resources/puddle_xlarge.png"));
 
+		application.getTextureManager().genTexture("track0", new File("resources/tiretrack0.png"));
+		application.getTextureManager().genTexture("track1", new File("resources/tiretrack1.png"));
+		application.getTextureManager().genTexture("track2", new File("resources/tiretrack2.png"));
+		application.getTextureManager().genTexture("track3", new File("resources/tiretrack3.png"));
+		application.getTextureManager().genTexture("track4", new File("resources/tiretrack4.png"));
+		application.getTextureManager().genTexture("track5", new File("resources/tiretrack5.png"));
+
+
 		Oil.setOilTextures(new Texture[] {application.getTextureManager().getTexture("puddle_xsmall"),
 				                          application.getTextureManager().getTexture("puddle_small"),
 			                              application.getTextureManager().getTexture("puddle_medium"),
 			                              application.getTextureManager().getTexture("puddle_large"),
 			                              application.getTextureManager().getTexture("puddle_xlarge")
 		                                 });
+
+		Track.setTrackTextures(new Texture[] {application.getTextureManager().getTexture("track0"),
+				application.getTextureManager().getTexture("track1"),
+				application.getTextureManager().getTexture("track2"),
+				application.getTextureManager().getTexture("track3"),
+				application.getTextureManager().getTexture("track4"),
+				application.getTextureManager().getTexture("track5")
+		});
 		
 		for(int i = 0; i < 5; i++)
 			application.getTextureManager().genTexture("tiretrack" + i, new File("resources/tiretrack" + i + ".png"));
@@ -157,24 +173,6 @@ public class GuiGame extends GuiScreen<GameSettings>
 		float shiftX = 1920 / 2 - gameSettings.getFont().getWidth(title) / 2f;
 		gameSettings.getFont().draw(title, shiftX, 600, 0, 1f);
 
-		//scores
-		setColorToCar(0);
-		shiftX = 470 - gameSettings.getFont().getWidth("0") / 2f;
-		gameSettings.getFont().draw(Integer.toString(world.getPlayerScores()[0]), shiftX, 200, 0, .5f);
-
-		setColorToCar(1);
-		shiftX = 1450 - gameSettings.getFont().getWidth("24") / 2f;
-		gameSettings.getFont().draw(Integer.toString(world.getPlayerScores()[1]), shiftX, 200, 0, .5f);
-
-		setColorToCar(2);
-		shiftX = 470 - gameSettings.getFont().getWidth("56") / 2f;
-		gameSettings.getFont().draw(Integer.toString(world.getPlayerScores()[2]), shiftX, 950, 0, .5f);
-
-		setColorToCar(3);
-		shiftX = 1450 - gameSettings.getFont().getWidth("2") / 2f;
-		gameSettings.getFont().draw(Integer.toString(world.getPlayerScores()[3]), shiftX, 950, 0, .5f);
-
-
 		gameSettings.getFont().unbind();
 		
 		world.render(delta);
@@ -218,7 +216,32 @@ public class GuiGame extends GuiScreen<GameSettings>
 		
 	}
 
-	private void setColorToCar(int player){
+	public static void renderScores(GameSettings gameSettings, int[] playerScores){
+		gameSettings.getFont().bind();
+
+		float shiftX;
+
+		//scores
+		setColorToCar(0);
+		shiftX = 470 - gameSettings.getFont().getWidth("0") / 2f;
+		gameSettings.getFont().draw(Integer.toString(playerScores[0]), shiftX, 200, 0, .5f);
+
+		setColorToCar(1);
+		shiftX = 1450 - gameSettings.getFont().getWidth("24") / 2f;
+		gameSettings.getFont().draw(Integer.toString(playerScores[1]), shiftX, 200, 0, .5f);
+
+		setColorToCar(2);
+		shiftX = 470 - gameSettings.getFont().getWidth("56") / 2f;
+		gameSettings.getFont().draw(Integer.toString(playerScores[2]), shiftX, 950, 0, .5f);
+
+		setColorToCar(3);
+		shiftX = 1450 - gameSettings.getFont().getWidth("2") / 2f;
+		gameSettings.getFont().draw(Integer.toString(playerScores[3]), shiftX, 950, 0, .5f);
+
+		gameSettings.getFont().unbind();
+	}
+
+	private static void setColorToCar(int player){
 		double[] colors = playerColors[player];
 		GL11.glColor4d(colors[0], colors[1], colors[2], 0.1);
 	}
