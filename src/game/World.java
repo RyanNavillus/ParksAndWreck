@@ -46,6 +46,7 @@ public class World {
 	private List<Car> staticCars;
 	private Car[] playerCars;
 	private int[] playerScores;
+	private int[] displayScores;
 	private List<Car> parkedCars;
 	
 	private List<ParkingSpot> parkingList;
@@ -67,6 +68,7 @@ public class World {
 
 		parkingList = new ArrayList<>();
 		playerScores = new int[4];
+		displayScores = new int[4];
 
 		players = new Player[] {new Player(), new Player(), new Player(), new Player()};
 
@@ -281,7 +283,7 @@ public class World {
 
 		renderTracks();
 
-		GuiGame.renderScores(gameSettings, playerScores);
+		GuiGame.renderScores(gameSettings, playerScores, displayScores);
 
 		for(Track track : tracks){
 			track.render(delta);

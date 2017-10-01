@@ -20,6 +20,8 @@ public class ParkingSpot {
     private float[] color = new float[3];
     public int id;
     
+    public Car assignedCar;
+    
     public ParkingSpot(double x, double y, int direction){
         xPos = x;
         yPos = y;
