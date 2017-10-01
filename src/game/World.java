@@ -18,8 +18,7 @@ import org.dyn4j.samples.SimulationBody;
 /**
  * Created by Killian Le Clainche on 9/30/2017.
  */
-public class World
-{
+public class World {
 	public static Texture fireTexture;
 	
 	private float totalTime = 0;
@@ -93,55 +92,51 @@ public class World
 			
 			ticksToInitialize = 10;
 		}
-		
-		if(playerCars[0] != null && players[0].controller != null && players[0].controller.getDirection() != Double.NaN)
-		{
-			//System.out.println(players[0].controller.getDirection() + " BLALDSLDASL " + )
-			playerCars[0].rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI) - playerCars[0].getTransform().getRotation());
+
+		if (playerCars[0] != null && players[0].controller != null
+				&& players[0].controller.getDirection() != Double.NaN) {
+			// System.out.println(players[0].controller.getDirection() + "
+			// BLALDSLDASL " + )
+			playerCars[0].rotateAboutCenter(-(players[0].controller.getDirection() / 180 * Math.PI)
+					- playerCars[0].getTransform().getRotation());
 		}
-		
-		for(Car p : playerCars){
+
+		for (Car p : playerCars) {
 			if (p == null)
 				continue;
 
 			p.update(delta);
 		}
-		
-		for(Car s : staticCars)
+
+		for (Car s : staticCars)
 			s.update(delta);
-		
+
 		physicsWorld.update(delta);
 	}
 	
 	public void render(double delta)
 	{
 		totalTime += delta;
-		
-		if(totalTime % .4 <= .2 && fireTexture.getName().equals("fire1"))
-		{
+
+		if (totalTime % .4 <= .2 && fireTexture.getName().equals("fire1")) {
 			fireTexture = textureManager.getTexture("fire0");
-		}
-		else if(totalTime % .4 > .2 && fireTexture.getName().equals("fire0"))
-		{
+		} else if (totalTime % .4 > .2 && fireTexture.getName().equals("fire0")) {
 			fireTexture = textureManager.getTexture("fire1");
 		}
-		
-		for(ParkingSpot parkingSpot : parkingList)
-		{
+
+		for (ParkingSpot parkingSpot : parkingList) {
 			parkingSpot.render(delta);
 		}
 
-		for(Oil oil : oils){
+		for (Oil oil : oils) {
 			oil.render(delta);
 		}
-		
-		for(Car car : staticCars)
-		{
+
+		for (Car car : staticCars) {
 			car.render(delta);
 		}
-		
-		for(Car car : playerCars)
-		{
+
+		for (Car car : playerCars) {
 			if (car == null)
 				continue;
 
@@ -149,15 +144,15 @@ public class World
 		}
 	}
 
-	public Car[] getPlayerCars(){
+	public Car[] getPlayerCars() {
 		return playerCars;
 	}
 
-	public int[] getPlayerScores(){
+	public int[] getPlayerScores() {
 		return playerScores;
 	}
 
-	public static ArrayList<Oil> getOils(){
+	public static ArrayList<Oil> getOils() {
 		return oils;
 	}
 	

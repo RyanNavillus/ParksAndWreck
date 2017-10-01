@@ -6,14 +6,17 @@ import com.polaris.engine.render.TextureManager;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
+import org.dyn4j.geometry.Rectangle;
 import org.dyn4j.geometry.Vector2;
+import org.dyn4j.samples.SimulationBody;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Car extends Body
 {
-	
+	private static final double SCALE = 32.0;
 	private static final double width = 44 * 2.2, height = 27 * 2.2;
 	private static final double halfWidth = 22 * 2.2, halfHeight = 13.5 * 2.2;
 	
@@ -36,12 +39,10 @@ public class Car extends Body
 		
 		this.translate(new Vector2(startX, startY));
 		this.rotateAboutCenter(rotation);
-		setLinearVelocity(Math.cos(rotation) * 1000, Math.sin(rotation) * 1000);
+		setLinearVelocity(Math.cos(rotation), Math.sin(rotation));
 		
 		double friction = 0.0;
 		double bounce = 0.2;
-		
-		System.out.println(this.getWorldCenter());
 		
 		// might have to switch width and height
 		addFixture(Geometry.createRectangle(width, height),  1, friction, bounce);
@@ -63,27 +64,22 @@ public class Car extends Body
 		//	generateFire();
 
 		broken = false;
-		leaking = Math.random() * 10 < 5;
+		leaking = Math.random() * 10 < 1;
 	}
 	
-	/*
-	 GL11.glPushMatrix();
-	 GL11.glTranslate3f(CENTER_X, CENTER_Y, CENTER_Z);
-	 GL11.glRotate3f(ROTATION, ROTATION_X, ROTATION_Y, ROTATION_Z);
-	 RENDER WHEELS
-	 RENDER CAR + COLOR
-	 SETUP FOR RENDERING FIRE ANIMATION ON TOP OF CARS
-	GL11.glPopMatrix();
-	 
-	 */
+	public double getX() {
+		return this.getWorldCenter().x * SCALE;
+	}
+
+	public double getY() {
+		return this.getWorldCenter().y * SCALE;
+	}
 	
 	public void update(double delta)
 	{
-		//setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
-
 		if (leaking){
-			double x = this.getTransform().getTranslationX();
-			double y = this.getTransform().getTranslationY() + 100;
+			double x = getX() + halfWidth/SCALE;
+			double y = getY() + halfWidth/SCALE;
 			boolean grew = false;
 
 			for(Oil oil : World.getOils()){
@@ -96,20 +92,20 @@ public class Car extends Body
 			}
 
 			if (!grew)
-				World.getOils().add(new Oil(x, y));
-
+				World.getOils().add(new Oil(x, y, Math.random() * 360));
 		}
 	}
 	
 	public void render(double delta)
 	{
 		
-		Vector2 pos = this.getWorldCenter();
+		double posX = this.getX();
+		double posY = this.getY();
 		double rotation = this.getTransform().getRotation();
 		
 		GL11.glPushMatrix();
 		
-		GL11.glTranslatef((float) (pos.x), (float) (pos.y), 0);
+		GL11.glTranslatef((float) (posX), (float) (posY), 0);
 		GL11.glRotatef((float) (rotation * 180 / Math.PI), 0, 0, 1);
 
 
@@ -161,9 +157,9 @@ public class Car extends Body
 		GL11.glBegin(GL11.GL_QUADS);
 
 
-		for (int i = 0; i < fires.size(); i++){
-			double x = fires.get(i)[0];
-			double y =  fires.get(i)[1];
+		for (Double[] d : fires){
+			double x = d[0];
+			double y =  d[1];
 
 			GL11.glTexCoord2d(0, 0);
 			GL11.glVertex2d(-halfWidth + x, -halfHeight + y);
