@@ -299,7 +299,7 @@ public class Car extends Body
 	}
 	
 	public boolean recentlyHit() {
-		return (new Date().getTime() - hitTime.getTime()) < 50;
+		return (new Date().getTime() - hitTime.getTime()) < 80;
 	}
 
 	public void damageCar(){

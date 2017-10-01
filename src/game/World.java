@@ -132,7 +132,7 @@ public class World {
 		@Override
 		public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Penetration penetration)
 		{
-			double damageSpeedThresh = 2;
+			double damageSpeedThresh = 3;
 			if (body1.getLinearVelocity().getMagnitude() > damageSpeedThresh ||
 					body2.getLinearVelocity().getMagnitude() > damageSpeedThresh)
 			{
