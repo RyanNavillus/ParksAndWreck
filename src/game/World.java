@@ -16,6 +16,7 @@ import java.util.List;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.Force;
 import org.dyn4j.geometry.Geometry;
+import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 import org.dyn4j.samples.SimulationBody;
@@ -90,6 +91,19 @@ public class World {
 		setupFrameBuffers();
 
 		createWalls();
+
+		if (playerCars[0] != null)
+		{
+			staticCars.add(playerCars[0]);
+			staticCars.add(playerCars[1]);
+			staticCars.add(playerCars[2]);
+			staticCars.add(playerCars[3]);
+		}
+
+		addPlayerCar(0, new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager));
+		addPlayerCar(1, new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager));
+		addPlayerCar(2, new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager));
+		addPlayerCar(3, new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager));
 	}
 
 	private void addPlayerCar(int id, Car car)
@@ -107,53 +121,36 @@ public class World {
 
 	public void update(double delta)
 	{
-		if((ticksToInitialize -= delta) <= 0)
+		if (playerCars[0] != null && !playerCars[0].isRecent())
 		{
-			if (playerCars[0] != null)
+			final double force = 20000 * delta;
+
+			if (gameSettings.goKey.isPressed())
 			{
-				staticCars.add(playerCars[0]);
-				staticCars.add(playerCars[1]);
-				staticCars.add(playerCars[2]);
-				staticCars.add(playerCars[3]);
+				playerCars[0].thrust(force);
 			}
 
-			addPlayerCar(0, new Car(-55, 110, 0, GuiGame.playerColors[0], textureManager));
-			addPlayerCar(1, new Car(-55, 970, 0, GuiGame.playerColors[1], textureManager));
-			addPlayerCar(2, new Car(1975, 110, 180, GuiGame.playerColors[2], textureManager));
-			addPlayerCar(3, new Car(1975, 970, 180, GuiGame.playerColors[3], textureManager));
-			ticksToInitialize = 100;
+			if (gameSettings.stopKey.isPressed())
+			{
+				playerCars[0].thrust(-force);
+			}
+
+			if (gameSettings.rightKey.isPressed())
+			{
+				playerCars[0].myrotate(force);
+			}
+
+			if (gameSettings.leftKey.isPressed())
+			{
+				playerCars[0].myrotate(-force);
+			}
 		}
-
-		if (ticksToInitialize < 99)
-		{
-			if (playerCars[0] != null)
-			{
-				final double force = 20000 * delta;
-
-				if (gameSettings.goKey.isPressed())
-				{
-					playerCars[0].thrust(force);
-				}
-
-				if (gameSettings.stopKey.isPressed())
-				{
-					playerCars[0].thrust(-force);
-				}
-
-				if (gameSettings.rightKey.isPressed())
-				{
-					playerCars[0].myrotate(force);
-				}
-
-				if (gameSettings.leftKey.isPressed())
-				{
-					playerCars[0].myrotate(-force);
-				}
-			}
 			
-			for(int i = 0; i < playerCars.length; i++)
+		for(int i = 0; i < playerCars.length; i++)
+		{
+			if(playerCars[i] != null && players[i].controller != null)
 			{
-				if(playerCars[i] != null && players[i].controller != null)
+				if (!playerCars[i].isRecent())
 				{
 					double angle = players[i].controller.getDirection();
 					
@@ -219,9 +216,16 @@ public class World {
 							removePlayerCar(i, car);
 							
 							//Immobilize car
-							car.setMass(MassType.INFINITE);
-							car.setLinearVelocity(0,0);
-							car.setAngularVelocity(0);
+//							Mass mas = new Mass(new Vector2(0, 0), 10000, )
+//							car.setMass(MassType.INFINITE);
+							Mass oldMass = car.getMass();
+							car.setMass(new Mass(oldMass.getCenter(), oldMass.getMass() * 10, oldMass.getInertia() * 10));
+							car.setIAmStatic();
+							
+							car.setLinearVelocity(car.getLinearVelocity().product(0.1));
+							car.setAngularVelocity(car.getAngularVelocity() * 0.1);
+							car.setAngularDamping(car.getAngularDamping() * 3);
+							car.setLinearDamping(car.getLinearDamping() * 3);
 							//Increase score of car.player
 							playerScores[i] += 10;
 							
@@ -441,8 +445,8 @@ public class World {
 	{
 		double scale = Car.SCALE;
 
-		double friction = 0.5;
-		double bounce = 0.5;
+		double friction = 0.9;
+		double bounce = 0.2;
 
 		//left wall
 		Body wall = new Body(1);
