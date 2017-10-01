@@ -1,8 +1,10 @@
 package game;
 
+import com.polaris.engine.render.Shader;
 import com.polaris.engine.render.Texture;
 import com.polaris.engine.render.TextureManager;
 
+import java.io.File;
 import sun.security.krb5.internal.crypto.crc32;
 
 import java.util.ArrayList;
@@ -17,12 +19,22 @@ import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 import org.dyn4j.samples.SimulationBody;
+import org.lwjgl.opengl.*;
+
+import static org.lwjgl.opengl.GL11.glViewport;
 
 /**
  * Created by Killian Le Clainche on 9/30/2017.
  */
 public class World {
 	public static Texture fireTexture;
+	
+	private static Shader colorShader;
+	private static int texID;
+	private static int windowSize;
+	private static int trackFrameBuffer;
+	private static int trackTexture;
+	private static int renderBuffer;
 	
 	private float totalTime = 0;
 	
@@ -41,6 +53,7 @@ public class World {
 	private double ticksToInitialize = 2;
 
 	private static ArrayList<Oil> oils = new ArrayList<>();
+	
 
 	public World(GameSettings settings, TextureManager manager)
 	{
@@ -60,17 +73,14 @@ public class World {
 				
 		fireTexture = textureManager.getTexture("fire0");
 
-
-		// top
-		// parkingList.addAll(ParkingSpot.createParkingArea(580, 200, 9, 2));
-		// parkingList.addAll(ParkingSpot.createParkingArea(580, 200 +
-		// ParkingSpot.HEIGHT - 5, 9, 0));
 		parkingList.addAll(ParkingSpot.createParkingArea(200, 153, 10, 1));   //left
 		parkingList.addAll(ParkingSpot.createParkingArea(1720 - ParkingSpot.HEIGHT, 153, 10, 3));   //right
 
 		parkingList.addAll(ParkingSpot.createParkingArea(580, 200 + ParkingSpot.HEIGHT / 2, 9, 4));
 
 		parkingList.addAll(ParkingSpot.createParkingArea(580, 880 - ParkingSpot.HEIGHT / 2 - ParkingSpot.HEIGHT, 9, 4));
+		
+		setupFrameBuffers();
 		
 		createWalls();
 	}
@@ -199,6 +209,8 @@ public class World {
 		for (ParkingSpot parkingSpot : parkingList) {
 			parkingSpot.render(delta);
 		}
+		
+		renderTracks();
 
 		for (Oil oil : oils) {
 			oil.render(delta);
@@ -226,6 +238,88 @@ public class World {
 
 	public static ArrayList<Oil> getOils() {
 		return oils;
+	}
+	
+	public static void renderTrack(double x, double y, double rotation)
+	{
+		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, trackFrameBuffer);
+		glViewport(0, 0, 1920, 1080);
+		
+		GL11.glPushMatrix();
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, 1920, 1080, 0, -1, 1);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		
+		//RENDER THE TRACK HERE
+		
+		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+	}
+	
+	private void renderTracks()
+	{
+		colorShader.bind();
+		
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, trackTexture);
+		
+		GL20.glUniform1i(texID, 0);
+		GL20.glUniform2f(windowSize, gameSettings.getWindowWidth(), gameSettings.getWindowHeight());
+		
+		GL20.glEnableVertexAttribArray(0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, renderBuffer);
+		GL20.glVertexAttribPointer(
+				0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+				3,                  // size
+				GL11.GL_FLOAT,           // type
+				false,           // normalized?
+				0,                  // stride
+				0            // array buffer offset
+		);
+		
+		// Draw the triangles !
+		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6); // 2*3 indices starting at 0 -> 2 triangles
+		
+		GL20.glDisableVertexAttribArray(0);
+		
+		colorShader.unbind();
+	}
+	
+	private void setupFrameBuffers()
+	{
+		colorShader = Shader.createShader(new File("shaders/normal.vert"), new File("shaders/normal.frag"));
+		texID = GL20.glGetUniformLocation(colorShader.getShaderId(), "renderedTexture");
+		windowSize = GL20.glGetUniformLocation(colorShader.getShaderId(), "window");
+		
+		trackFrameBuffer = GL30.glGenFramebuffers();
+		trackTexture = GL11.glGenTextures();
+		
+		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, trackFrameBuffer);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, trackTexture);
+		
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 1920, 1080, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, 0);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+		
+		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, trackTexture, 0);
+		
+		GL20.glDrawBuffers(GL30.GL_COLOR_ATTACHMENT0);
+		
+		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		
+		float[] g_quad_vertex_buffer_data = {
+				0, 0, 0.0f,
+				1920, 0, 0.0f,
+				0,  1080, 0.0f,
+				0,  1080, 0.0f,
+				1920, 0, 0.0f,
+				1920,  1080, 0.0f,
+				};
+		
+		renderBuffer = GL15.glGenBuffers();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, renderBuffer);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, g_quad_vertex_buffer_data, GL15.GL_STATIC_DRAW);
 	}
 	
 	private void createWalls()

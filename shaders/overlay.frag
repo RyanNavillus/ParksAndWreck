@@ -20,7 +20,7 @@ void DrawVignette( inout vec3 color, vec2 uv )
 
 void DrawScanline( inout vec3 color, vec2 uv )
 {
-    float scanline 	= clamp( 0.95 + 0.05 * cos( 3.14 * ( uv.y + 0.008 ) * 240.0 * 1.0 ), 0.0, 1.0 );
+    float scanline 	= clamp( 0.95 + 0.05 * cos( 3.14 * ( uv.y + 0.008 * time ) * 240.0 * 1.0 ), 0.0, 1.0 );
     float grille 	= 0.8 + 0.2 * clamp( 1.5 * cos( 3.14 * uv.x * 640.0 * 1.0 ), 0.0, 1.0 );
     color *= scanline * grille * 1.4;
 }
