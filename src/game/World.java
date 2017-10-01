@@ -41,6 +41,8 @@ public class World {
 	private static int trackFrameBuffer;
 	private static int trackTexture;
 	private static int renderBuffer;
+	
+	private static boolean boomMode = false;
 
 	private float totalTime = 0;
 
@@ -121,9 +123,15 @@ public class World {
 				if (body1 instanceof Car) 
 				{
 					((Car)body1).damageCar();
+					if (boomMode) {
+						body1.applyImpulse(body2.getLinearVelocity().product(3));
+					}
 				}
 				if (body2 instanceof Car) {
 					((Car)body2).damageCar();
+					if (boomMode) {
+						body2.applyImpulse(body1.getLinearVelocity().product(3));
+					}
 				}
 			}
 
@@ -148,6 +156,10 @@ public class World {
 	public void update(double delta)
 	{
 		final double force = 20000 * delta;
+		
+		if (gameSettings.uKey.isPressed()) {
+			boomMode = true;
+		}
 
 		if (playerCars[3] != null && !playerCars[3].isRecent())
 		{

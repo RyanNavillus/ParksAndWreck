@@ -28,6 +28,7 @@ public class GameSettings extends Settings
 	public Key stop2Key;
 	public Key right2Key;
 	public Key left2Key;
+	public Key uKey;
 	
 	public void init(Input i)
 	{
@@ -52,6 +53,7 @@ public class GameSettings extends Settings
 		this.stop2Key = GameSettings.getKey(GLFW.GLFW_KEY_S);
 		this.right2Key = GameSettings.getKey(GLFW.GLFW_KEY_D);
 		this.left2Key = GameSettings.getKey(GLFW.GLFW_KEY_A);
+		this.uKey = GameSettings.getKey(GLFW.GLFW_KEY_U);
 		
 		/*this.jumpKey = new Key[]{input.getKey(GLFW.GLFW_KEY_W), input.getKey(GLFW.GLFW_KEY_I), input.getKey(GLFW.GLFW_KEY_T), input.getKey(GLFW.GLFW_KEY_UP)};
 		this.smashKey = new Key[]{input.getKey(GLFW.GLFW_KEY_S), input.getKey(GLFW.GLFW_KEY_K), input.getKey(GLFW.GLFW_KEY_G), input.getKey(GLFW.GLFW_KEY_DOWN)};
