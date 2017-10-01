@@ -73,8 +73,8 @@ public class World {
 				
 		fireTexture = textureManager.getTexture("fire0");
 
-		parkingList.addAll(ParkingSpot.createParkingArea(200, 153, 10, 1));   //left
-		parkingList.addAll(ParkingSpot.createParkingArea(1720 - ParkingSpot.HEIGHT, 153, 10, 3));   //right
+		parkingList.addAll(ParkingSpot.createParkingArea(200, 153, 9, 1));   //left
+		parkingList.addAll(ParkingSpot.createParkingArea(1720 - ParkingSpot.HEIGHT, 153, 9, 3));   //right
 
 		parkingList.addAll(ParkingSpot.createParkingArea(580, 200 + ParkingSpot.HEIGHT / 2, 9, 4));
 
