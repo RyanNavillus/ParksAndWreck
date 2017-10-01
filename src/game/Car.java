@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Car extends SimulationBody {
-	
+	private static final double SCALE = 32.0;
 	private static final double height = 44 * 2.5, width = 27 * 2.5;
 	private static final double halfHeight = 22 * 2.5, halfWidth = 13.5 * 2.5;
 	
@@ -34,14 +34,24 @@ public class Car extends SimulationBody {
 	public int parkingSpotId;
 	
 	private boolean broken;
+	private boolean leaking;
 
 	public Car(double startX, double startY, double startRotation, double[] carColors, TextureManager manager)
 	{
-		this.getTransform().transform(new Vector2(startX, startY));
-		getTransform().setRotation(startRotation);
-		setLinearVelocity(Math.cos(startRotation / 180 * Math.PI) * 1000, Math.sin(startRotation / 180 * Math.PI) * 1000);
+		super();
+
+		this.translate(new Vector2(startX, startY).product(1/SCALE));
+		this.rotateAboutCenter(startRotation / 180 * Math.PI);
+		setLinearVelocity(Math.cos(startRotation / 180 * Math.PI), Math.sin(startRotation / 180 * Math.PI));
 		
-		addFixture(Geometry.createRectangle(width, height),  1, 0, 0.2);
+		double friction = 0.0;
+		double bounce = 0.2;
+		
+		// the width and height are correct, do not change
+		addFixture(Geometry.createRectangle(height/SCALE, width/SCALE), 1, friction, bounce);
+
+		// this may or may not need to be changed
+//		this.translate(0.0, 2.0);
 		setMass(MassType.NORMAL);
 		
 		car = manager.getTexture("car");
@@ -50,38 +60,55 @@ public class Car extends SimulationBody {
 
 		this.carColors = carColors;
 
+//		this.setAngularDamping(10.0f);
+//		this.setLinearDamping(3.0f);
+
 		//for (int i = 0; i < 5; i++)
 		//	generateFire();
 
 		broken = false;
+		leaking = Math.random() * 10 < 1;
 	}
 	
-	/*
-	 GL11.glPushMatrix();
-	 GL11.glTranslate3f(CENTER_X, CENTER_Y, CENTER_Z);
-	 GL11.glRotate3f(ROTATION, ROTATION_X, ROTATION_Y, ROTATION_Z);
-	 RENDER WHEELS
-	 RENDER CAR + COLOR
-	 SETUP FOR RENDERING FIRE ANIMATION ON TOP OF CARS
-	GL11.glPopMatrix();
-	 
-	 */
+	public double getX() {
+		return this.getWorldCenter().x * SCALE;
+	}
+
+	public double getY() {
+		return this.getWorldCenter().y * SCALE;
+	}
 	
 	public void update(double delta)
 	{
-		setLinearVelocity(Math.cos(this.getTransform().getRotation()) * 1000, Math.sin(this.getTransform().getRotation()) * 1000);
+		if (leaking){
+			double x = getX() + halfWidth/SCALE;
+			double y = getY() + halfWidth/SCALE;
+			boolean grew = false;
+
+			for(Oil oil : World.getOils()){
+				if (Math.abs(x - oil.getxPos()) < oil.scale && Math.abs(y - oil.getyPos()) < oil.scale ){
+					oil.grow(5);
+					grew = true;
+
+					break;
+				}
+			}
+
+			if (!grew)
+				World.getOils().add(new Oil(x, y, Math.random() * 360));
+		}
 	}
 	
 	public void render(double delta)
 	{
 		
-		double posX = this.getTransform().getTranslationX();
-		double posY = this.getTransform().getTranslationY();
+		double posX = this.getX();
+		double posY = this.getY();
 		double rotation = this.getTransform().getRotation();
 		
 		GL11.glPushMatrix();
 		
-		GL11.glTranslatef((float) (posX + (halfWidth)), (float) (posY + (halfHeight)), 0);
+		GL11.glTranslatef((float) (posX + halfWidth), (float) (posY + halfHeight), 0);
 		GL11.glRotatef((float) (rotation * 180 / Math.PI - 90), 0, 0, 1);
 
 
