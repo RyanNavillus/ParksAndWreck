@@ -41,15 +41,17 @@ public class Car extends Body
 
 		double rotation = startRotation / 180 * Math.PI;
 		
-		this.translate(new Vector2(startX, startY));
-		this.rotateAboutCenter(rotation);
-		setLinearVelocity(Math.cos(rotation), Math.sin(rotation));
+		this.translate(new Vector2(startX + 100, startY + 100).product(1/SCALE));
+//		this.rotateAboutCenter(rotation);
+//		Vector2 initVel = new Vector2(Math.cos(rotation), Math.sin(rotation));
+//		setLinearVelocity(initVel);
+		this.getLinearVelocity().multiply(0);
 		
 		double friction = 0.0;
 		double bounce = 0.2;
 		
 		// might have to switch width and height
-		addFixture(Geometry.createRectangle(width, height),  1, friction, bounce);
+		addFixture(Geometry.createRectangle(width/SCALE, height/SCALE),  1, friction, bounce);
 
 		// this may or may not need to be changed
 //		this.translate(0.0, 2.0);
@@ -199,4 +201,26 @@ public class Car extends Body
 	public double[] getCarColors(){
 		return carColors;
 	}
+
+	public void thrust(double force) {
+        final Vector2 r = new Vector2(this.getTransform().getRotation() + Math.PI * 0.5).left();
+       	Vector2 f = r.product(force);
+       	applyForce(f);
+	}
+
+	public void myrotate(double force) {
+        final Vector2 r = new Vector2(this.getTransform().getRotation() + Math.PI * 0.5).left();
+        final Vector2 c = this.getWorldCenter();
+
+        Vector2 f1 = r.product(force * 0.05).right();
+        Vector2 f2 = r.product(force * 0.05).left();
+        Vector2 p1 = c.sum(r.product(0.9));
+        Vector2 p2 = c.sum(r.product(-0.9));
+        	
+        // apply a force to the top going left
+        this.applyForce(f1, p1);
+        // apply a force to the bottom going right
+        this.applyForce(f2, p2);
+	}
 }
+
