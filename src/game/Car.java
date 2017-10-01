@@ -47,7 +47,7 @@ public class Car extends Body
 	
 	public boolean isRecent()
 	{
-		return (new Date().getTime() - madeTime.getTime()) < 500;
+		return (new Date().getTime() - madeTime.getTime()) < 300;
 	}
 
 	private int health;
@@ -63,7 +63,7 @@ public class Car extends Body
 		
 		this.translate(new Vector2(startX, startY).product(1/SCALE));
 		this.rotateAboutCenter(rotation);
-		Vector2 initVel = new Vector2(Math.cos(rotation), Math.sin(rotation)).multiply(75);
+		Vector2 initVel = new Vector2(Math.cos(rotation), Math.sin(rotation)).multiply(45);
 		setLinearVelocity(initVel);
 //		this.getLinearVelocity().multiply(0);
 		
@@ -299,7 +299,7 @@ public class Car extends Body
 	}
 	
 	public boolean recentlyHit() {
-		return (new Date().getTime() - hitTime.getTime()) < 200;
+		return (new Date().getTime() - hitTime.getTime()) < 50;
 	}
 
 	public void damageCar(){
