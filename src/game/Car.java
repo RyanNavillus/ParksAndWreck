@@ -273,14 +273,14 @@ public class Car extends Body
         mag = Math.max(mag, 3);
         
         Vector2 f1 = r.product(force * mag / 100).right();
-//        Vector2 f2 = r.product(force * mag).left();
+        Vector2 f2 = r.product(force * mag / 400).left();
         Vector2 p1 = c.sum(r.product(0.9));
-//        Vector2 p2 = c.sum(r.product(-0.9));
+        Vector2 p2 = c.sum(r.product(-0.9));
         	
         // apply a force to the top going left
         this.applyForce(f1, p1);
         // apply a force to the bottom going right
-//        this.applyForce(f2, p2);
+        this.applyForce(f2, p2);
 	}
 	
 	public void myrotate2(double force, double iniangle) {
