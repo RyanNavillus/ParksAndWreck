@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dyn4j.dynamics.Force;
+import org.dyn4j.geometry.Vector2;
 import org.dyn4j.samples.SimulationBody;
 
 /**
@@ -29,7 +30,7 @@ public class World
 	private org.dyn4j.dynamics.World physicsWorld;
 	private double ticksToInitialize = 2;
 
-	public World(GameSettings settings, TextureManager manager, org.dyn4j.dynamics.World physicsWorld)
+	public World(GameSettings settings, TextureManager manager)
 	{
 		staticCars = new ArrayList<>();
 		playerCars = new ArrayList<>();
@@ -38,19 +39,9 @@ public class World
 		gameSettings = settings;
 		
 		textureManager = manager;
-				
-		this.physicsWorld = physicsWorld;
 		
-		Car car = new Car(100, 100, 0, manager);
-		//playerCars.add(car);
-		//physicsWorld.addBody(car.simulationBody);
-		
-		car = new Car(100, 200, 45, manager);
-		playerCars.add(car);
-		physicsWorld.addBody(car.simulationBody);
-		car.simulationBody.translate(100, 100);
-		car.simulationBody.rotate(10);
-		car.simulationBody.applyForce(new Force(100.0, 100.0));
+		physicsWorld = new org.dyn4j.dynamics.World();
+		physicsWorld.setGravity(new Vector2(0, 0));
 				
 		fireTexture = textureManager.getTexture("fire0");
 
@@ -72,18 +63,23 @@ public class World
 		parkingList.addAll(ParkingSpot.createParkingArea(580, 880 - ParkingSpot.HEIGHT / 2 - ParkingSpot.HEIGHT, 9, 4));
 	}
 	
+	private void addPlayerCar(Car car)
+	{
+		playerCars.add(car);
+		physicsWorld.addBody(car);
+	}
+	
 	public void update(double delta)
 	{
-
 		if((ticksToInitialize -= delta) <= 0)
 		{
-			playerCars.add(new Car(-65, 55,  270, textureManager));
+			addPlayerCar(new Car(-65, 55,  0, textureManager));
 			
-			playerCars.add(new Car(-65, 915,  270, textureManager));
+			addPlayerCar(new Car(-65, 915,  0, textureManager));
 			
-			playerCars.add(new Car(1920, 55,  90, textureManager));
+			addPlayerCar(new Car(1920, 55,  180, textureManager));
 			
-			playerCars.add(new Car(1920, 915,  90, textureManager));
+			addPlayerCar(new Car(1920, 915,  180, textureManager));
 			
 			ticksToInitialize = 2;
 		}
@@ -92,7 +88,9 @@ public class World
 			p.update(delta);
 		
 		for(Car s : staticCars)
-			s.update(delta);
+			s.update(0);
+		
+		physicsWorld.update(delta);
 	}
 	
 	public void render(double delta)

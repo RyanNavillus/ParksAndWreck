@@ -28,7 +28,6 @@ public class GuiGame extends GuiScreen<GameSettings>
 	
 	private Background background;
 	private World world;
-	private org.dyn4j.dynamics.World physicsWorld;
 
 	private int frameBuffer;
 	private int frameBufferTexture;
@@ -58,7 +57,7 @@ public class GuiGame extends GuiScreen<GameSettings>
 	public void init()
 	{
 		super.init();
-		world = new World(this.gameSettings, application.getTextureManager(), physicsWorld);
+		world = new World(this.gameSettings, application.getTextureManager());
 		
 		shader = Shader.createShader(new File("shaders/overlay.vert"), new File("shaders/overlay.frag"));
 		
@@ -98,8 +97,6 @@ public class GuiGame extends GuiScreen<GameSettings>
 	}
 	
 	private void initializePhysics() {
-		physicsWorld = new org.dyn4j.dynamics.World();
-		physicsWorld.setGravity(new Vector2(0, 0));
 		
 	}
 	
