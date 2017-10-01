@@ -233,16 +233,6 @@ public class GuiGame extends GuiScreen<GameSettings>
 		shiftY = 200 - randomOffset;
 		gameSettings.getFont().draw(Integer.toString(displayScores[0]), shiftX, shiftY, 0, .5f);
 
-		displacementFrequency = displayScores[1] != 0 ? 100 / displayScores[1] : 100;
-		if (displacementFrequency < 5)
-			displacementFrequency = 5;
-
-		randomOffset = Math.random() * displacementFrequency < 1 ? 5 * playerScores[1] / 20 : 0;
-		randomOffset = Math.random() * 2 < 1 ? randomOffset : -randomOffset;
-		setColorToCar(1);
-		shiftX = 1500 - gameSettings.getFont().getWidth(Integer.toString(displayScores[1])) / 2f - randomOffset;
-		gameSettings.getFont().draw(Integer.toString(displayScores[1]), shiftX, 200, 0, .5f);
-
 		displacementFrequency = displayScores[2] != 0 ? 100 / displayScores[2] : 100;
 		if (displacementFrequency < 5)
 			displacementFrequency = 5;
@@ -250,8 +240,18 @@ public class GuiGame extends GuiScreen<GameSettings>
 		randomOffset = Math.random() * displacementFrequency < 1 ? 5 * playerScores[2] / 20 : 0;
 		randomOffset = Math.random() * 2 < 1 ? randomOffset : -randomOffset;
 		setColorToCar(2);
-		shiftX = 470 - gameSettings.getFont().getWidth(Integer.toString(displayScores[2])) / 2f - randomOffset;
-		gameSettings.getFont().draw(Integer.toString(displayScores[2]), shiftX, 950, 0, .5f);
+		shiftX = 1500 - gameSettings.getFont().getWidth(Integer.toString(displayScores[2])) / 2f - randomOffset;
+		gameSettings.getFont().draw(Integer.toString(displayScores[2]), shiftX, 200, 0, .5f);
+
+		displacementFrequency = displayScores[1] != 0 ? 100 / displayScores[1] : 100;
+		if (displacementFrequency < 5)
+			displacementFrequency = 5;
+
+		randomOffset = Math.random() * displacementFrequency < 1 ? 5 * playerScores[1] / 20 : 0;
+		randomOffset = Math.random() * 2 < 1 ? randomOffset : -randomOffset;
+		setColorToCar(1);
+		shiftX = 470 - gameSettings.getFont().getWidth(Integer.toString(displayScores[1])) / 2f - randomOffset;
+		gameSettings.getFont().draw(Integer.toString(displayScores[1]), shiftX, 950, 0, .5f);
 
 		displacementFrequency = displayScores[3] != 0 ? 100 / displayScores[3] : 100;
 		if (displacementFrequency < 5)
