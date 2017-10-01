@@ -130,7 +130,6 @@ public class ParkingSpot {
             GL11.glVertex2d(WIDTH + xPos, 0 + yPos);
             GL11.glEnd();
         }
-
     }
 
     public boolean containsCar(Car car) {
